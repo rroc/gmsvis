@@ -1,0 +1,10 @@
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\MusicDataminer.Form1.resources
+obj\Debug\WindowsApplication1.Properties.Resources.resources
+obj\Debug\MusicDataminer.csproj.GenerateResource.Cache
+bin\Debug\WindowsApplication1.exe
+bin\Debug\WindowsApplication1.pdb
+bin\Debug\CarlosAg.ExcelXmlWriter.dll
+bin\Debug\MusicBrainzDotNet.dll
+obj\Debug\WindowsApplication1.exe
+obj\Debug\WindowsApplication1.pdb
