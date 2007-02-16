@@ -1,0 +1,229 @@
+AF	Afghanistan	800
+AL	Albania	5600
+DZ	Algeria	7700
+AS	American Samoa	5800
+AD	Andorra	24000
+AO	Angola	4300
+AI	Anguilla	8800
+AG	Antigua and Barbuda	10900
+AR	Argentina	15000
+AM	Armenia	5400
+AW	Aruba	21800
+AU	Australia	32900
+AT	Austria	34100
+AZ	Azerbaijan	7300
+BS	Bahamas The	21300
+BH	Bahrain	25300
+BD	Bangladesh	2200
+BB	Barbados	18200
+BY	Belarus	7800
+BE	Belgium	31800
+BZ	Belize	8400
+BJ	Benin	1100
+BM	Bermuda	69900
+BT	Bhutan	1400
+BO	Bolivia	3000
+BA	Bosnia and Herzegovina	5500
+BW	Botswana	11400
+BR	Brazil	8600
+IO	British Virgin Islands	38500
+BN	Brunei	23600
+BG	Bulgaria	10400
+BF	Burkina Faso	1300
+MM	Burma	1800
+BI	Burundi	700
+KH	Cambodia	2600
+CM	Cameroon	2400
+CA	Canada	35200
+CV	Cape Verde	6000
+KY	Cayman Islands	43800
+CF	Central African Republic	1100
+TD	Chad	1500
+CL	Chile	12600
+CN	China	7600
+CO	Colombia	8400
+KM	Comoros	600
+CD	Congo Democratic Republic of the	700
+CG	Congo Republic of the	1300
+CK	Cook Islands	9100
+CR	Costa Rica	12000
+CI	Cote d'Ivoire	1600
+HR	Croatia	13200
+CU	Cuba	3900
+CY	Cyprus	22700
+CZ	Czech Republic	21600
+DK	Denmark	37000
+DJ	Djibouti	1000
+DM	Dominica	3800
+DO	Dominican Republic	8000
+TL	East Timor	800
+EC	Ecuador	4500
+EG	Egypt	4200
+SV	El Salvador	4900
+GQ	Equatorial Guinea	50200
+ER	Eritrea	1000
+EE	Estonia	19600
+ET	Ethiopia	1000
+XE	European Union	29300
+FK	Falkland Islands (Islas Malvinas)	25000
+FO	Faroe Islands	31000
+FJ	Fiji	6100
+FI	Finland	32800
+FR	France	30100
+PF	French Polynesia	17500
+GA	Gabon	7200
+GM	Gambia The	2000
+XX	Gaza Strip	1500
+GE	Georgia	3800
+DE	Germany	31400
+GH	Ghana	2600
+GI	Gibraltar	27900
+GR	Greece	23500
+GL	Greenland	20000
+GD	Grenada	3900
+GU	Guam	15000
+GT	Guatemala	4900
+XX	Guernsey	44600
+GN	Guinea	2000
+GW	Guinea-Bissau	900
+GY	Guyana	4700
+HT	Haiti	1800
+HN	Honduras	3000
+HK	Hong Kong	36500
+HU	Hungary	17300
+IS	Iceland	38100
+IN	India	3700
+ID	Indonesia	3800
+IR	Iran	8900
+IQ	Iraq	1900
+IE	Ireland	43600
+XX	Isle of Man	27800
+IL	Israel	26200
+IT	Italy	29700
+JM	Jamaica	4600
+JP	Japan	33100
+XX	Jersey	40000
+JO	Jordan	4900
+KZ	Kazakhstan	9100
+KE	Kenya	1200
+KI	Kiribati	2700
+KP	Korea North	1800
+KR	Korea South	24200
+KW	Kuwait	21600
+KG	Kyrgyzstan	2000
+LA	Laos	2100
+LV	Latvia	15400
+LB	Lebanon	5500
+LS	Lesotho	2600
+LR	Liberia	1000
+LY	Libya	12700
+LI	Liechtenstein	25000
+LT	Lithuania	15100
+LU	Luxembourg	68800
+MO	Macau	24300
+MK	Macedonia	8200
+MG	Madagascar	900
+MW	Malawi	600
+MY	Malaysia	12700
+MV	Maldives	3900
+ML	Mali	1200
+MT	Malta	20300
+MH	Marshall Islands	2900
+MR	Mauritania	2600
+MU	Mauritius	13500
+YT	Mayotte	2600
+MX	Mexico	10600
+FM	Micronesia Federated States of	2300
+MD	Moldova	2000
+MC	Monaco	27000
+MN	Mongolia	2000
+XX	Montenegro	3800
+MS	Montserrat	3400
+MA	Morocco	4400
+MZ	Mozambique	1500
+NA	Namibia	7400
+NR	Nauru	5000
+NP	Nepal	1500
+NL	Netherlands	31700
+AN	Netherlands Antilles	16000
+NC	New Caledonia	15000
+NZ	New Zealand	26000
+NI	Nicaragua	3000
+NE	Niger	1000
+NG	Nigeria	1400
+NU	Niue	5800
+MP	Northern Mariana Islands	12500
+NO	Norway	47800
+OM	Oman	14100
+PK	Pakistan	2600
+PW	Palau	7600
+PA	Panama	7900
+PG	Papua New Guinea	2700
+PY	Paraguay	4700
+PE	Peru	6400
+PH	Philippines	5000
+PL	Poland	14100
+PT	Portugal	19100
+PR	Puerto Rico	19100
+QA	Qatar	29400
+RO	Romania	8800
+RU	Russia	12100
+RW	Rwanda	1600
+SH	Saint Helena	2500
+KN	Saint Kitts and Nevis	8200
+LC	Saint Lucia	4800
+PM	Saint Pierre and Miquelon	7000
+VC	Saint Vincent and the Grenadines	3600
+WS	Samoa	2100
+SM	San Marino	34600
+ST	Sao Tome and Principe	1200
+SA	Saudi Arabia	13800
+SN	Senegal	1800
+CS	Serbia	4400
+SC	Seychelles	7800
+SL	Sierra Leone	900
+SG	Singapore	30900
+SK	Slovakia	17700
+SI	Slovenia	22900
+SB	Solomon Islands	600
+SO	Somalia	600
+ZA	South Africa	13000
+ES	Spain	27000
+LK	Sri Lanka	4600
+SD	Sudan	2300
+SR	Suriname	7100
+SZ	Swaziland	5200
+SE	Sweden	31600
+CH	Switzerland	33600
+SY	Syria	4000
+TW	Taiwan	29000
+TJ	Tajikistan	1300
+TZ	Tanzania	800
+TH	Thailand	9100
+TG	Togo	1700
+TK	Tokelau	1000
+TO	Tonga	2200
+TT	Trinidad and Tobago	19700
+TN	Tunisia	8600
+TR	Turkey	8900
+TM	Turkmenistan	8900
+TC	Turks and Caicos Islands	11500
+TV	Tuvalu	1600
+UG	Uganda	1800
+UA	Ukraine	7600
+AE	United Arab Emirates	49700
+GB	United Kingdom	31400
+US	United States	43500
+UY	Uruguay	10700
+UZ	Uzbekistan	2000
+VU	Vanuatu	2900
+VE	Venezuela	6900
+VN	Vietnam	3100
+VG	Virgin Islands	14500
+WF	Wallis and Futuna	3800
+XX	West Bank	1500
+XX	World	10000
+YE	Yemen	900
+ZM	Zambia	1000
+ZW	Zimbabwe	2000
+XU	[Unknown Country] 	0
