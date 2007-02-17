@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
 using CarlosAg.ExcelXmlWriter;
@@ -13,9 +14,16 @@ namespace MusicDataminer
     class MusicDBParser
     {
         private Form1 iForm;
-        private string iDataAlbumFileName;
-        private string iDataCountriesFileName;
+        private const string iDataAlbumFileName     = "../../../data_albums.bin";
+        private const string iDataCountriesFileName = "../../../data_countries.bin";
+        private const string iCountriesInfoFileName = "../../../data/geodata/countries_acronyms.txt";
+        private const string iDBFileName            = "../../../db.bin";
 
+        //
+        // Data Structures
+        //
+
+        [Serializable]
         public struct Country
         {
             public string acronym;
@@ -23,12 +31,14 @@ namespace MusicDataminer
             public int gdpPerCapita;
         };
 
+        [Serializable]
         public struct MusicBrainzAlbum
         {
             public Country country;
             public int date;
         };
 
+        [Serializable]
         public struct Album
         {
             public string title;
@@ -40,21 +50,104 @@ namespace MusicDataminer
             public List<MusicBrainzAlbum> releases;
         };
 
+
+        [Serializable]
+        public struct DB
+        {
+            public List<Album> albums;
+            public Hashtable countries;
+        };
+
+
         // private attributes
-        private List<Album> albums = new List<Album>();
-        private Hashtable countries = new Hashtable();
+        private DB dataBase;
 
         //Constructor
         public MusicDBParser(Form1 aForm)
         {
             iForm = aForm;
-            iDataAlbumFileName = "../../../data_albums.bin";
-            iDataCountriesFileName = "../../../data_countries.bin";
-            this.ParseCountries("../../../data/geodata/countries_acronyms.txt");
+
+            // try to load DataBase
+            bool loaded = LoadDB();
+            
+            if ( ! loaded )
+            {
+                dataBase = new DB();
+                dataBase.albums = new List<Album>();
+                dataBase.countries = new Hashtable();
+                this.ParseCountries( iCountriesInfoFileName );
+            }
+
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    SaveDB
+        // FullName:  MusicDataminer.MusicDBParser.SaveDB
+        // Access:    public 
+        // Returns:   void
+        //////////////////////////////////////////////////////////////////////////
+        public void SaveDB(string filename)
+        {
+            // file stream states the saved binary
+            FileStream fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
 
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(fs, dataBase);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    LoadDB
+        // FullName:  MusicDataminer.MusicDBParser.LoadDB
+        // Access:    public 
+        // Returns:   bool
+        //////////////////////////////////////////////////////////////////////////
+        public bool LoadDB(string filename)
+        {
+            // file stream states the saved binary
+            FileStream fs = null;
+            bool loaded = false;
+
+            if (File.Exists(filename))
+            {
+                fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    dataBase = (DB)bf.Deserialize(fs);
+                    loaded = true;
+                }
+                catch (System.Exception e)
+                {
+                    Console.WriteLine("DB not loaded: " + e.Message);
+                    return loaded;
+                }
+                finally
+                {
+                    fs.Close();
+                }
+            }
+
+            return loaded;
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    GetMusicBrainzReleases
+        // FullName:  MusicDataminer.MusicDBParser.GetMusicBrainzReleases
+        // Access:    public 
+        // Returns:   bool
+        // Parameter: string artist
+        // Parameter: string albumName
+        // Parameter: MusicBrainz o
+        // Parameter: List<MusicBrainzAlbum> releasesList
+        // Parameter: out string retrievedName
+        //////////////////////////////////////////////////////////////////////////
         public bool GetMusicBrainzReleases(string artist, string albumName, MusicBrainz o,
             List<MusicBrainzAlbum> releasesList, out string retrievedName)
         {
@@ -118,9 +211,9 @@ namespace MusicDataminer
                         // add it to the list
                         MusicBrainzAlbum release = new MusicBrainzAlbum();
 
-                        if (countries.ContainsKey(country.ToUpper()))
+                        if (dataBase.countries.ContainsKey(country.ToUpper()))
                         {
-                            release.country = (Country)countries[country];
+                            release.country = (Country)dataBase.countries[country];
                             release.date = int.Parse(date.Substring(0, 4));
                             releasesList.Add(release);
                         }
@@ -168,6 +261,13 @@ namespace MusicDataminer
             return "../../../log_" + aStyle + ".txt";
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    ClearLog
+        // FullName:  MusicDataminer.MusicDBParser.ClearLog
+        // Access:    public 
+        // Returns:   void
+        // Parameter: string aStyle
+        //////////////////////////////////////////////////////////////////////////
         public void ClearLog(string aStyle) 
         {
             string fileName = GetLogFilename(aStyle);
@@ -180,6 +280,14 @@ namespace MusicDataminer
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    SaveLog
+        // FullName:  MusicDataminer.MusicDBParser.SaveLog
+        // Access:    private 
+        // Returns:   void
+        // Parameter: int aLineNumber
+        // Parameter: string aStyle
+        //////////////////////////////////////////////////////////////////////////
         private void SaveLog(int aLineNumber, string aStyle)
         {
 
@@ -242,9 +350,9 @@ namespace MusicDataminer
                     country.name = words[1];
                     country.gdpPerCapita = int.Parse(words[2]);
 
-                    if (!countries.ContainsKey(country.acronym))
+                    if (!dataBase.countries.ContainsKey(country.acronym))
                     {
-                        countries.Add(country.acronym, country);
+                        dataBase.countries.Add(country.acronym, country);
                     }
                 }
             }
@@ -310,7 +418,7 @@ namespace MusicDataminer
                 {
                     album.title = retrievedName;
                     album.releases = releases;
-                    albums.Add(album);
+                    dataBase.albums.Add(album);
 
                     //Console.WriteLine("Added Album: " + album.title + " Artist: " + album.artist + ": ");
                     iForm.PrintLine("Added Album: " + album.title + " Artist: " + album.artist + ": ");
@@ -337,6 +445,8 @@ namespace MusicDataminer
 
             //update log
             SaveLog(lineNumber, style);
+            //SaveCountries();
+            SaveDB();
         }
 
     }
