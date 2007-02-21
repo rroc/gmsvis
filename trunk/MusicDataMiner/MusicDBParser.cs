@@ -6,6 +6,7 @@ using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Threading;
+using System.Runtime.CompilerServices;
 
 using CarlosAg.ExcelXmlWriter;
 using musicbrainz;
@@ -98,6 +99,7 @@ namespace MusicDataminer
         // Access:    public 
         // Returns:   void
         //////////////////////////////////////////////////////////////////////////
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SaveDB(string filename, DB db)
         {
             // file stream states the saved binary

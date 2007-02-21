@@ -52,7 +52,7 @@ namespace MusicDataminer
             this.splitLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitLayout.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitLayout.Location = new System.Drawing.Point(0, 0);
-            this.splitLayout.Margin = new System.Windows.Forms.Padding(2);
+            this.splitLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitLayout.Name = "splitLayout";
             // 
             // splitLayout.Panel1
@@ -68,18 +68,17 @@ namespace MusicDataminer
             // splitLayout.Panel2
             // 
             this.splitLayout.Panel2.Controls.Add(this.outputBox);
-            this.splitLayout.Size = new System.Drawing.Size(788, 432);
+            this.splitLayout.Size = new System.Drawing.Size(1051, 532);
             this.splitLayout.SplitterDistance = 219;
-            this.splitLayout.SplitterWidth = 3;
             this.splitLayout.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(35, 379);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Location = new System.Drawing.Point(47, 466);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 19);
+            this.button1.Size = new System.Drawing.Size(159, 23);
             this.button1.TabIndex = 6;
             this.button1.Text = "Synchronize DB files";
             this.button1.UseVisualStyleBackColor = true;
@@ -87,10 +86,10 @@ namespace MusicDataminer
             // 
             // clearLogButton
             // 
-            this.clearLogButton.Location = new System.Drawing.Point(34, 340);
-            this.clearLogButton.Margin = new System.Windows.Forms.Padding(2);
+            this.clearLogButton.Location = new System.Drawing.Point(45, 418);
+            this.clearLogButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.clearLogButton.Name = "clearLogButton";
-            this.clearLogButton.Size = new System.Drawing.Size(90, 19);
+            this.clearLogButton.Size = new System.Drawing.Size(120, 23);
             this.clearLogButton.TabIndex = 5;
             this.clearLogButton.Text = "Erase Selected";
             this.clearLogButton.UseVisualStyleBackColor = true;
@@ -100,20 +99,18 @@ namespace MusicDataminer
             // 
             this.titleLabel.AutoSize = true;
             this.titleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.titleLabel.Location = new System.Drawing.Point(15, 7);
-            this.titleLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.titleLabel.Location = new System.Drawing.Point(20, 9);
             this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(98, 13);
+            this.titleLabel.Size = new System.Drawing.Size(123, 17);
             this.titleLabel.TabIndex = 4;
             this.titleLabel.Text = "MusicDataMiner";
             // 
             // infoLabel
             // 
             this.infoLabel.AutoSize = true;
-            this.infoLabel.Location = new System.Drawing.Point(15, 29);
-            this.infoLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.infoLabel.Location = new System.Drawing.Point(20, 36);
             this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(107, 78);
+            this.infoLabel.Size = new System.Drawing.Size(144, 102);
             this.infoLabel.TabIndex = 3;
             this.infoLabel.Text = "Browses through \r\npreprocessed freedb \r\n-information and \r\nmatches that with \r\nth" +
                 "e online \r\nMusicBrainz-data.";
@@ -121,10 +118,9 @@ namespace MusicDataminer
             // stylesLabel
             // 
             this.stylesLabel.AutoSize = true;
-            this.stylesLabel.Location = new System.Drawing.Point(32, 120);
-            this.stylesLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.stylesLabel.Location = new System.Drawing.Point(43, 148);
             this.stylesLabel.Name = "stylesLabel";
-            this.stylesLabel.Size = new System.Drawing.Size(91, 13);
+            this.stylesLabel.Size = new System.Drawing.Size(121, 17);
             this.stylesLabel.TabIndex = 2;
             this.stylesLabel.Text = "Styles to Process:";
             // 
@@ -144,20 +140,20 @@ namespace MusicDataminer
             "reggae",
             "rock",
             "soundtrack"});
-            this.styleCheckBoxList.Location = new System.Drawing.Point(34, 136);
-            this.styleCheckBoxList.Margin = new System.Windows.Forms.Padding(2);
+            this.styleCheckBoxList.Location = new System.Drawing.Point(45, 167);
+            this.styleCheckBoxList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.styleCheckBoxList.Name = "styleCheckBoxList";
-            this.styleCheckBoxList.Size = new System.Drawing.Size(91, 154);
+            this.styleCheckBoxList.Size = new System.Drawing.Size(120, 191);
             this.styleCheckBoxList.Sorted = true;
             this.styleCheckBoxList.TabIndex = 1;
             // 
             // startQueryButton
             // 
             this.startQueryButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startQueryButton.Location = new System.Drawing.Point(34, 310);
-            this.startQueryButton.Margin = new System.Windows.Forms.Padding(2);
+            this.startQueryButton.Location = new System.Drawing.Point(45, 382);
+            this.startQueryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.startQueryButton.Name = "startQueryButton";
-            this.startQueryButton.Size = new System.Drawing.Size(90, 19);
+            this.startQueryButton.Size = new System.Drawing.Size(120, 23);
             this.startQueryButton.TabIndex = 0;
             this.startQueryButton.Text = "Start Queries";
             this.startQueryButton.UseVisualStyleBackColor = true;
@@ -167,14 +163,15 @@ namespace MusicDataminer
             // 
             this.outputBox.BackColor = System.Drawing.SystemColors.Window;
             this.outputBox.CausesValidation = false;
+            this.outputBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.outputBox.Font = new System.Drawing.Font("Courier New", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.outputBox.Location = new System.Drawing.Point(0, 0);
-            this.outputBox.Margin = new System.Windows.Forms.Padding(2);
+            this.outputBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.outputBox.Multiline = true;
             this.outputBox.Name = "outputBox";
             this.outputBox.ReadOnly = true;
             this.outputBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.outputBox.Size = new System.Drawing.Size(622, 370);
+            this.outputBox.Size = new System.Drawing.Size(828, 532);
             this.outputBox.TabIndex = 0;
             this.outputBox.TextChanged += new System.EventHandler(this.outputBox_TextChanged);
             // 
@@ -185,11 +182,11 @@ namespace MusicDataminer
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(788, 432);
+            this.ClientSize = new System.Drawing.Size(1051, 532);
             this.Controls.Add(this.splitLayout);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Music Dataminer";
             this.splitLayout.Panel1.ResumeLayout(false);
