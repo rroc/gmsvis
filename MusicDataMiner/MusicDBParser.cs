@@ -71,6 +71,7 @@ namespace MusicDataminer
 
         // private attributes
         private DB dataBase;
+        private Hashtable iLineCount;
 
         //Constructor
         public MusicDBParser(Form1 aForm)
@@ -404,7 +405,7 @@ namespace MusicDataminer
 
 
 
-        void ThreadParse( object data)
+        void ThreadParse(object data)
         {
             ThreadData td = (ThreadData)data;
 
@@ -420,18 +421,19 @@ namespace MusicDataminer
                 //update log
 
                 SaveLog((int)this.iLineCount[td.style], td.style);
-	            MusicDBParser.SaveDB( iDBFileName, this.dataBase );
+                MusicDBParser.SaveDB(iDBFileName, this.dataBase);
             }
-            catch (ThreadAbortException) 
+            catch (ThreadAbortException)
             {
                 iForm.PrintLine("(" + td.style + ")\tAborted the queries ( at " + iLineCount[td.style] + " lines )");
 
                 //update log
 
                 SaveLog((int)this.iLineCount[td.style], td.style);
-	            MusicDBParser.SaveDB( iDBFileName, this.dataBase );
- 
+                MusicDBParser.SaveDB(iDBFileName, this.dataBase);
+
             }
+        }
 
         public void ParseMusicStyle(string style, MusicBrainz queryObject, Thread aCurrentThread )
         {
