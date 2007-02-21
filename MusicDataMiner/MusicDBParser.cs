@@ -29,8 +29,10 @@ namespace MusicDataminer
         {
             public string acronym;
             public string name;
-            public int gdpPerCapita;
+            public int gdbPerCapita;
             public string govType;
+            public float unemploymentRate;
+            public float medianAge;
         };
 
         [Serializable]
@@ -346,13 +348,23 @@ namespace MusicDataminer
 
                 string[] words = text.Split(delimiterChars);
 
-                if (words.Length > 2)
+                // Acronym	Country	GDB Per capita	Government Type	Unemployment Rate	Median Age
+                if (words.Length > 5)
                 {
                     Country country;
+
+                    // Acronym
                     country.acronym = words[0].ToUpperInvariant();
+                    // Country Name
                     country.name = words[1];
-                    country.gdpPerCapita = int.Parse(words[2]);
-                    country.govType = words[3].Trim(new char[] { '"' }).ToLowerInvariant();
+                    // GDB Per Capita
+                    country.gdbPerCapita = HandleNAValuesInt(words[2]);
+                    // Government Type
+                    country.govType = words[3].Trim('"').ToLowerInvariant();
+                    // Unemployment Rate
+                    country.unemploymentRate = HandleNAValuesFloat(words[4]);
+                    // Median Age
+                    country.medianAge = HandleNAValuesFloat(words[5]);
 
                     if (!dataBase.countries.ContainsKey(country.acronym))
                     {
@@ -360,6 +372,16 @@ namespace MusicDataminer
                     }
                 }
             }
+        }
+
+        private float HandleNAValuesFloat(string s)
+        {
+            return s.ToUpperInvariant() == "NA" ? -1 : float.Parse(s);
+        }
+
+        private int HandleNAValuesInt(string s)
+        {
+            return s.ToUpperInvariant() == "NA" ? -1 : int.Parse(s);
         }
 
         ParseMusicStyleDelegate iParseMusicStyleDelegate;
@@ -452,30 +474,22 @@ namespace MusicDataminer
             MusicDBParser.SaveDB( iDBFileName, this.dataBase );
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    string
-        // FullName:  string
-        // Access:    public 
-        // Returns:   bool
-        // Parameter: string destinationDBFilename
-        // Parameter: string sourceDBFilename
-        // Parameter: DB synchDB
-        //////////////////////////////////////////////////////////////////////////
-        public static bool SynchronizeDBs(string destinationDBFilename, 
-            string sourceDBFilename, DB synchDB)
+        public static bool SynchronizeDBs(string srcDBFilename1,
+            string srcDBFilename2, string outputFilename)
         {
             DB destination;
             DB source;
-            synchDB = new DB();
             
-            bool loaded = MusicDBParser.LoadDB(destinationDBFilename, out destination);
+            bool loaded = MusicDBParser.LoadDB(srcDBFilename1, out destination);
             if( loaded )
             {
-                loaded = MusicDBParser.LoadDB(sourceDBFilename, out source);
+                loaded = MusicDBParser.LoadDB(srcDBFilename2, out source);
 
                 if (loaded)
                 {
                     destination.albums.AddRange(source.albums);
+
+                    SaveDB(outputFilename, destination);
 
                     return true;
                 }
