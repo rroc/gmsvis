@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using System.Threading;
 
 using CarlosAg.ExcelXmlWriter;
 using musicbrainz;
@@ -62,6 +63,11 @@ namespace MusicDataminer
             public Hashtable countries;
         };
 
+        public struct ThreadData
+        {
+            public string style;
+            public MusicBrainz query;
+        };
 
         // private attributes
         private DB dataBase;
@@ -70,6 +76,7 @@ namespace MusicDataminer
         public MusicDBParser(Form1 aForm)
         {
             iForm = aForm;
+            iLineCount = new Hashtable();
 
             // try to load DataBase
             bool loaded = LoadDB( iDBFileName, out this.dataBase );
@@ -154,7 +161,7 @@ namespace MusicDataminer
         // Parameter: out string retrievedName
         //////////////////////////////////////////////////////////////////////////
         public bool GetMusicBrainzReleases(string artist, string albumName, MusicBrainz o,
-            List<MusicBrainzAlbum> releasesList, out string retrievedName)
+            List<MusicBrainzAlbum> releasesList, out string retrievedName, string aStyle)
         {
             retrievedName = albumName;
             bool foundRelevantRelease = false;
@@ -162,7 +169,7 @@ namespace MusicDataminer
 
 
             //Console.WriteLine("Searching for occurrences for: " + artist + " / " + albumName);
-            iForm.PrintLine("Searching for occurrences for: " + artist + " / " + albumName);
+            iForm.PrintLine("(" + aStyle + ") Search: " + artist + " / " + albumName);
             bool ret = o.Query(MusicBrainz.MBQ_FileInfoLookup, new String[] { "", artist, albumName, "", "", "" });
 
             // Select the first album
@@ -281,7 +288,7 @@ namespace MusicDataminer
             if (File.Exists(fileName))
             {
                 File.Delete(fileName);
-                iForm.PrintLine("Erased a log file: " + fileName);
+                iForm.PrintLine("(" + aStyle + ")\tErased a log file.");
             }
         }
 
@@ -325,12 +332,12 @@ namespace MusicDataminer
                 s = sr.ReadLine();
                 sr.Close();
 
-                iForm.PrintLine("Continuing from line number: " + s + ".");
+                iForm.PrintLine("(" + aStyle + ")\tContinuing from line number: " + s + ".");
                 return int.Parse(s);
             }
             catch
             {
-                iForm.PrintLine("Starting New Query Event.");
+                iForm.PrintLine("(" + aStyle + ")\tStarting New Query Event.");
                 return 0;
             }
         }
@@ -384,22 +391,49 @@ namespace MusicDataminer
             return s.ToUpperInvariant() == "NA" ? -1 : int.Parse(s);
         }
 
-        ParseMusicStyleDelegate iParseMusicStyleDelegate;
-
-        private delegate void ParseMusicStyleDelegate(string style, MusicBrainz queryObject);
-        private void ParseMusicStyleCallback(IAsyncResult ar)
+        public Thread AsyncParseByStyle(string style, MusicBrainz queryObject)
         {
-            Console.WriteLine("DONE");
+            ThreadData td = new ThreadData() ;
+            td.style = style;
+            td.query = queryObject;
+
+            Thread thr = new Thread(new ParameterizedThreadStart(this.ThreadParse));
+            thr.Start( td );
+            return thr;
         }
 
-        public void AsyncParseByStyle(string style, MusicBrainz queryObject)
-        {
-            iParseMusicStyleDelegate = new ParseMusicStyleDelegate(ParseMusicStyle);
-            AsyncCallback callback = new AsyncCallback(ParseMusicStyleCallback);
-            iParseMusicStyleDelegate.BeginInvoke(style, queryObject, callback, 123456789);
-        }
 
-        public void ParseMusicStyle(string style, MusicBrainz queryObject)
+
+        void ThreadParse( object data)
+        {
+            ThreadData td = (ThreadData)data;
+
+            Thread thr = Thread.CurrentThread;
+            try
+            {
+                ParseMusicStyle(td.style, td.query, thr);
+            }
+            catch (ThreadInterruptedException)
+            {
+                iForm.PrintLine("(" + td.style + ")\tInterrupted the queries ( at " + iLineCount[td.style] + " lines )");
+
+                //update log
+
+                SaveLog((int)this.iLineCount[td.style], td.style);
+	            MusicDBParser.SaveDB( iDBFileName, this.dataBase );
+            }
+            catch (ThreadAbortException) 
+            {
+                iForm.PrintLine("(" + td.style + ")\tAborted the queries ( at " + iLineCount[td.style] + " lines )");
+
+                //update log
+
+                SaveLog((int)this.iLineCount[td.style], td.style);
+	            MusicDBParser.SaveDB( iDBFileName, this.dataBase );
+ 
+            }
+
+        public void ParseMusicStyle(string style, MusicBrainz queryObject, Thread aCurrentThread )
         {
             // Open the file and read it back.
             StreamReader sr = File.OpenText("../../../data/freedb/" + style + ".txt");
@@ -412,9 +446,11 @@ namespace MusicDataminer
                 sr.ReadLine();
             }
 
+            iLineCount[style] = lineNumber;
             //Start querying
-            while ((text = sr.ReadLine()) != null && iForm.queryOnGoing)
+            while ((text = sr.ReadLine()) != null )
             {
+                Thread.Sleep(2);
                 char[] delimiterChars = { '\t' };
 
                 string[] tokens = text.Split(delimiterChars);
@@ -438,7 +474,7 @@ namespace MusicDataminer
                 List<MusicBrainzAlbum> releases = new List<MusicBrainzAlbum>();
                 string retrievedName;
                 bool foundSomething = GetMusicBrainzReleases(album.artist, album.title, queryObject,
-                    releases, out retrievedName);
+                    releases, out retrievedName, style);
 
                 if (foundSomething)
                 {
@@ -447,7 +483,7 @@ namespace MusicDataminer
                     dataBase.albums.Add(album);
 
                     //Console.WriteLine("Added Album: " + album.title + " Artist: " + album.artist + ": ");
-                    iForm.PrintLine("Added Album: " + album.title + " Artist: " + album.artist + ": ");
+                    iForm.PrintLine("(" + style + ")\tNew Album: " + album.title + " Artist: " + album.artist + ": ");
                     foreach (MusicBrainzAlbum release in album.releases)
                     {
                         //Console.WriteLine("\tCountry: " + release.country.name + "  Date: " + release.date);
@@ -455,19 +491,11 @@ namespace MusicDataminer
                     }
                 }
                 lineNumber++;
+                iLineCount[style] = lineNumber;
             }
 
-            //query was interrupted
-            if (!iForm.queryOnGoing)
-            {
-                iForm.PrintLine("Stopped " + style + "-query ( line: " + lineNumber+" )");
-            }
-            //end ok
-            else
-            {
-                iForm.PrintLine("Finished with "+ style +"-queries ( " + lineNumber+" lines )");
-            }
-
+            iForm.PrintLine("(" + style + ")\t!!! Finished the queries !!! ( " + lineNumber + " lines )");
+  
 
             //update log
             SaveLog(lineNumber, style);
