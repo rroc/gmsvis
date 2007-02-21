@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,8 @@ namespace MusicDataminer
     {
         private MusicDBParser iParser;
         public bool queryOnGoing;
+
+        private Hashtable iThreadList; 
         
         delegate void SetTextCallback(string text);
 
@@ -38,6 +41,7 @@ namespace MusicDataminer
             //this.styleCheckBoxList.SetItemChecked(10, true);
             this.outputBox.Text = "Ready.\r\n";
 
+            iThreadList = new Hashtable();
             iParser = new MusicDBParser( this );
             queryOnGoing = false;
         }
@@ -56,7 +60,7 @@ namespace MusicDataminer
                 PrintLine( "Restart Querying according to styles:\r\n-----------------------------------\r\n");
                 foreach (string style in this.styleCheckBoxList.CheckedItems)
                 {
-                    PrintLine("Style: " + style);
+//                    PrintLine("Style: " + style);
                     this.QueryByStyle(style);
                 }
             }
@@ -64,6 +68,19 @@ namespace MusicDataminer
             else
             {
                 PrintLine("Pausing please wait...");
+                //foreach(Thread thr in iThreadList) 
+                //{
+                //    thr.Interrupt();
+                //}
+                foreach (string style in this.styleCheckBoxList.CheckedItems)
+                {
+                    PrintLine( "("+style + ")\tStopping..." );
+                    if (((Thread)iThreadList[style]).IsAlive) 
+                    {
+                        ((Thread)iThreadList[style]).Abort();
+                    }
+                }
+                iThreadList.Clear();
                 queryOnGoing = false;
                 this.startQueryButton.Text = "Start Queries";
             }
@@ -111,7 +128,7 @@ namespace MusicDataminer
             else
                 o.SetDepth(4);
 
-            iParser.AsyncParseByStyle(aStyle, o);
+            iThreadList[aStyle] = iParser.AsyncParseByStyle(aStyle, o);
             return 0;
         }
 
