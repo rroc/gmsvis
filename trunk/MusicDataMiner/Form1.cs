@@ -111,7 +111,7 @@ namespace MusicDataminer
         //------------------------------------------------------------
         public int QueryByStyle(string aStyle)
         {
-            MusicBrainz o;
+/*            MusicBrainz o;
 
             // Create the musicbrainz object, which will be needed for subsequent calls
             o = new MusicBrainz();
@@ -127,8 +127,8 @@ namespace MusicDataminer
                 o.SetDepth(int.Parse(Environment.GetEnvironmentVariable("MB_DEPTH")));
             else
                 o.SetDepth(4);
-
-            iThreadList[aStyle] = iParser.AsyncParseByStyle(aStyle, o);
+*/
+            iThreadList[aStyle] = iParser.AsyncParseByStyle(aStyle);
             return 0;
         }
 
