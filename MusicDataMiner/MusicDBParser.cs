@@ -14,10 +14,11 @@ namespace MusicDataminer
     class MusicDBParser
     {
         private Form1 iForm;
-        private const string iDataAlbumFileName     = "../../../data_albums.bin";
-        private const string iDataCountriesFileName = "../../../data_countries.bin";
-        private const string iCountriesInfoFileName = "../../../data/geodata/countries_acronyms.txt";
-        private const string iDBFileName            = "../../../db.bin";
+        private const string iDataPath              = "../../../data/";
+        private const string iDataAlbumFileName     = iDataPath + "data_albums.bin";
+        private const string iDataCountriesFileName = iDataPath + "data_countries.bin";
+        private const string iCountriesInfoFileName = iDataPath + "geodata/countries_acronyms.txt";
+        private const string iDBFileName            = iDataPath + "db.bin";
 
         //
         // Data Structures
@@ -29,6 +30,7 @@ namespace MusicDataminer
             public string acronym;
             public string name;
             public int gdpPerCapita;
+            public string govType;
         };
 
         [Serializable]
@@ -68,7 +70,7 @@ namespace MusicDataminer
             iForm = aForm;
 
             // try to load DataBase
-            bool loaded = LoadDB();
+            bool loaded = LoadDB( iDBFileName, out this.dataBase );
             
             if ( ! loaded )
             {
@@ -86,7 +88,7 @@ namespace MusicDataminer
         // Access:    public 
         // Returns:   void
         //////////////////////////////////////////////////////////////////////////
-        public void SaveDB(string filename)
+        public static void SaveDB(string filename, DB db)
         {
             // file stream states the saved binary
             FileStream fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
@@ -94,7 +96,7 @@ namespace MusicDataminer
             try
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(fs, dataBase);
+                bf.Serialize(fs, db);
             }
             finally
             {
@@ -108,10 +110,11 @@ namespace MusicDataminer
         // Access:    public 
         // Returns:   bool
         //////////////////////////////////////////////////////////////////////////
-        public bool LoadDB(string filename)
+        public static bool LoadDB(string filename, out DB db)
         {
             // file stream states the saved binary
             FileStream fs = null;
+            db = new DB();
             bool loaded = false;
 
             if (File.Exists(filename))
@@ -120,7 +123,7 @@ namespace MusicDataminer
                 try
                 {
                     BinaryFormatter bf = new BinaryFormatter();
-                    dataBase = (DB)bf.Deserialize(fs);
+                    db = (DB)bf.Deserialize(fs);
                     loaded = true;
                 }
                 catch (System.Exception e)
@@ -346,9 +349,10 @@ namespace MusicDataminer
                 if (words.Length > 2)
                 {
                     Country country;
-                    country.acronym = words[0].ToUpper();
+                    country.acronym = words[0].ToUpperInvariant();
                     country.name = words[1];
                     country.gdpPerCapita = int.Parse(words[2]);
+                    country.govType = words[3].Trim(new char[] { '"' }).ToLowerInvariant();
 
                     if (!dataBase.countries.ContainsKey(country.acronym))
                     {
@@ -445,8 +449,39 @@ namespace MusicDataminer
 
             //update log
             SaveLog(lineNumber, style);
-            //SaveCountries();
-            SaveDB();
+            MusicDBParser.SaveDB( iDBFileName, this.dataBase );
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    string
+        // FullName:  string
+        // Access:    public 
+        // Returns:   bool
+        // Parameter: string destinationDBFilename
+        // Parameter: string sourceDBFilename
+        // Parameter: DB synchDB
+        //////////////////////////////////////////////////////////////////////////
+        public static bool SynchronizeDBs(string destinationDBFilename, 
+            string sourceDBFilename, DB synchDB)
+        {
+            DB destination;
+            DB source;
+            synchDB = new DB();
+            
+            bool loaded = MusicDBParser.LoadDB(destinationDBFilename, out destination);
+            if( loaded )
+            {
+                loaded = MusicDBParser.LoadDB(sourceDBFilename, out source);
+
+                if (loaded)
+                {
+                    destination.albums.AddRange(source.albums);
+
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     }
