@@ -108,7 +108,7 @@ namespace MusicDataminer
             // infoLabel
             // 
             this.infoLabel.AutoSize = true;
-            this.infoLabel.Location = new System.Drawing.Point(20, 36);
+            this.infoLabel.Location = new System.Drawing.Point(20, 26);
             this.infoLabel.Name = "infoLabel";
             this.infoLabel.Size = new System.Drawing.Size(144, 102);
             this.infoLabel.TabIndex = 3;
