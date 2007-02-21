@@ -186,7 +186,12 @@ namespace MusicDataminer
 
             //Console.WriteLine("Searching for occurrences for: " + artist + " / " + albumName);
             iForm.PrintLine("(" + aStyle + ") LOOK: " + artist + " / " + albumName);
-            bool ret = o.Query(MusicBrainz.MBQ_FileInfoLookup, new String[] { "", artist, albumName, "", "", "" });
+            bool found = o.Query(MusicBrainz.MBQ_FileInfoLookup, new String[] { "", artist, albumName, "", "", "" });
+
+            if( ! found )
+            {
+                return found;
+            }
 
             // Select the first album
             o.Select(MusicBrainz.MBS_SelectLookupResult, 1);
