@@ -1,228 +1,228 @@
-AF	Afghanistan	800	Islamic republic
-AL	Albania	5600	democracy
-DZ	Algeria	7700	republic
-AS	American Samoa	5800	NA
-AD	Andorra	24000	parliamentary democracy
-AO	Angola	4300	"republic; multiparty presidential regime"
-AI	Anguilla	8800	NA
-AG	Antigua and Barbuda	10900	constitutional parliamentary democracy
-AR	Argentina	15000	republic
-AM	Armenia	5400	republic
-AW	Aruba	21800	parliamentary democracy
-AU	Australia	32900	federal parliamentary democracy
-AT	Austria	34100	federal republic
-AZ	Azerbaijan	7300	republic
-BS	Bahamas The	21300	constitutional parliamentary democracy
-BH	Bahrain	25300	constitutional hereditary monarchy
-BD	Bangladesh	2200	parliamentary democracy
-BB	Barbados	18200	parliamentary democracy
-BY	Belarus	7800	republic
-BE	Belgium	31800	federal parliamentary democracy under a constitutional monarchy
-BZ	Belize	8400	parliamentary democracy
-BJ	Benin	1100	republic
-BM	Bermuda	69900	parliamentary
-BT	Bhutan	1400	monarchy
-BO	Bolivia	3000	republic
-BA	Bosnia and Herzegovina	5500	federal democratic republic
-BW	Botswana	11400	parliamentary republic
-BR	Brazil	8600	federative republic
-IO	British Virgin Islands	38500	NA
-BN	Brunei	23600	constitutional sultanate
-BG	Bulgaria	10400	parliamentary democracy
-BF	Burkina Faso	1300	parliamentary republic
-MM	Burma	1800	military junta
-BI	Burundi	700	republic
-KH	Cambodia	2600	multiparty democracy
-CM	Cameroon	2400	"republic; multiparty presidential regime"
-CA	Canada	35200	parliamentary democracy
-CV	Cape Verde	6000	republic
-KY	Cayman Islands	43800	constitutional monarchy
-CF	Central African Republic	1100	republic
-TD	Chad	1500	republic
-CL	Chile	12600	republic
-CN	China	7600	Communist state
-CO	Colombia	8400	republic
-KM	Comoros	600	republic
-CD	Congo Democratic Republic of the	700	transitional government
-CG	Congo Republic of the	1300	republic
-CK	Cook Islands	9100	self-governing parliamentary democracy
-CR	Costa Rica	12000	democratic republic
-CI	Cote d'Ivoire	1600	"republic; multiparty presidential regime"
-HR	Croatia	13200	presidential/parliamentary democracy
-CU	Cuba	3900	Communist state
-CY	Cyprus	22700	republic
-CZ	Czech Republic	21600	parliamentary democracy
-DK	Denmark	37000	constitutional monarchy
-DJ	Djibouti	1000	republic
-DM	Dominica	3800	parliamentary democracy
-DO	Dominican Republic	8000	representative democracy
-TL	East Timor	800	republic
-EC	Ecuador	4500	republic
-EG	Egypt	4200	republic
-SV	El Salvador	4900	republic
-GQ	Equatorial Guinea	50200	republic
-ER	Eritrea	1000	transitional government
-EE	Estonia	19600	parliamentary republic
-ET	Ethiopia	1000	federal republic
-XE	European Union	29300	NA
-FK	Falkland Islands (Islas Malvinas)	25000	NA
-FO	Faroe Islands	31000	NA
-FJ	Fiji	6100	republic
-FI	Finland	32800	republic
-FR	France	30100	republic
-PF	French Polynesia	17500	NA
-GA	Gabon	7200	"republic; multiparty presidential regime"
-GM	Gambia The	2000	republic
-X1	Gaza Strip	1500	NA
-GE	Georgia	3800	republic
-DE	Germany	31400	federal republic
-GH	Ghana	2600	constitutional democracy
-GI	Gibraltar	27900	NA
-GR	Greece	23500	parliamentary republic
-GL	Greenland	20000	parliamentary democracy
-GD	Grenada	3900	parliamentary democracy
-GU	Guam	15000	NA
-GT	Guatemala	4900	constitutional democratic republic
-X2	Guernsey	44600	parliamentary democracy
-GN	Guinea	2000	republic
-GW	Guinea-Bissau	900	republic
-GY	Guyana	4700	republic
-HT	Haiti	1800	elected government
-HN	Honduras	3000	democratic constitutional republic
-HK	Hong Kong	36500	limited democracy
-HU	Hungary	17300	parliamentary democracy
-IS	Iceland	38100	constitutional republic
-IN	India	3700	federal republic
-ID	Indonesia	3800	republic
-IR	Iran	8900	theocratic republic
-IQ	Iraq	1900	parliamentary democracy
-IE	Ireland	43600	republic, parliamentary democracy
-X7	Isle of Man	27800	parliamentary democracy
-IL	Israel	26200	parliamentary democracy
-IT	Italy	29700	republic
-JM	Jamaica	4600	constitutional parliamentary democracy
-JP	Japan	33100	constitutional monarchy with a parliamentary government
-X3	Jersey	40000	parliamentary democracy
-JO	Jordan	4900	constitutional monarchy
-KZ	Kazakhstan	9100	republic
-KE	Kenya	1200	republic
-KI	Kiribati	2700	republic
-KP	Korea North	1800	Communist state
-KR	Korea South	24200	republic
-KW	Kuwait	21600	constitutional hereditary emirate
-KG	Kyrgyzstan	2000	republic
-LA	Laos	2100	Communist state
-LV	Latvia	15400	parliamentary democracy
-LB	Lebanon	5500	republic
-LS	Lesotho	2600	parliamentary constitutional monarchy
-LR	Liberia	1000	republic
-LY	Libya	12700	NA
-LI	Liechtenstein	25000	constitutional monarchy
-LT	Lithuania	15100	parliamentary democracy
-LU	Luxembourg	68800	constitutional monarchy
-MO	Macau	24300	limited democracy
-MK	Macedonia	8200	parliamentary democracy
-MG	Madagascar	900	republic
-MW	Malawi	600	multiparty democracy
-MY	Malaysia	12700	constitutional monarchy
-MV	Maldives	3900	republic
-ML	Mali	1200	republic
-MT	Malta	20300	republic
-MH	Marshall Islands	2900	constitutional government
-MR	Mauritania	2600	republic
-MU	Mauritius	13500	parliamentary democracy
-YT	Mayotte	2600	NA
-MX	Mexico	10600	federal republic
-FM	Micronesia Federated States of	2300	constitutional government
-MD	Moldova	2000	republic
-MC	Monaco	27000	constitutional monarchy
-MN	Mongolia	2000	mixed parliamentary/presidential
-X4	Montenegro	3800	republic
-MS	Montserrat	3400	NA
-MA	Morocco	4400	constitutional monarchy
-MZ	Mozambique	1500	republic
-NA	Namibia	7400	republic
-NR	Nauru	5000	republic
-NP	Nepal	1500	parliamentary democracy
-NL	Netherlands	31700	constitutional monarchy
-AN	Netherlands Antilles	16000	parliamentary
-NC	New Caledonia	15000	NA
-NZ	New Zealand	26000	parliamentary democracy
-NI	Nicaragua	3000	republic
-NE	Niger	1000	republic
-NG	Nigeria	1400	federal republic
-NU	Niue	5800	self-governing parliamentary democracy
-MP	Northern Mariana Islands	12500	NA
-NO	Norway	47800	constitutional monarchy
-OM	Oman	14100	monarchy
-PK	Pakistan	2600	federal republic
-PW	Palau	7600	constitutional government
-PA	Panama	7900	constitutional democracy
-PG	Papua New Guinea	2700	constitutional parliamentary democracy
-PY	Paraguay	4700	constitutional republic
-PE	Peru	6400	constitutional republic
-PH	Philippines	5000	republic
-PL	Poland	14100	republic
-PT	Portugal	19100	parliamentary democracy
-PR	Puerto Rico	19100	commonwealth
-QA	Qatar	29400	traditional emirate
-RO	Romania	8800	republic
-RU	Russia	12100	federation
-RW	Rwanda	1600	republic
-SH	Saint Helena	2500	NA
-KN	Saint Kitts and Nevis	8200	parliamentary democracy
-LC	Saint Lucia	4800	parliamentary democracy
-PM	Saint Pierre and Miquelon	7000	NA
-VC	Saint Vincent and the Grenadines	3600	parliamentary democracy
-WS	Samoa	2100	parliamentary democracy
-SM	San Marino	34600	independent republic
-ST	Sao Tome and Principe	1200	republic
-SA	Saudi Arabia	13800	monarchy
-SN	Senegal	1800	republic
-CS	Serbia	4400	republic
-SC	Seychelles	7800	republic
-SL	Sierra Leone	900	constitutional democracy
-SG	Singapore	30900	parliamentary republic
-SK	Slovakia	17700	parliamentary democracy
-SI	Slovenia	22900	parliamentary republic
-SB	Solomon Islands	600	parliamentary democracy
-SO	Somalia	600	NA
-ZA	South Africa	13000	republic
-ES	Spain	27000	parliamentary monarchy
-LK	Sri Lanka	4600	republic
-SD	Sudan	2300	NA
-SR	Suriname	7100	constitutional democracy
-SZ	Swaziland	5200	monarchy
-SE	Sweden	31600	constitutional monarchy
-CH	Switzerland	33600	federal republic
-SY	Syria	4000	NA
-TW	Taiwan	29000	multiparty democracy
-TJ	Tajikistan	1300	republic
-TZ	Tanzania	800	republic
-TH	Thailand	9100	constitutional monarchy
-TG	Togo	1700	republic
-TK	Tokelau	1000	NA
-TO	Tonga	2200	constitutional monarchy
-TT	Trinidad and Tobago	19700	parliamentary democracy
-TN	Tunisia	8600	republic
-TR	Turkey	8900	republican parliamentary democracy
-TM	Turkmenistan	8900	republic
-TC	Turks and Caicos Islands	11500	NA
-TV	Tuvalu	1600	constitutional monarchy
-UG	Uganda	1800	republic
-UA	Ukraine	7600	republic
-AE	United Arab Emirates	49700	federation
-GB	United Kingdom	31400	constitutional monarchy
-US	United States	43500	federal republic
-UY	Uruguay	10700	constitutional republic
-UZ	Uzbekistan	2000	republic
-VU	Vanuatu	2900	parliamentary republic
-VE	Venezuela	6900	federal republic
-VN	Vietnam	3100	Communist state
-VG	Virgin Islands	14500	NA
-WF	Wallis and Futuna	3800	NA
-X5	West Bank	1500	NA
-X6	World	10000	NA
-YE	Yemen	900	republic
-ZM	Zambia	1000	republic
-ZW	Zimbabwe	2000	parliamentary democracy
+AF	Afghanistan	800	Islamic republic	40	17,6
+AL	Albania	5600	democracy	14,3	28,9
+DZ	Algeria	7700	republic	15,7	24,9
+AS	American Samoa	5800	NA	29,8	23,2
+AD	Andorra	24000	parliamentary democracy	0	40,9
+AO	Angola	4300	"republic; multiparty presidential regime"	NA	18
+AI	Anguilla	8800	NA	8	31,2
+AG	Antigua and Barbuda	10900	constitutional parliamentary democracy	11	30
+AR	Argentina	15000	republic	10,2	29,7
+AM	Armenia	5400	republic	7,6	30,4
+AW	Aruba	21800	parliamentary democracy	6,9	38,5
+AU	Australia	32900	federal parliamentary democracy	4,9	36,9
+AT	Austria	34100	federal republic	4,9	40,9
+AZ	Azerbaijan	7300	republic	1,2	27,7
+BS	Bahamas The	21300	constitutional parliamentary democracy	10,2	27,8
+BH	Bahrain	25300	constitutional hereditary monarchy	15	29,4
+BD	Bangladesh	2200	parliamentary democracy	2,5	22,2
+BB	Barbados	18200	parliamentary democracy	10,7	34,6
+BY	Belarus	7800	republic	1,6	37,2
+BE	Belgium	31800	federal parliamentary democracy under a constitutional monarchy	8,1	40,9
+BZ	Belize	8400	parliamentary democracy	12,9	19,6
+BJ	Benin	1100	republic	NA	17,6
+BM	Bermuda	69900	parliamentary	2,1	40,2
+BT	Bhutan	1400	monarchy	NA	20,4
+BO	Bolivia	3000	republic	7,8	21,8
+BA	Bosnia and Herzegovina	5500	federal democratic republic	45,5	38,4
+BW	Botswana	11400	parliamentary republic	23,8	19,4
+BR	Brazil	8600	federative republic	9,6	28,2
+IO	British Virgin Islands	38500	NA	3,6	31,4
+BN	Brunei	23600	constitutional sultanate	4,8	27,4
+BG	Bulgaria	10400	parliamentary democracy	9,6	40,8
+BF	Burkina Faso	1300	parliamentary republic	NA	16,5
+MM	Burma	1800	military junta	10,2	27
+BI	Burundi	700	republic	NA	16,6
+KH	Cambodia	2600	multiparty democracy	2,5	20,6
+CM	Cameroon	2400	"republic; multiparty presidential regime"	30	18,9
+CA	Canada	35200	parliamentary democracy	6,4	38,9
+CV	Cape Verde	6000	republic	21	19,8
+KY	Cayman Islands	43800	constitutional monarchy	4,4	37,2
+CF	Central African Republic	1100	republic	8	18,4
+TD	Chad	1500	republic	NA	16
+CL	Chile	12600	republic	8,3	30,4
+CN	China	7600	Communist state	4,2	32,7
+CO	Colombia	8400	republic	11,1	26,3
+KM	Comoros	600	republic	20	18,6
+CD	Congo Democratic Republic of the	700	transitional government	NA	16,2
+CG	Congo Republic of the	1300	republic	NA	16,6
+CK	Cook Islands	9100	self-governing parliamentary democracy	13,1	25,3
+CR	Costa Rica	12000	democratic republic	6,6	26,4
+CI	Cote d'Ivoire	1600	"republic; multiparty presidential regime"	13	19,2
+HR	Croatia	13200	presidential/parliamentary democracy	17,2	40,3
+CU	Cuba	3900	Communist state	1,9	35,9
+CY	Cyprus	22700	republic	5,5	34,9
+CZ	Czech Republic	21600	parliamentary democracy	8,4	39,3
+DK	Denmark	37000	constitutional monarchy	4,5	39,8
+DJ	Djibouti	1000	republic	50	18,2
+DM	Dominica	3800	parliamentary democracy	23	30,1
+DO	Dominican Republic	8000	representative democracy	16	24,1
+TL	East Timor	800	republic	50	20,8
+EC	Ecuador	4500	republic	10,6	23,6
+EG	Egypt	4200	republic	10,3	24
+SV	El Salvador	4900	republic	6	21,8
+GQ	Equatorial Guinea	50200	republic	30	18,8
+ER	Eritrea	1000	transitional government	NA	17,8
+EE	Estonia	19600	parliamentary republic	5,8	39,3
+ET	Ethiopia	1000	federal republic	NA	17,8
+XE	European Union	29300	NA	8,8	NA
+FK	Falkland Islands (Islas Malvinas)	25000	NA	0	NA
+FO	Faroe Islands	31000	NA	1	35
+FJ	Fiji	6100	republic	7,6	24,6
+FI	Finland	32800	republic	7	41,3
+FR	France	30100	republic	9,1	39,1
+PF	French Polynesia	17500	NA	11,8	27,9
+GA	Gabon	7200	"republic; multiparty presidential regime"	21	18,6
+GM	Gambia The	2000	republic	NA	17,7
+X1	Gaza Strip	1500	NA	31	15,8
+GE	Georgia	3800	republic	12,6	37,7
+DE	Germany	31400	federal republic	7,1	42,6
+GH	Ghana	2600	constitutional democracy	20	19,9
+GI	Gibraltar	27900	NA	2	39,8
+GR	Greece	23500	parliamentary republic	9,2	40,8
+GL	Greenland	20000	parliamentary democracy	10	34
+GD	Grenada	3900	parliamentary democracy	12,5	21,7
+GU	Guam	15000	NA	11,4	28,6
+GT	Guatemala	4900	constitutional democratic republic	7,5	18,9
+X2	Guernsey	44600	parliamentary democracy	0,9	41,3
+GN	Guinea	2000	republic	NA	17,7
+GW	Guinea-Bissau	900	republic	NA	19
+GY	Guyana	4700	republic	9,1	27,4
+HT	Haiti	1800	elected government	NA	18,2
+HN	Honduras	3000	democratic constitutional republic	27,9	19,5
+HK	Hong Kong	36500	limited democracy	4,9	40,7
+HU	Hungary	17300	parliamentary democracy	7,4	38,7
+IS	Iceland	38100	constitutional republic	1,3	34,2
+IN	India	3700	federal republic	7,8	24,9
+ID	Indonesia	3800	republic	12,5	26,8
+IR	Iran	8900	theocratic republic	11,2	24,8
+IQ	Iraq	1900	parliamentary democracy	25	19,7
+IE	Ireland	43600	republic, parliamentary democracy	4,3	34
+X7	Isle of Man	27800	parliamentary democracy	0,6	39,6
+IL	Israel	26200	parliamentary democracy	8,5	29,6
+IT	Italy	29700	republic	7	42,2
+JM	Jamaica	4600	constitutional parliamentary democracy	11	23
+JP	Japan	33100	constitutional monarchy with a parliamentary government	4,1	42,9
+X3	Jersey	40000	parliamentary democracy	0,9	41,4
+JO	Jordan	4900	constitutional monarchy	15	23
+KZ	Kazakhstan	9100	republic	7,4	28,8
+KE	Kenya	1200	republic	40	18,2
+KI	Kiribati	2700	republic	2	20,2
+KP	Korea North	1800	Communist state	NA	32
+KR	Korea South	24200	republic	3,6	35,2
+KW	Kuwait	21600	constitutional hereditary emirate	2,2	25,9
+KG	Kyrgyzstan	2000	republic	18	23,6
+LA	Laos	2100	Communist state	2,4	18,9
+LV	Latvia	15400	parliamentary democracy	6,7	39,4
+LB	Lebanon	5500	republic	20	27,8
+LS	Lesotho	2600	parliamentary constitutional monarchy	45	20,3
+LR	Liberia	1000	republic	85	18,1
+LY	Libya	12700	NA	30	23
+LI	Liechtenstein	25000	constitutional monarchy	1,3	39,6
+LT	Lithuania	15100	parliamentary democracy	4,5	38,2
+LU	Luxembourg	68800	constitutional monarchy	4,1	38,7
+MO	Macau	24300	limited democracy	4,1	36,1
+MK	Macedonia	8200	parliamentary democracy	35	34,1
+MG	Madagascar	900	republic	NA	17,5
+MW	Malawi	600	multiparty democracy	NA	16,5
+MY	Malaysia	12700	constitutional monarchy	3,5	24,1
+MV	Maldives	3900	republic	NA	17,9
+ML	Mali	1200	republic	14,6	15,8
+MT	Malta	20300	republic	7,8	38,7
+MH	Marshall Islands	2900	constitutional government	30,9	20,3
+MR	Mauritania	2600	republic	20	17
+MU	Mauritius	13500	parliamentary democracy	9,4	30,8
+YT	Mayotte	2600	NA	32,8	17
+MX	Mexico	10600	federal republic	3,2	25,3
+FM	Micronesia Federated States of	2300	constitutional government	22	20,9
+MD	Moldova	2000	republic	8	32,3
+MC	Monaco	27000	constitutional monarchy	22	45,4
+MN	Mongolia	2000	mixed parliamentary/presidential	6,7	24,6
+X4	Montenegro	3800	republic	27,7	NA
+MS	Montserrat	3400	NA	6	28,9
+MA	Morocco	4400	constitutional monarchy	7,7	23,9
+MZ	Mozambique	1500	republic	21	18,3
+NA	Namibia	7400	republic	5,3	20
+NR	Nauru	5000	republic	90	20,6
+NP	Nepal	1500	parliamentary democracy	42	20,3
+NL	Netherlands	31700	constitutional monarchy	5,5	39,4
+AN	Netherlands Antilles	16000	parliamentary	17	32,8
+NC	New Caledonia	15000	NA	17,1	27,8
+NZ	New Zealand	26000	parliamentary democracy	8,3	33,9
+NI	Nicaragua	3000	republic	3,8	20,9
+NE	Niger	1000	republic	NA	16,5
+NG	Nigeria	1400	federal republic	5,8	18,7
+NU	Niue	5800	self-governing parliamentary democracy	12	NA
+MP	Northern Mariana Islands	12500	NA	3,9	29,5
+NO	Norway	47800	constitutional monarchy	3,5	38,4
+OM	Oman	14100	monarchy	15	19
+PK	Pakistan	2600	federal republic	6,5	19,8
+PW	Palau	7600	constitutional government	4,2	31,7
+PA	Panama	7900	constitutional democracy	8,8	26,1
+PG	Papua New Guinea	2700	constitutional parliamentary democracy	2	21,2
+PY	Paraguay	4700	constitutional republic	9,4	21,3
+PE	Peru	6400	constitutional republic	7,2	25,3
+PH	Philippines	5000	republic	8,4	22,5
+PL	Poland	14100	republic	14,9	37
+PT	Portugal	19100	parliamentary democracy	7,5	38,5
+PR	Puerto Rico	19100	commonwealth	12	34,7
+QA	Qatar	29400	traditional emirate	3,2	31,7
+RO	Romania	8800	republic	6,1	36,6
+RU	Russia	12100	federation	6,6	38,4
+RW	Rwanda	1600	republic	NA	18,6
+SH	Saint Helena	2500	NA	14	36
+KN	Saint Kitts and Nevis	8200	parliamentary democracy	4,5	27,8
+LC	Saint Lucia	4800	parliamentary democracy	20	25,2
+PM	Saint Pierre and Miquelon	7000	NA	10,3	34,1
+VC	Saint Vincent and the Grenadines	3600	parliamentary democracy	15	26,9
+WS	Samoa	2100	parliamentary democracy	NA	25,2
+SM	San Marino	34600	independent republic	2,6	40,6
+ST	Sao Tome and Principe	1200	republic	NA	16,2
+SA	Saudi Arabia	13800	monarchy	13	21,4
+SN	Senegal	1800	republic	48	19,1
+CS	Serbia	4400	republic	31,6	40,4
+SC	Seychelles	7800	republic	NA	28,1
+SL	Sierra Leone	900	constitutional democracy	NA	17,4
+SG	Singapore	30900	parliamentary republic	3,1	37,3
+SK	Slovakia	17700	parliamentary democracy	10,2	35,8
+SI	Slovenia	22900	parliamentary republic	9,6	40,6
+SB	Solomon Islands	600	parliamentary democracy	NA	18,9
+SO	Somalia	600	NA	NA	17,6
+ZA	South Africa	13000	republic	25,5	24,1
+ES	Spain	27000	parliamentary monarchy	8,7	39,9
+LK	Sri Lanka	4600	republic	7,6	29,8
+SD	Sudan	2300	NA	18,7	18,3
+SR	Suriname	7100	constitutional democracy	9,5	26,5
+SZ	Swaziland	5200	monarchy	40	18,5
+SE	Sweden	31600	constitutional monarchy	5,6	40,9
+CH	Switzerland	33600	federal republic	3,3	40,1
+SY	Syria	4000	NA	8	20,7
+TW	Taiwan	29000	multiparty democracy	3,9	34,6
+TJ	Tajikistan	1300	republic	12	20
+TZ	Tanzania	800	republic	NA	17,7
+TH	Thailand	9100	constitutional monarchy	2,1	31,9
+TG	Togo	1700	republic	NA	18,3
+TK	Tokelau	1000	NA	NA	NA
+TO	Tonga	2200	constitutional monarchy	13	20,7
+TT	Trinidad and Tobago	19700	parliamentary democracy	7	31,2
+TN	Tunisia	8600	republic	13,9	27,8
+TR	Turkey	8900	republican parliamentary democracy	10,2	28,1
+TM	Turkmenistan	8900	republic	60	21,8
+TC	Turks and Caicos Islands	11500	NA	10	27,5
+TV	Tuvalu	1600	constitutional monarchy	NA	24,6
+UG	Uganda	1800	republic	NA	15
+UA	Ukraine	7600	republic	2,9	39,2
+AE	United Arab Emirates	49700	federation	2,4	28,1
+GB	United Kingdom	31400	constitutional monarchy	5,4	39,3
+US	United States	43500	federal republic	4,6	36,5
+UY	Uruguay	10700	constitutional republic	10,5	32,7
+UZ	Uzbekistan	2000	republic	0,8	22,7
+VU	Vanuatu	2900	parliamentary republic	1,7	23
+VE	Venezuela	6900	federal republic	8,9	26
+VN	Vietnam	3100	Communist state	2	25,9
+VG	Virgin Islands	14500	NA	6,2	37,1
+WF	Wallis and Futuna	3800	NA	15,2	NA
+X5	West Bank	1500	NA	20,3	18,3
+X6	World	10000	NA	30	27,6
+YE	Yemen	900	republic	35	16,6
+ZM	Zambia	1000	republic	50	16,5
+ZW	Zimbabwe	2000	parliamentary democracy	80	19,9
