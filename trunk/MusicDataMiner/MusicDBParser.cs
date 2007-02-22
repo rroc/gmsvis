@@ -88,6 +88,7 @@ namespace MusicDataminer
                 dataBase.albums = new List<Album>();
                 dataBase.countries = new Hashtable();
                 this.ParseCountries( iCountriesInfoFileName );
+                MusicDBParser.SaveDB(iDBFileName, this.dataBase);
             }
 
         }
@@ -256,7 +257,6 @@ namespace MusicDataminer
                     o.Select(MusicBrainz.MBS_Back);
                 }
             }
-
             return foundRelevantRelease;
         }
 
@@ -389,9 +389,9 @@ namespace MusicDataminer
                     country.gdbPerCapita = HandleNAValuesInt(words[2]);
                     // Government Type
                     country.govType = words[3].Trim('"').ToLowerInvariant();
-                    // Unemployment Rate
+                        // Unemployment Rate
                     country.unemploymentRate = HandleNAValuesFloat(words[4]);
-                    // Median Age
+                        // Median Age
                     country.medianAge = HandleNAValuesFloat(words[5]);
 
                     if (!dataBase.countries.ContainsKey(country.acronym))
@@ -416,14 +416,11 @@ namespace MusicDataminer
         {
             ThreadData td = new ThreadData() ;
             td.style = style;
-//            td.query = queryObject;
 
             Thread thr = new Thread(new ParameterizedThreadStart(this.ThreadParse));
             thr.Start( td );
             return thr;
         }
-
-
 
         void ThreadParse(object data)
         {
@@ -469,15 +466,17 @@ namespace MusicDataminer
             }
 
             iLineCount[style] = lineNumber;
+
+            Album album = new Album();
+            char[] delimiterChars = { '\t' };
+            string[] tokens;
+            string retrievedName;
+
             //Start querying
             while ((text = sr.ReadLine()) != null )
             {
                 Thread.Sleep(2);
-                char[] delimiterChars = { '\t' };
-
-                string[] tokens = text.Split(delimiterChars);
-
-                Album album = new Album();
+                tokens = text.Split(delimiterChars);
 
                 // Lowercase all the tokens
                 album.artist = tokens[0].ToLower();
@@ -492,9 +491,9 @@ namespace MusicDataminer
                     album.style = tokens[2].ToLower();
                 }
 
-                // search for info in the MusicBrainz DB
                 List<MusicBrainzAlbum> releases = new List<MusicBrainzAlbum>();
-                string retrievedName;
+
+                // search for info in the MusicBrainz DB
                 bool foundSomething = GetMusicBrainzReleases(album.artist, album.title, releases, out retrievedName, style);
 
                 if (foundSomething)
