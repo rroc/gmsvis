@@ -13,6 +13,59 @@ using musicbrainz;
 
 namespace MusicDataminer
 {
+    //
+    // Data Structures
+    //
+
+    [Serializable]
+    public class Country
+    {
+        public string acronym;
+        public string name;
+        public int gdbPerCapita;
+        public string govType;
+        public float unemploymentRate;
+        public float medianAge;
+
+        public List<MusicBrainzRelease> releases;
+    };
+
+    [Serializable]
+    public class MusicBrainzRelease
+    {
+        public Country country;
+        public int date;
+
+        public Album freeDBAlbum;
+    };
+
+    [Serializable]
+    public class Style
+    {
+        public List<MusicBrainzRelease> releases;
+        public string name;
+    };
+
+    [Serializable]
+    public class Album
+    {
+        public string title;
+
+        public string artist;
+        public Style style;
+
+        public List<MusicBrainzRelease> releases;
+    };
+
+
+    [Serializable]
+    public class DB
+    {
+        public List<Album> albums;
+        public Hashtable countries;
+        public Hashtable styles;
+    };
+
     class MusicDBParser
     {
         private Form1 iForm;
@@ -21,48 +74,6 @@ namespace MusicDataminer
         private const string iDataCountriesFileName = iDataPath + "data_countries.bin";
         private const string iCountriesInfoFileName = iDataPath + "geodata/countries_acronyms.txt";
         private const string iDBFileName            = iDataPath + "db.bin";
-
-        //
-        // Data Structures
-        //
-
-        [Serializable]
-        public struct Country
-        {
-            public string acronym;
-            public string name;
-            public int gdbPerCapita;
-            public string govType;
-            public float unemploymentRate;
-            public float medianAge;
-        };
-
-        [Serializable]
-        public struct MusicBrainzAlbum
-        {
-            public Country country;
-            public int date;
-        };
-
-        [Serializable]
-        public struct Album
-        {
-            public string title;
-
-            // probably store it as pointer :) ??
-            public string artist;
-            public string style;
-
-            public List<MusicBrainzAlbum> releases;
-        };
-
-
-        [Serializable]
-        public struct DB
-        {
-            public List<Album> albums;
-            public Hashtable countries;
-        };
 
         public struct ThreadData
         {
@@ -84,9 +95,11 @@ namespace MusicDataminer
             
             if ( ! loaded )
             {
-                dataBase = new DB();
-                dataBase.albums = new List<Album>();
-                dataBase.countries = new Hashtable();
+                dataBase            = new DB();
+                dataBase.albums     = new List<Album>();
+                dataBase.countries  = new Hashtable();
+                dataBase.styles     = new Hashtable();
+
                 this.ParseCountries( iCountriesInfoFileName );
                 MusicDBParser.SaveDB(iDBFileName, this.dataBase);
             }
@@ -165,7 +178,7 @@ namespace MusicDataminer
         // Parameter: out string retrievedName
         //////////////////////////////////////////////////////////////////////////
         public bool GetMusicBrainzReleases(string artist, string albumName,
-            List<MusicBrainzAlbum> releasesList, out string retrievedName, string aStyle)
+            List<MusicBrainzRelease> releasesList, out string retrievedName, string aStyle)
         {
             MusicBrainz o;
             // Create the musicbrainz object, which will be needed for subsequent calls
@@ -242,14 +255,17 @@ namespace MusicDataminer
                         string date;
                         o.GetResultData(MusicBrainz.MBE_ReleaseGetDate, out date);
 
-                        // add it to the list
-                        MusicBrainzAlbum release = new MusicBrainzAlbum();
-
                         if (dataBase.countries.ContainsKey(country.ToUpper()))
                         {
+                            // add it to the list
+                            MusicBrainzRelease release = new MusicBrainzRelease();
+
                             release.country = (Country)dataBase.countries[country];
                             release.date = int.Parse(date.Substring(0, 4));
+
+                            // Add the release both to the Album and Country
                             releasesList.Add(release);
+                            release.country.releases.Add(release);
                         }
 
                     }
@@ -379,7 +395,7 @@ namespace MusicDataminer
                 // Acronym	Country	GDB Per capita	Government Type	Unemployment Rate	Median Age
                 if (words.Length > 5)
                 {
-                    Country country;
+                    Country country = new Country();
 
                     // Acronym
                     country.acronym = words[0].ToUpperInvariant();
@@ -389,10 +405,12 @@ namespace MusicDataminer
                     country.gdbPerCapita = HandleNAValuesInt(words[2]);
                     // Government Type
                     country.govType = words[3].Trim('"').ToLowerInvariant();
-                        // Unemployment Rate
+                    // Unemployment Rate
                     country.unemploymentRate = HandleNAValuesFloat(words[4]);
-                        // Median Age
+                    // Median Age
                     country.medianAge = HandleNAValuesFloat(words[5]);
+                    // Empty List of Releases
+                    country.releases = new List<MusicBrainzRelease>();
 
                     if (!dataBase.countries.ContainsKey(country.acronym))
                     {
@@ -450,6 +468,10 @@ namespace MusicDataminer
                 MusicDBParser.SaveDB(iDBFileName, this.dataBase);
 
             }
+            catch(Exception e)
+            {
+                iForm.PrintLine(e.Message);
+            }
         }
 
         public void ParseMusicStyle(string style, Thread aCurrentThread )
@@ -467,10 +489,11 @@ namespace MusicDataminer
 
             iLineCount[style] = lineNumber;
 
-            Album album = new Album();
             char[] delimiterChars = { '\t' };
             string[] tokens;
             string retrievedName;
+
+            Style styleObj = GetStyle(style);
 
             //Start querying
             while ((text = sr.ReadLine()) != null )
@@ -479,34 +502,43 @@ namespace MusicDataminer
                 tokens = text.Split(delimiterChars);
 
                 // Lowercase all the tokens
-                album.artist = tokens[0].ToLower();
-                album.title = tokens[1].ToLower();
+                string artist = tokens[0].ToLower();
+                string title = tokens[1].ToLower();
 
-                if (tokens.Length < 3 || tokens[2].Trim().Length == 0)
-                {
-                    album.style = style;
-                }
-                else
-                {
-                    album.style = tokens[2].ToLower();
-                }
-
-                List<MusicBrainzAlbum> releases = new List<MusicBrainzAlbum>();
+                List<MusicBrainzRelease> releases = new List<MusicBrainzRelease>();
 
                 // search for info in the MusicBrainz DB
-                bool foundSomething = GetMusicBrainzReleases(album.artist, album.title, releases, out retrievedName, style);
+                bool foundSomething = GetMusicBrainzReleases(artist, title, releases, out retrievedName, style);
 
                 if (foundSomething)
                 {
-                    album.title = retrievedName;
-                    album.releases = releases;
+                    Album album = new Album();
+
+                    if (tokens.Length < 3 || tokens[2].Trim().Length == 0)
+                    {
+                        album.style = styleObj;
+                    }
+                    else
+                    {
+                        album.style = GetStyle(tokens[2]);
+                    }
+
+                    // Add the album to all its releases
+                    foreach (MusicBrainzRelease release in releases)
+                    {
+                        release.freeDBAlbum = album;
+                    }
+
+                    album.title     = retrievedName;
+                    album.artist    = artist;
+                    album.releases  = releases;
+
+                    album.style.releases.AddRange(releases);
                     dataBase.albums.Add(album);
 
-                    //Console.WriteLine("Added Album: " + album.title + " Artist: " + album.artist + ": ");
                     iForm.PrintLine("(" + style + ")\t-> ADDED: " + album.title + " Artist: " + album.artist);
-                    foreach (MusicBrainzAlbum release in album.releases)
+                    foreach (MusicBrainzRelease release in album.releases)
                     {
-                        //Console.WriteLine("\tCountry: " + release.country.name + "  Date: " + release.date);
                         iForm.PrintLine("\tCountry: " + release.country.name + "  Date: " + release.date);
                     }
                 }
@@ -520,6 +552,36 @@ namespace MusicDataminer
             //update log
             SaveLog(lineNumber, style);
             MusicDBParser.SaveDB( iDBFileName, this.dataBase );
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    GetStyle
+        // FullName:  MusicDataminer.MusicDBParser.GetStyle
+        // Access:    private 
+        // Returns:   MusicDataminer.Style
+        // Parameter: string style
+        //////////////////////////////////////////////////////////////////////////
+        private Style GetStyle(string style)
+        {
+            string key = style.ToLowerInvariant();
+            key = key.Replace(" ", "");
+            key = key.Replace("-", "");
+            key = key.Replace(",", "");
+            key = key.Replace("/", "");
+
+            if( this.dataBase.styles.ContainsKey( key ) )
+            {
+                return (Style)this.dataBase.styles[key];
+            }
+            else
+            {
+                Style styleObj = new Style();
+                styleObj.name = style.ToLowerInvariant();
+                styleObj.releases = new List<MusicBrainzRelease>();
+                this.dataBase.styles.Add(key, styleObj);
+
+                return styleObj;
+            }
         }
 
         public static bool SynchronizeDBs(string srcDBFilename1,
