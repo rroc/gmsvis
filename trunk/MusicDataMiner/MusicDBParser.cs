@@ -47,6 +47,7 @@ namespace MusicDataminer
                 dataBase.countries  = new Hashtable();
                 dataBase.styles     = new Hashtable();
                 dataBase.artists    = new Hashtable();
+                dataBase.dates      = new Hashtable();
 
                 this.ParseCountries( iCountriesInfoFileName );
                 MusicDBLoader.SaveDB(iDBFileName, this.dataBase);
@@ -390,16 +391,17 @@ namespace MusicDataminer
                         album.style = GetStyle(tokens[2]);
                     }
 
-                    // Add the album to all its releases
-                    foreach (MusicBrainzRelease release in releases)
-                    {
-                        release.freeDBAlbum = album;
-                    }
-
                     album.title     = retrievedName;
 
                     if (AddAlbum(album, artistName))
                     {
+                        // Add the album to all its releases
+                        foreach (MusicBrainzRelease release in releases)
+                        {
+                            release.freeDBAlbum = album;
+                            AddReleaseDate( release );
+                        }
+
                         // set the Artist object
                         album.artist = GetArtist(artistName);
 
@@ -445,6 +447,31 @@ namespace MusicDataminer
             Regex regex = new Regex("[^a-z0-9€]");
 
             return regex.Replace(input, "");
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    AddReleaseDate
+        // FullName:  MusicDataminer.MusicDBParser.AddReleaseDate
+        // Access:    private 
+        // Returns:   void
+        // Parameter: MusicBrainzRelease release
+        //////////////////////////////////////////////////////////////////////////
+        private void AddReleaseDate(MusicBrainzRelease release)
+        {
+            int key = release.date;
+            List<MusicBrainzRelease> dates;
+
+            if ( ! this.dataBase.dates.ContainsKey(key) )
+            {
+                dates = new List<MusicBrainzRelease>();
+                this.dataBase.dates[key] = dates;
+            }
+            else
+            {
+                dates = (List<MusicBrainzRelease>)this.dataBase.dates[key];
+            }
+
+            dates.Add(release);
         }
 
         //////////////////////////////////////////////////////////////////////////
