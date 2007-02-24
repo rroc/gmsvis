@@ -69,6 +69,7 @@ namespace MusicDataminer
         public Hashtable countries;
         public Hashtable styles;
         public Hashtable artists;
+        public Hashtable dates;
     };
 
 
