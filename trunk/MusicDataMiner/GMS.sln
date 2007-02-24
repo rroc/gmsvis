@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicDataminer", "MusicDataminer.csproj", "{0F187C9F-9106-469A-B639-217E90BC7552}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMS", "..\GMS\GMS.csproj", "{ED09284D-96A5-4CCB-ADCA-27844BC7D372}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicDBStructures", "..\MusicDBStructures\MusicDBStructures.csproj", "{E32426DB-1517-4053-B921-56CFE8E0E324}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F187C9F-9106-469A-B639-217E90BC7552}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F187C9F-9106-469A-B639-217E90BC7552}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F187C9F-9106-469A-B639-217E90BC7552}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F187C9F-9106-469A-B639-217E90BC7552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED09284D-96A5-4CCB-ADCA-27844BC7D372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED09284D-96A5-4CCB-ADCA-27844BC7D372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED09284D-96A5-4CCB-ADCA-27844BC7D372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED09284D-96A5-4CCB-ADCA-27844BC7D372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E32426DB-1517-4053-B921-56CFE8E0E324}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{E32426DB-1517-4053-B921-56CFE8E0E324}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{E32426DB-1517-4053-B921-56CFE8E0E324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E32426DB-1517-4053-B921-56CFE8E0E324}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

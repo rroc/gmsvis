@@ -9,7 +9,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 
-using CarlosAg.ExcelXmlWriter;
 using musicbrainz;
 
 namespace MusicDataminer
