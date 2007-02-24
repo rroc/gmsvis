@@ -46,19 +46,29 @@ namespace MusicDataminer
     {
         public string title;
 
-        public string artist;
+        public Artist artist;
         public Style style;
 
         public List<MusicBrainzRelease> releases;
+    };
+
+    [Serializable]
+    public class Artist
+    {
+        public string name;
+        
+        public List<Album> albums;
     };
 
 
     [Serializable]
     public class DB
     {
-        public List<Album> albums;
+        //public List<Album> albums;
+        public Hashtable albums;
         public Hashtable countries;
         public Hashtable styles;
+        public Hashtable artists;
     };
 
 
