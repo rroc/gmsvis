@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Threading;
@@ -42,9 +43,10 @@ namespace MusicDataminer
             if ( ! loaded )
             {
                 dataBase            = new DB();
-                dataBase.albums     = new List<Album>();
+                dataBase.albums     = new Hashtable();
                 dataBase.countries  = new Hashtable();
                 dataBase.styles     = new Hashtable();
+                dataBase.artists    = new Hashtable();
 
                 this.ParseCountries( iCountriesInfoFileName );
                 MusicDBLoader.SaveDB(iDBFileName, this.dataBase);
@@ -331,6 +333,14 @@ namespace MusicDataminer
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    ParseMusicStyle
+        // FullName:  MusicDataminer.MusicDBParser.ParseMusicStyle
+        // Access:    public 
+        // Returns:   void
+        // Parameter: string style
+        // Parameter: Thread aCurrentThread
+        //////////////////////////////////////////////////////////////////////////
         public void ParseMusicStyle(string style, Thread aCurrentThread )
         {
             // Open the file and read it back.
@@ -359,13 +369,13 @@ namespace MusicDataminer
                 tokens = text.Split(delimiterChars);
 
                 // Lowercase all the tokens
-                string artist = tokens[0].ToLower();
+                string artistName = tokens[0].ToLower();
                 string title = tokens[1].ToLower();
 
                 List<MusicBrainzRelease> releases = new List<MusicBrainzRelease>();
 
                 // search for info in the MusicBrainz DB
-                bool foundSomething = GetMusicBrainzReleases(artist, title, releases, out retrievedName, style);
+                bool foundSomething = GetMusicBrainzReleases(artistName, title, releases, out retrievedName, style);
 
                 if (foundSomething)
                 {
@@ -387,16 +397,27 @@ namespace MusicDataminer
                     }
 
                     album.title     = retrievedName;
-                    album.artist    = artist;
-                    album.releases  = releases;
 
-                    album.style.releases.AddRange(releases);
-                    dataBase.albums.Add(album);
-
-                    iForm.PrintLine("(" + style + ")\t-> ADDED: " + album.title + " Artist: " + album.artist);
-                    foreach (MusicBrainzRelease release in album.releases)
+                    if (AddAlbum(album, artistName))
                     {
-                        iForm.PrintLine("\tCountry: " + release.country.name + "  Date: " + release.date);
+                        // set the Artist object
+                        album.artist = GetArtist(artistName);
+
+                        // add the releases to the Album
+                        album.releases = releases;
+
+                        // add the releases to their Style
+                        album.style.releases.AddRange(releases);
+
+                        // add the album to its artist
+                        album.artist.albums.Add(album);
+
+                        // Some output
+                        iForm.PrintLine("(" + style + ")\t-> ADDED: " + album.title + " Artist: " + album.artist.name);
+                        foreach (MusicBrainzRelease release in album.releases)
+                        {
+                            iForm.PrintLine("\tCountry: " + release.country.name + "  Date: " + release.date);
+                        }
                     }
                 }
                 lineNumber++;
@@ -412,6 +433,72 @@ namespace MusicDataminer
         }
 
         //////////////////////////////////////////////////////////////////////////
+        // Method:    ClearString
+        // FullName:  MusicDataminer.MusicDBParser.ClearString
+        // Access:    private 
+        // Returns:   string
+        // Parameter: string input
+        //////////////////////////////////////////////////////////////////////////
+        private string ClearString(string input)
+        {
+            input = input.Replace(" and ", "");
+            Regex regex = new Regex("[^a-z0-9€]");
+
+            return regex.Replace(input, "");
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    AddAlbum
+        // FullName:  MusicDataminer.MusicDBParser.AddAlbum
+        // Access:    private 
+        // Returns:   bool
+        // Parameter: Album album
+        //////////////////////////////////////////////////////////////////////////
+        private bool AddAlbum(Album album, string artistName)
+        {
+            string key = artistName + "€" + album.title;
+            key = key.ToLowerInvariant();
+
+            key = ClearString(key);
+
+            if (!this.dataBase.albums.ContainsKey(key))
+            {
+                this.dataBase.albums[key] = album;
+                return true;
+            }
+
+            return false;
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    GetArtist
+        // FullName:  MusicDataminer.MusicDBParser.GetArtist
+        // Access:    private 
+        // Returns:   MusicDataminer.Artist
+        // Parameter: string name
+        //////////////////////////////////////////////////////////////////////////
+        private Artist GetArtist(string name)
+        {
+            name = name.ToLowerInvariant();
+            string key = ClearString(name);
+
+            if (this.dataBase.artists.ContainsKey(key))
+            {
+                return (Artist)this.dataBase.artists[key];
+            }
+            else
+            {
+                Artist artist   = new Artist();
+                artist.name     = name;
+                artist.albums   = new List<Album>();
+                
+                this.dataBase.artists[key] = artist;
+
+                return artist;
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////
         // Method:    GetStyle
         // FullName:  MusicDataminer.MusicDBParser.GetStyle
         // Access:    private 
@@ -421,10 +508,8 @@ namespace MusicDataminer
         private Style GetStyle(string style)
         {
             string key = style.ToLowerInvariant();
-            key = key.Replace(" ", "");
-            key = key.Replace("-", "");
-            key = key.Replace(",", "");
-            key = key.Replace("/", "");
+
+            key = ClearString(key);
 
             if( this.dataBase.styles.ContainsKey( key ) )
             {
@@ -454,7 +539,8 @@ namespace MusicDataminer
 
                 if (loaded)
                 {
-                    destination.albums.AddRange(source.albums);
+                    // TODO: recode this
+                    //destination.albums.AddRange(source.albums);
 
                     MusicDBLoader.SaveDB(outputFilename, destination);
 
