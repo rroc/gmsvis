@@ -8,12 +8,12 @@ Andorra	an-flag.gif
 Angola	ao-flag.gif
 Anguilla	av-flag.gif
 Antarctica	ay-flag.gif
-Antiguaand Barbuda	ac-flag.gif
+Antigua and Barbuda	ac-flag.gif
 Arctic Ocean	xq-flag.gif
 Argentina	ar-flag.gif
 Armenia	am-flag.gif
 Aruba	aa-flag.gif
-Ashmoreand Cartier Islands	at-flag.gif
+Ashmore and Cartier Islands	at-flag.gif
 Atlantic Ocean	zh-flag.gif
 Australia	as-flag.gif
 Austria	au-flag.gif
@@ -31,7 +31,7 @@ Benin	bn-flag.gif
 Bermuda	bd-flag.gif
 Bhutan	bt-flag.gif
 Bolivia	bl-flag.gif
-Bosniaand Herzegovina	bk-flag.gif
+Bosnia and Herzegovina	bk-flag.gif
 Botswana	bc-flag.gif
 Bouvet Island	bv-flag.gif
 Brazil	br-flag.gif
@@ -86,7 +86,7 @@ Fiji	fj-flag.gif
 Finland	fi-flag.gif
 France	fr-flag.gif
 French Polynesia	fp-flag.gif
-French Southernand Antarctic Lands	fs-flag.gif
+French Southern and Antarctic Lands	fs-flag.gif
 Gabon	gb-flag.gif
 Gambia,The	ga-flag.gif
 Gaza Strip	gz-flag.gif
@@ -105,7 +105,7 @@ Guinea	gv-flag.gif
 Guinea-Bissau	pu-flag.gif
 Guyana	gy-flag.gif
 Haiti	ha-flag.gif
-Heard Islandand Mc Donald Islands	hm-flag.gif
+Heard Island and Mc Donald Islands	hm-flag.gif
 Holy See(Vatican City)	vt-flag.gif
 Honduras	ho-flag.gif
 Hong Kong	hk-flag.gif
@@ -204,13 +204,13 @@ Romania	ro-flag.gif
 Russia	rs-flag.gif
 Rwanda	rw-flag.gif
 Saint Helena	sh-flag.gif
-Saint Kittsand Nevis	sc-flag.gif
+Saint Kitts and Nevis	sc-flag.gif
 Saint Lucia	st-flag.gif
-Saint Pierreand Miquelon	sb-flag.gif
+Saint Pierre and Miquelon	sb-flag.gif
 Saint Vincentandthe Grenadines	vc-flag.gif
 Samoa	ws-flag.gif
 San Marino	sm-flag.gif
-Sao Tomeand Principe	tp-flag.gif
+Sao Tome and Principe	tp-flag.gif
 Saudi Arabia	sa-flag.gif
 Senegal	sg-flag.gif
 Serbia	rb-flag.gif
@@ -240,12 +240,12 @@ Thailand	th-flag.gif
 Togo	to-flag.gif
 Tokelau	tl-flag.gif
 Tonga	tn-flag.gif
-Trinidadand Tobago	td-flag.gif
+Trinidad and Tobago	td-flag.gif
 Tromelin Island	te-flag.gif
 Tunisia	ts-flag.gif
 Turkey	tu-flag.gif
 Turkmenistan	tx-flag.gif
-Turksand Caicos Islands	tk-flag.gif
+Turks and Caicos Islands	tk-flag.gif
 Tuvalu	tv-flag.gif
 Uganda	ug-flag.gif
 Ukraine	up-flag.gif
@@ -260,7 +260,7 @@ Venezuela	ve-flag.gif
 Vietnam	vm-flag.gif
 Virgin Islands	vq-flag.gif
 Wake Island	wq-flag.gif
-Wallisand Futuna	wf-flag.gif
+Wallis and Futuna	wf-flag.gif
 West Bank	we-flag.gif
 Western Sahara	wi-flag.gif
 Yemen	ym-flag.gif
