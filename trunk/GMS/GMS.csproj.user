@@ -1,0 +1,5 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ReferencePath>D:\Linkoping University\Information Visualization\Project\MusicDataMiner\</ReferencePath>
+  </PropertyGroup>
+</Project>
