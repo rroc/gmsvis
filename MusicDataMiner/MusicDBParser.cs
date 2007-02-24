@@ -8,64 +8,10 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Runtime.CompilerServices;
 
-using CarlosAg.ExcelXmlWriter;
 using musicbrainz;
 
 namespace MusicDataminer
 {
-    //
-    // Data Structures
-    //
-
-    [Serializable]
-    public class Country
-    {
-        public string acronym;
-        public string name;
-        public int gdbPerCapita;
-        public string govType;
-        public float unemploymentRate;
-        public float medianAge;
-
-        public List<MusicBrainzRelease> releases;
-    };
-
-    [Serializable]
-    public class MusicBrainzRelease
-    {
-        public Country country;
-        public int date;
-
-        public Album freeDBAlbum;
-    };
-
-    [Serializable]
-    public class Style
-    {
-        public List<MusicBrainzRelease> releases;
-        public string name;
-    };
-
-    [Serializable]
-    public class Album
-    {
-        public string title;
-
-        public string artist;
-        public Style style;
-
-        public List<MusicBrainzRelease> releases;
-    };
-
-
-    [Serializable]
-    public class DB
-    {
-        public List<Album> albums;
-        public Hashtable countries;
-        public Hashtable styles;
-    };
-
     class MusicDBParser
     {
         private Form1 iForm;
@@ -91,7 +37,7 @@ namespace MusicDataminer
             iLineCount = new Hashtable();
 
             // try to load DataBase
-            bool loaded = LoadDB( iDBFileName, out this.dataBase );
+            bool loaded = MusicDBLoader.LoadDB( iDBFileName, out this.dataBase );
             
             if ( ! loaded )
             {
@@ -101,69 +47,9 @@ namespace MusicDataminer
                 dataBase.styles     = new Hashtable();
 
                 this.ParseCountries( iCountriesInfoFileName );
-                MusicDBParser.SaveDB(iDBFileName, this.dataBase);
+                MusicDBLoader.SaveDB(iDBFileName, this.dataBase);
             }
 
-        }
-
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    SaveDB
-        // FullName:  MusicDataminer.MusicDBParser.SaveDB
-        // Access:    public 
-        // Returns:   void
-        //////////////////////////////////////////////////////////////////////////
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void SaveDB(string filename, DB db)
-        {
-            // file stream states the saved binary
-            FileStream fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
-
-            try
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(fs, db);
-            }
-            finally
-            {
-                fs.Close();
-            }
-        }
-
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    LoadDB
-        // FullName:  MusicDataminer.MusicDBParser.LoadDB
-        // Access:    public 
-        // Returns:   bool
-        //////////////////////////////////////////////////////////////////////////
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static bool LoadDB(string filename, out DB db)
-        {
-            // file stream states the saved binary
-            FileStream fs = null;
-            db = new DB();
-            bool loaded = false;
-
-            if (File.Exists(filename))
-            {
-                fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                try
-                {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    db = (DB)bf.Deserialize(fs);
-                    loaded = true;
-                }
-                catch (System.Exception e)
-                {
-                    Console.WriteLine("DB not loaded: " + e.Message);
-                    return loaded;
-                }
-                finally
-                {
-                    fs.Close();
-                }
-            }
-
-            return loaded;
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -274,35 +160,6 @@ namespace MusicDataminer
                 }
             }
             return foundRelevantRelease;
-        }
-
-        private static void WriteSomeStuff()
-        {
-            Workbook book = new Workbook();
-            Worksheet sheet = book.Worksheets.Add("Sample");
-            WorksheetRow row = sheet.Table.Rows.Add();
-
-            // Header
-            row.Cells.Add("Artist");
-            row.Cells.Add("Album/Release");
-            row.Cells.Add("Similar Artist");
-            row.Cells.Add("Date");
-            row.Cells.Add("Country");
-
-            // Rows
-            row = sheet.Table.Rows.Add();
-            row.Cells.Add("Pink Floyd");
-            row.Cells.Add("The Division Bell");
-            row.Cells.Add("Someone :)");
-            row.Cells.Add("2000-10-05");
-            row.Cells.Add("SE");
-
-            book.Save(@"../../../test.xls");
-        }
-
-        private void SaveData() 
-        {
- 
         }
 
         private string GetLogFilename( string aStyle )
@@ -456,7 +313,7 @@ namespace MusicDataminer
                 //update log
 
                 SaveLog((int)this.iLineCount[td.style], td.style);
-                MusicDBParser.SaveDB(iDBFileName, this.dataBase);
+                MusicDBLoader.SaveDB(iDBFileName, this.dataBase);
             }
             catch (ThreadAbortException)
             {
@@ -465,7 +322,7 @@ namespace MusicDataminer
                 //update log
 
                 SaveLog((int)this.iLineCount[td.style], td.style);
-                MusicDBParser.SaveDB(iDBFileName, this.dataBase);
+                MusicDBLoader.SaveDB(iDBFileName, this.dataBase);
 
             }
             catch(Exception e)
@@ -551,7 +408,7 @@ namespace MusicDataminer
 
             //update log
             SaveLog(lineNumber, style);
-            MusicDBParser.SaveDB( iDBFileName, this.dataBase );
+            MusicDBLoader.SaveDB(iDBFileName, this.dataBase);
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -589,17 +446,17 @@ namespace MusicDataminer
         {
             DB destination;
             DB source;
-            
-            bool loaded = MusicDBParser.LoadDB(srcDBFilename1, out destination);
+
+            bool loaded = MusicDBLoader.LoadDB(srcDBFilename1, out destination);
             if( loaded )
             {
-                loaded = MusicDBParser.LoadDB(srcDBFilename2, out source);
+                loaded = MusicDBLoader.LoadDB(srcDBFilename2, out source);
 
                 if (loaded)
                 {
                     destination.albums.AddRange(source.albums);
 
-                    SaveDB(outputFilename, destination);
+                    MusicDBLoader.SaveDB(outputFilename, destination);
 
                     return true;
                 }
