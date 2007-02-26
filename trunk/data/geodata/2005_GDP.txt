@@ -1,0 +1,272 @@
+141 		Afghanistan	$800
+145 		Akrotiri	NA
+103 		Albania	$4,900
+91 		Algeria	$6,600
+78 		American Samoa	$8,000
+29 		Andorra	$26,800
+128 		Angola	$2,100
+82 		Anguilla	$7,500
+145 		Antarctica	NA
+66 		Antigua and Barbuda	$11,000
+145 		Arctic Ocean	NA
+60 		Argentina	$12,400
+105 		Armenia	$4,600
+23 		Aruba	$28,000
+145 		Ashmore and Cartier Islands	NA
+145 		Atlantic Ocean	NA
+14 		Australia	$30,700
+13 		Austria	$31,300
+112 		Azerbaijan	$3,800
+47 		Bahamas, The	$17,700
+44 		Bahrain	$19,200
+145 		Baker Island	NA
+129 		Bangladesh	$2,000
+51 		Barbados	$16,400
+145 		Bassas da India	NA
+89 		Belarus	$6,800
+15 		Belgium	$30,600
+92 		Belize	$6,500
+137 		Benin	$1,200
+5 		Bermuda	$36,000
+135 		Bhutan	$1,400
+123 		Bolivia	$2,600
+92 		Bosnia and Herzegovina	$6,500
+72 		Botswana	$9,200
+145 		Bouvet Island	NA
+77 		Brazil	$8,100
+145 		British Indian Ocean Territory	NA
+4 		British Virgin Islands	$38,500
+33 		Brunei	$23,600
+76 		Bulgaria	$8,200
+137 		Burkina Faso	$1,200
+132 		Burma	$1,700
+143 		Burundi	$600
+129 		Cambodia	$2,000
+130 		Cameroon	$1,900
+12 		Canada	$31,500
+135 		Cape Verde	$1,400
+9 		Cayman Islands	$32,300
+138 		Central African Republic	$1,100
+133 		Chad	$1,600
+67 		Chile	$10,700
+98 		China	$5,600
+145 		Christmas Island	NA
+145 		Clipperton Island	NA
+145 		Cocos (Keeling) Islands	NA
+91 		Colombia	$6,600
+142 		Comoros	$700
+142 		Congo, Democratic Republic of the	$700
+141 		Congo, Republic of the	$800
+102 		Cook Islands	$5,000
+145 		Coral Sea Islands	NA
+71 		Costa Rica	$9,600
+134 		Cote d'Ivoire	$1,500
+64 		Croatia	$11,200
+119 		Cuba	$3,000
+40 		Cyprus	$20,300
+85 		Cyprus - Turkish area	$7,135
+50 		Czech Republic	$16,800
+10 		Denmark	$32,200
+145 		Dhekelia	NA
+136 		Djibouti	$1,300
+99 		Dominica	$5,500
+93 		Dominican Republic	$6,300
+144 		East Timor	$400
+113 		Ecuador	$3,700
+108 		Egypt	$4,200
+103 		El Salvador	$4,900
+122 		Equatorial Guinea	$2,700
+140 		Eritrea	$900
+56 		Estonia	$14,300
+141 		Ethiopia	$800
+145 		Europa Island	NA
+28 		European Union	$26,900
+32 		Falkland Islands (Islas Malvinas)	$25,000
+36 		Faroe Islands	$22,000
+95 		Fiji	$5,900
+19 		Finland	$29,000
+20 		France	$28,700
+75 		French Guiana	$8,300
+48 		French Polynesia	$17,500
+145 		French Southern and Antarctic Lands	NA
+95 		Gabon	$5,900
+131 		Gambia, The	$1,800
+143 		Gaza Strip	$600
+118 		Georgia	$3,100
+20 		Germany	$28,700
+126 		Ghana	$2,300
+24 		Gibraltar	$27,900
+145 		Glorioso Islands	NA
+37 		Greece	$21,300
+41 		Greenland	$20,000
+102 		Grenada	$5,000
+79 		Guadeloupe	$7,900
+38 		Guam	$21,000
+108 		Guatemala	$4,200
+3 		Guernsey	$40,000
+128 		Guinea	$2,100
+142 		Guinea-Bissau	$700
+112 		Guyana	$3,800
+134 		Haiti	$1,500
+145 		Heard Island and McDonald Islands	NA
+145 		Holy See (Vatican City)	NA
+121 		Honduras	$2,800
+7 		Hong Kong	$34,200
+145 		Howland Island	NA
+53 		Hungary	$14,900
+11 		Iceland	$31,900
+118 		India	$3,100
+145 		Indian Ocean	NA
+115 		Indonesia	$3,500
+81 		Iran	$7,700
+128 		Iraq	$2,100
+11 		Ireland	$31,900
+39 		Israel	$20,800
+26 		Italy	$27,700
+109 		Jamaica	$4,100
+145 		Jan Mayen	NA
+18 		Japan	$29,400
+145 		Jarvis Island	NA
+3 		Jersey	$40,000
+145 		Johnston Atoll	NA
+106 		Jordan	$4,500
+145 		Juan de Nova Island	NA
+80 		Kazakhstan	$7,800
+138 		Kenya	$1,100
+145 		Kingman Reef	NA
+141 		Kiribati	$800
+132 		Korea, North	$1,700
+44 		Korea, South	$19,200
+37 		Kuwait	$21,300
+132 		Kyrgyzstan	$1,700
+130 		Laos	$1,900
+62 		Latvia	$11,500
+102 		Lebanon	$5,000
+117 		Lesotho	$3,200
+140 		Liberia	$900
+90 		Libya	$6,700
+32 		Liechtenstein	$25,000
+59 		Lithuania	$12,500
+1 		Luxembourg	$58,900
+43 		Macau	$19,400
+86 		Macedonia	$7,100
+141 		Madagascar	$800
+143 		Malawi	$600
+70 		Malaysia	$9,700
+111 		Maldives	$3,900
+140 		Mali	$900
+45 		Malta	$18,200
+21 		Man, Isle of	$28,500
+133 		Marshall Islands	$1,600
+55 		Martinique	$14,400
+131 		Mauritania	$1,800
+58 		Mauritius	$12,800
+123 		Mayotte	$2,600
+71 		Mexico	$9,600
+129 		Micronesia, Federated States of	$2,000
+145 		Midway Islands	NA
+130 		Moldova	$1,900
+27 		Monaco	$27,000
+130 		Mongolia	$1,900
+116 		Montserrat	$3,400
+108 		Morocco	$4,200
+137 		Mozambique	$1,200
+84 		Namibia	$7,300
+102 		Nauru	$5,000
+145 		Navassa Island	NA
+134 		Nepal	$1,500
+17 		Netherlands	$29,500
+63 		Netherlands Antilles	$11,400
+52 		New Caledonia	$15,000
+35 		New Zealand	$23,200
+126 		Nicaragua	$2,300
+140 		Niger	$900
+139 		Nigeria	$1,000
+114 		Niue	$3,600
+145 		Norfolk Island	NA
+59 		Northern Mariana Islands	$12,500
+3 		Norway	$40,000
+57 		Oman	$13,100
+145 		Pacific Ocean	NA
+127 		Pakistan	$2,200
+73 		Palau	$9,000
+145 		Palmyra Atoll	NA
+88 		Panama	$6,900
+127 		Papua New Guinea	$2,200
+145 		Paracel Islands	NA
+104 		Paraguay	$4,800
+98 		Peru	$5,600
+102 		Philippines	$5,000
+145 		Pitcairn Islands	NA
+61 		Poland	$12,000
+46 		Portugal	$17,900
+47 		Puerto Rico	$17,700
+35 		Qatar	$23,200
+94 		Reunion	$6,000
+81 		Romania	$7,700
+69 		Russia	$9,800
+136 		Rwanda	$1,300
+124 		Saint Helena	$2,500
+74 		Saint Kitts and Nevis	$8,800
+100 		Saint Lucia	$5,400
+87 		Saint Pierre and Miquelon	$7,000
+120 		Saint Vincent and the Grenadines	$2,900
+98 		Samoa	$5,600
+6 		San Marino	$34,600
+137 		Sao Tome and Principe	$1,200
+61 		Saudi Arabia	$12,000
+132 		Senegal	$1,700
+125 		Serbia and Montenegro	$2,400
+80 		Seychelles	$7,800
+143 		Sierra Leone	$600
+25 		Singapore	$27,800
+54 		Slovakia	$14,500
+42 		Slovenia	$19,600
+132 		Solomon Islands	$1,700
+143 		Somalia	$600
+65 		South Africa	$11,100
+145 		South Georgia and the South Sandwich Islands	NA
+145 		Southern Ocean	NA
+34 		Spain	$23,300
+145 		Spratly Islands	NA
+110 		Sri Lanka	$4,000
+130 		Sudan	$1,900
+107 		Suriname	$4,300
+145 		Svalbard	NA
+101 		Swaziland	$5,100
+22 		Sweden	$28,400
+8 		Switzerland	$33,800
+116 		Syria	$3,400
+30 		Taiwan	$25,300
+138 		Tajikistan	$1,100
+142 		Tanzania	$700
+77 		Thailand	$8,100
+133 		Togo	$1,600
+139 		Tokelau	$1,000
+126 		Tonga	$2,300
+68 		Trinidad and Tobago	$10,500
+145 		Tromelin Island	NA
+86 		Tunisia	$7,100
+83 		Turkey	$7,400
+97 		Turkmenistan	$5,700
+62 		Turks and Caicos Islands	$11,500
+138 		Tuvalu	$1,100
+134 		Uganda	$1,500
+93 		Ukraine	$6,300
+31 		United Arab Emirates	$25,200
+16 		United Kingdom	$29,600
+2 		United States	$40,100
+54 		Uruguay	$14,500
+131 		Uzbekistan	$1,800
+120 		Vanuatu	$2,900
+96 		Venezuela	$5,800
+122 		Vietnam	$2,700
+49 		Virgin Islands	$17,200
+145 		Wake Island	NA
+112 		Wallis and Futuna	$3,800
+141 		West Bank	$800
+145 		Western Sahara	NA
+74 		World	$8,800
+141 		Yemen	$800
+140 		Zambia	$900
+130 		Zimbabwe	$1,900

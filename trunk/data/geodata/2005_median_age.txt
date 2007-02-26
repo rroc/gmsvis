@@ -1,0 +1,266 @@
+195 		Afghanistan	17.56
+214 		Akrotiri	NA
+88 		Albania	28.52
+122 		Algeria	24.36
+132 		American Samoa	22.76
+13 		Andorra	40.34
+185 		Angola	18.12
+77 		Anguilla	30.76
+214 		Antarctica	NA
+80 		Antigua and Barbuda	29.67
+83 		Argentina	29.42
+79 		Armenia	30.07
+38 		Aruba	38.00
+214 		Ashmore and Cartier Islands	NA
+45 		Australia	36.56
+12 		Austria	40.44
+96 		Azerbaijan	27.53
+95 		Bahamas, The	27.55
+86 		Bahrain	29.19
+214 		Baker Island	NA
+138 		Bangladesh	21.87
+59 		Barbados	34.15
+214 		Bassas da India	NA
+41 		Belarus	37.03
+10 		Belgium	40.55
+164 		Belize	19.35
+203 		Benin	16.56
+18 		Bermuda	39.76
+152 		Bhutan	20.27
+141 		Bolivia	21.47
+50 		Bosnia and Herzegovina	36.21
+165 		Botswana	19.29
+214 		Bouvet Island	NA
+92 		Brazil	27.81
+214 		British Indian Ocean Territory	NA
+75 		British Virgin Islands	30.90
+103 		Brunei	27.04
+8 		Bulgaria	40.66
+201 		Burkina Faso	16.82
+109 		Burma	26.14
+202 		Burundi	16.60
+158 		Cambodia	19.91
+176 		Cameroon	18.60
+31 		Canada	38.54
+163 		Cape Verde	19.40
+42 		Cayman Islands	36.83
+185 		Central African Republic	18.12
+210 		Chad	16.02
+79 		Chile	30.07
+68 		China	32.26
+214 		Christmas Island	NA
+214 		Clipperton Island	NA
+214 		Cocos (Keeling) Islands	NA
+111 		Colombia	26.04
+175 		Comoros	18.61
+211 		Congo, Democratic Republic of the	15.80
+146 		Congo, Republic of the	20.70
+214 		Cook Islands	NA
+214 		Coral Sea Islands	NA
+112 		Costa Rica	26.03
+169 		Cote d'Ivoire	19.05
+16 		Croatia	39.97
+53 		Cuba	35.36
+57 		Cyprus	34.4
+28 		Czech Republic	38.97
+21 		Denmark	39.47
+214 		Dhekelia	NA
+181 		Djibouti	18.23
+81 		Dominica	29.59
+127 		Dominican Republic	23.88
+150 		East Timor	20.41
+131 		Ecuador	23.27
+128 		Egypt	23.68
+139 		El Salvador	21.57
+171 		Equatorial Guinea	18.83
+196 		Eritrea	17.54
+25 		Estonia	39.06
+190 		Ethiopia	17.75
+214 		Europa Island	NA
+214 		European Union	NA
+214 		Falkland Islands (Islas Malvinas)	NA
+55 		Faroe Islands	35.11
+123 		Fiji	24.28
+6 		Finland	40.97
+29 		France	38.85
+89 		French Guiana	28.45
+98 		French Polynesia	27.48
+214 		French Southern and Antarctic Lands	NA
+177 		Gabon	18.57
+194 		Gambia, The	17.59
+212 		Gaza Strip	15.65
+40 		Georgia	37.36
+3 		Germany	42.16
+149 		Ghana	20.45
+22 		Gibraltar	39.40
+214 		Glorioso Islands	NA
+11 		Greece	40.50
+62 		Greenland	33.83
+143 		Grenada	21.26
+70 		Guadeloupe	31.81
+90 		Guam	28.38
+179 		Guatemala	18.47
+5 		Guernsey	40.99
+192 		Guinea	17.67
+170 		Guinea-Bissau	18.97
+104 		Guyana	26.91
+188 		Haiti	18.03
+214 		Heard Island and McDonald Islands	NA
+214 		Holy See (Vatican City)	NA
+167 		Honduras	19.15
+22 		Hong Kong	39.40
+214 		Howland Island	NA
+30 		Hungary	38.57
+61 		Iceland	34.00
+119 		India	24.66
+106 		Indonesia	26.48
+124 		Iran	24.23
+162 		Iraq	19.43
+63 		Ireland	33.70
+84 		Israel	29.39
+4 		Italy	41.77
+102 		Jamaica	27.25
+214 		Jan Mayen	NA
+2 		Japan	42.64
+214 		Jarvis Island	NA
+7 		Jersey	40.89
+214 		Johnston Atoll	NA
+135 		Jordan	22.62
+214 		Juan de Nova Island	NA
+88 		Kazakhstan	28.52
+182 		Kenya	18.19
+214 		Kingman Reef	NA
+156 		Kiribati	20.05
+71 		Korea, North	31.74
+56 		Korea, South	34.51
+113 		Kuwait	25.86
+130 		Kyrgyzstan	23.39
+172 		Laos	18.74
+24 		Latvia	39.12
+100 		Lebanon	27.34
+154 		Lesotho	20.19
+187 		Liberia	18.06
+133 		Libya	22.68
+23 		Liechtenstein	39.22
+39 		Lithuania	37.83
+32 		Luxembourg	38.51
+54 		Macau	35.20
+66 		Macedonia	32.80
+198 		Madagascar	17.46
+207 		Malawi	16.34
+126 		Malaysia	23.92
+191 		Maldives	17.69
+206 		Mali	16.35
+33 		Malta	38.36
+20 		Man, Isle of	39.48
+157 		Marshall Islands	19.95
+65 		Martinique	33.61
+199 		Mauritania	16.98
+78 		Mauritius	30.50
+200 		Mayotte	16.96
+117 		Mexico	24.93
+214 		Micronesia, Federated States of	NA
+214 		Midway Islands	NA
+69 		Moldova	32.22
+1 		Monaco	45.25
+123 		Mongolia	24.28
+87 		Montserrat	28.56
+129 		Morocco	23.61
+180 		Mozambique	18.29
+159 		Namibia	19.79
+153 		Nauru	20.24
+214 		Navassa Island	NA
+155 		Nepal	20.07
+26 		Netherlands	39.04
+67 		Netherlands Antilles	32.46
+97 		New Caledonia	27.50
+64 		New Zealand	33.65
+147 		Nicaragua	20.56
+208 		Niger	16.25
+174 		Nigeria	18.63
+214 		Niue	NA
+214 		Norfolk Island	NA
+85 		Northern Mariana Islands	29.33
+36 		Norway	38.17
+168 		Oman	19.13
+161 		Pakistan	19.58
+73 		Palau	31.43
+214 		Palmyra Atoll	NA
+108 		Panama	26.18
+145 		Papua New Guinea	21.09
+214 		Paracel Islands	NA
+144 		Paraguay	21.20
+116 		Peru	24.95
+137 		Philippines	22.27
+214 		Pitcairn Islands	NA
+47 		Poland	36.43
+35 		Portugal	38.20
+58 		Puerto Rico	34.23
+72 		Qatar	31.57
+105 		Reunion	26.72
+48 		Romania	36.39
+37 		Russia	38.15
+178 		Rwanda	18.48
+52 		Saint Helena	35.40
+94 		Saint Kitts and Nevis	27.60
+118 		Saint Lucia	24.81
+63 		Saint Pierre and Miquelon	33.70
+107 		Saint Vincent and the Grenadines	26.36
+120 		Samoa	24.59
+14 		San Marino	40.29
+209 		Sao Tome and Principe	16.12
+142 		Saudi Arabia	21.28
+183 		Senegal	18.15
+43 		Serbia and Montenegro	36.79
+93 		Seychelles	27.70
+197 		Sierra Leone	17.53
+44 		Singapore	36.76
+51 		Slovakia	35.43
+15 		Slovenia	40.23
+174 		Solomon Islands	18.63
+194 		Somalia	17.59
+125 		South Africa	23.98
+214 		South Georgia and the South Sandwich Islands	NA
+19 		Spain	39.51
+214 		Spratly Islands	NA
+82 		Sri Lanka	29.44
+186 		Sudan	18.07
+110 		Suriname	26.13
+214 		Svalbard	NA
+173 		Swaziland	18.72
+9 		Sweden	40.60
+17 		Switzerland	39.77
+151 		Syria	20.37
+60 		Taiwan	34.14
+160 		Tajikistan	19.73
+193 		Tanzania	17.62
+76 		Thailand	30.88
+189 		Togo	17.78
+214 		Tokelau	NA
+148 		Tonga	20.46
+74 		Trinidad and Tobago	30.91
+214 		Tromelin Island	NA
+101 		Tunisia	27.29
+93 		Turkey	27.70
+140 		Turkmenistan	21.56
+99 		Turks and Caicos Islands	27.35
+121 		Tuvalu	24.45
+213 		Uganda	14.97
+34 		Ukraine	38.22
+91 		United Arab Emirates	27.90
+27 		United Kingdom	38.99
+49 		United States	36.27
+67 		Uruguay	32.46
+136 		Uzbekistan	22.36
+134 		Vanuatu	22.64
+114 		Venezuela	25.60
+115 		Vietnam	25.51
+46 		Virgin Islands	36.52
+214 		Wake Island	NA
+214 		Wallis and Futuna	NA
+184 		West Bank	18.14
+214 		Western Sahara	NA
+94 		World	27.60
+204 		Yemen	16.54
+205 		Zambia	16.46
+166 		Zimbabwe	19.26

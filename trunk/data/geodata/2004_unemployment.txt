@@ -1,0 +1,269 @@
+126 		Afghanistan	NA
+39 		Albania	15.80
+18 		Algeria	28.40
+91 		American Samoa	6.00
+125 		Andorra	.00
+4 		Angola	50.00
+86 		Anguilla	6.70
+127 		Antarctica	NA
+61 		Antigua and Barbuda	11.00
+127 		Arctic Ocean	NA
+35 		Argentina	16.30
+27 		Armenia	20.00
+123 		Aruba	.60
+127 		Ashmore and Cartier Islands	NA
+127 		Atlantic Ocean	NA
+90 		Australia	6.10
+101 		Austria	4.30
+37 		Azerbaijan	16.00
+85 		Bahamas, The	6.90
+43 		Bahrain	15.00
+127 		Baker Island	NA
+8 		Bangladesh	40.00
+63 		Barbados	10.70
+127 		Bassas da India	NA
+118 		Belarus	2.10
+76 		Belgium	8.10
+70 		Belize	9.10
+126 		Benin	NA
+98 		Bermuda	5.00
+126 		Bhutan	NA
+80 		Bolivia	7.60
+8 		Bosnia and Herzegovina	40.00
+8 		Botswana	40.00
+127 		Bouvet Island	NA
+54 		Brazil	12.20
+127 		British Indian Ocean Territory	NA
+111 		British Virgin Islands	3.00
+65 		Brunei	10.00
+49 		Bulgaria	13.50
+126 		Burkina Faso	NA
+97 		Burma	5.10
+126 		Burundi	NA
+114 		Cambodia	2.50
+17 		Cameroon	30.00
+79 		Canada	7.70
+26 		Cape Verde	21.00
+103 		Cayman Islands	4.10
+77 		Central African Republic	8.00
+126 		Chad	NA
+74 		Chile	8.50
+126 		China	NA
+126 		Christmas Island	NA
+127 		Clipperton Island	NA
+3 		Cocos (Keeling) Islands	60.00
+48 		Colombia	13.60
+27 		Comoros	20.00
+126 		Congo, Democratic Republic of the	NA
+126 		Congo, Republic of the	NA
+52 		Cook Islands	13.00
+127 		Coral Sea Islands	NA
+86 		Costa Rica	6.70
+52 		Cote d'Ivoire	13.00
+29 		Croatia	18.90
+109 		Cuba	3.20
+107 		Cyprus	3.4
+94 		Cyprus - Turkish area	5.6
+64 		Czech Republic	10.50
+91 		Denmark	6.00
+4 		Djibouti	50.00
+24 		Dominica	23.00
+42 		Dominican Republic	15.50
+4 		East Timor	50.00
+67 		Ecuador	9.80
+66 		Egypt	9.90
+87 		El Salvador	6.50
+17 		Equatorial Guinea	30.00
+126 		Eritrea	NA
+95 		Estonia	5.50
+126 		Ethiopia	NA
+127 		Europa Island	NA
+125 		Falkland Islands (Islas Malvinas)	.00
+121 		Faroe Islands	1.00
+80 		Fiji	7.60
+69 		Finland	9.20
+68 		France	9.60
+25 		French Guiana	22.00
+56 		French Polynesia	11.80
+127 		French Southern and Antarctic Lands	NA
+26 		Gabon	21.00
+126 		Gambia, The	NA
+4 		Gaza Strip	50.00
+32 		Georgia	17.00
+63 		Germany	10.70
+27 		Ghana	20.00
+119 		Gibraltar	2.00
+127 		Glorioso Islands	NA
+67 		Greece	9.80
+65 		Greenland	10.00
+53 		Grenada	12.50
+20 		Guadeloupe	27.80
+43 		Guam	15.00
+81 		Guatemala	7.50
+124 		Guernsey	.50
+126 		Guinea	NA
+126 		Guinea-Bissau	NA
+70 		Guyana	9.10
+125 		Haiti	.00
+127 		Heard Island and McDonald Islands	NA
+127 		Holy See (Vatican City)	NA
+21 		Honduras	27.50
+78 		Hong Kong	7.90
+127 		Howland Island	NA
+90 		Hungary	6.10
+106 		Iceland	3.50
+70 		India	9.10
+127 		Indian Ocean	NA
+64 		Indonesia	10.50
+40 		Iran	15.70
+126 		Iraq	NA
+98 		Ireland	5.00
+63 		Israel	10.70
+69 		Italy	9.20
+38 		Jamaica	15.90
+127 		Jan Mayen	NA
+96 		Japan	5.30
+127 		Jarvis Island	NA
+122 		Jersey	.70
+127 		Johnston Atoll	NA
+37 		Jordan	16.00
+127 		Juan de Nova Island	NA
+73 		Kazakhstan	8.60
+8 		Kenya	40.00
+127 		Kingman Reef	NA
+119 		Kiribati	2.00
+126 		Korea, North	NA
+107 		Korea, South	3.40
+84 		Kuwait	7.00
+83 		Kyrgyzstan	7.20
+93 		Laos	5.70
+72 		Latvia	8.70
+31 		Lebanon	18.00
+7 		Lesotho	45.00
+1 		Liberia	85.00
+17 		Libya	30.00
+120 		Liechtenstein	1.30
+63 		Lithuania	10.70
+111 		Luxembourg	3.00
+88 		Macau	6.30
+11 		Macedonia, The Former Yugoslav Republic of	36.70
+92 		Madagascar	5.90
+126 		Malawi	NA
+107 		Malaysia	3.40
+125 		Maldives	.00
+44 		Mali	14.60
+84 		Malta	7.00
+122 		Man, Isle of	.70
+16 		Marshall Islands	30.90
+22 		Martinique	27.20
+26 		Mauritania	21.00
+71 		Mauritius	8.80
+9 		Mayotte	38.00
+108 		Mexico	3.30
+37 		Micronesia, Federated States of	16.00
+127 		Midway Islands	NA
+77 		Moldova	8.00
+110 		Monaco	3.10
+99 		Mongolia	4.60
+91 		Montserrat	6.00
+28 		Morocco	19.00
+26 		Mozambique	21.00
+13 		Namibia	35.00
+125 		Nauru	.00
+127 		Navassa Island	NA
+6 		Nepal	47.00
+102 		Netherlands	4.20
+41 		Netherlands Antilles	15.60
+28 		New Caledonia	19.00
+97 		New Zealand	5.10
+25 		Nicaragua	22.00
+126 		Niger	NA
+19 		Nigeria	28.00
+126 		Niue	NA
+126 		Norfolk Island	NA
+126 		Northern Mariana Islands	NA
+100 		Norway	4.50
+126 		Oman	NA
+127 		Pacific Ocean	NA
+79 		Pakistan	7.70
+116 		Palau	2.30
+127 		Palmyra Atoll	NA
+45 		Panama	14.50
+126 		Papua New Guinea	NA
+127 		Paracel Islands	NA
+34 		Paraguay	16.40
+50 		Peru	13.40
+58 		Philippines	11.40
+126 		Pitcairn Islands	NA
+31 		Poland	18.00
+91 		Portugal	6.00
+55 		Puerto Rico	12.00
+112 		Qatar	2.70
+12 		Reunion	36.00
+82 		Romania	7.30
+75 		Russia	8.40
+126 		Rwanda	NA
+47 		Saint Helena	14.00
+100 		Saint Kitts and Nevis	4.50
+33 		Saint Lucia	16.50
+67 		Saint Pierre and Miquelon	9.80
+25 		Saint Vincent and the Grenadines	22.00
+126 		Samoa	NA
+113 		San Marino	2.60
+126 		Sao Tome and Principe	NA
+23 		Saudi Arabia	25.00
+5 		Senegal	48.00
+14 		Serbia and Montenegro	34.50
+126 		Seychelles	NA
+126 		Sierra Leone	NA
+98 		Singapore	5.00
+43 		Slovakia	15.00
+60 		Slovenia	11.20
+126 		Solomon Islands	NA
+126 		Somalia	NA
+10 		South Africa	37.00
+127 		South Georgia and the South Sandwich Islands	NA
+127 		Southern Ocean	NA
+57 		Spain	11.70
+127 		Spratly Islands	NA
+77 		Sri Lanka	8.00
+30 		Sudan	18.70
+32 		Suriname	17.00
+127 		Svalbard	NA
+15 		Swaziland	34.00
+99 		Sweden	4.60
+105 		Switzerland	3.90
+27 		Syria	20.00
+97 		Taiwan	5.10
+8 		Tajikistan	40.00
+126 		Tanzania	NA
+117 		Thailand	2.20
+126 		Togo	NA
+126 		Tokelau	NA
+51 		Tonga	13.30
+62 		Trinidad and Tobago	10.90
+127 		Tromelin Island	NA
+46 		Tunisia	14.30
+59 		Turkey	11.30
+126 		Turkmenistan	NA
+65 		Turks and Caicos Islands	10.00
+126 		Tuvalu	NA
+126 		Uganda	NA
+104 		Ukraine	4.00
+115 		United Arab Emirates	2.40
+97 		United Kingdom	5.10
+89 		United States	6.20
+36 		Uruguay	16.10
+65 		Uzbekistan	10.00
+126 		Vanuatu	NA
+31 		Venezuela	18.00
+23 		Vietnam	25.00
+72 		Virgin Islands	8.70
+127 		Wake Island	NA
+126 		Wallis and Futuna	NA
+4 		West Bank	50.00
+126 		Western Sahara	NA
+17 		World	30.00
+13 		Yemen	35.00
+4 		Zambia	50.00
+2 		Zimbabwe	70.00
