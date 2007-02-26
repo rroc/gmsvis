@@ -1,0 +1,9 @@
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\CountryDataParser.Form1.resources
+obj\Debug\CountryDataParser.Properties.Resources.resources
+obj\Debug\CountryDataParser.csproj.GenerateResource.Cache
+bin\Debug\CountryDataParser.exe
+bin\Debug\CountryDataParser.pdb
+obj\Debug\CountryDataParser.exe
+obj\Debug\CountryDataParser.pdb
+bin\Debug\CarlosAg.ExcelXmlWriter.dll
