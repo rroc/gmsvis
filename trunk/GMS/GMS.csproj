@@ -29,9 +29,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GAVLabFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GAVProjectFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GAVLabFramework.dll</HintPath>
+      <HintPath>..\lib\GAVProjectFramework.dll</HintPath>
     </Reference>
     <Reference Include="MusicBrainzDotNet, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>

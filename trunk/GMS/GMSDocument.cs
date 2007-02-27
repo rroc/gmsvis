@@ -6,9 +6,24 @@ using MusicDataminer;
 using Gav.Graphics;
 using Gav.Data;
 using System.Windows.Forms;
+using System.Globalization;
+using System.Drawing;
 
 namespace GMS
 {
+
+    class CountryComparer : IComparer
+    {
+        // Comparator class for countries
+        int IComparer.Compare(object x, object y)
+        {
+            Country c1 = (Country)x;
+            Country c2 = (Country)y;
+
+            return c1.name.CompareTo(c2.name);
+        }
+    };
+
     class GMSDocument
     {
         // private attributes
@@ -16,10 +31,13 @@ namespace GMS
         private object[,] data;
         List<string> stringList;
 
+        Hashtable countries;
+
         private DataCube dataCube;
         private Renderer renderer;
 
         Panel panel;
+        ParallelCoordinatesPlot pcPlot;
 
         DB db;
 
@@ -27,6 +45,7 @@ namespace GMS
         {
             this.panel = aPanel;
             this.renderer = new Renderer(form);
+            countries = new Hashtable();
         }
 
 
@@ -42,39 +61,45 @@ namespace GMS
 
         public void FillDummieCube(List<string> headers)
         {
+            headers.Add("Country");
             headers.Add("Median Age");
             headers.Add("Number of Releases");
             headers.Add("Unemployment Rate");
             headers.Add("GDB Per Capita");
 
             List<object[]> filteredCountries = new List<object[]>();
-            
-            int i = 0;
-            foreach (Country country in db.countries.Values)
+            ArrayList sortedCountries = new ArrayList(db.countries.Values);
+            sortedCountries.Sort(new CountryComparer());
+
+            uint i = 0;
+            foreach (Country country in sortedCountries)
             {
                 // if any albums were release in that country
                 if (country.releases.Count != 0)
                 {
-                    filteredCountries.Add(new object[4]{country.medianAge, 
+                    filteredCountries.Add(new object[5]{
+                        i, 
+                        country.medianAge, 
                         country.releases.Count, 
                         country.unemploymentRate, 
                         country.gdbPerCapita});
+                    
+                    string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(country.name);
 
-                    //data[0, i] = country.medianAge;
-                    //data[1, i] = country.releases.Count;
-                    //data[2, i] = country.unemploymentRate;
-                    //data[3, i] = country.gdbPerCapita;
+                    countries.Add(i++, countryTitleCase);
                 }
             }
 
-            data = new object[4, filteredCountries.Count];
-
+            data = new object[5, filteredCountries.Count];
+            
+            i = 0;
             foreach (object[] obj in filteredCountries)
             {
-                data[0, i] = obj[0];
-                data[1, i] = obj[1];
-                data[2, i] = obj[2];
-                data[3, i] = obj[3];
+                // copy every attribute
+                for (int j = 0; j < 5; j++)
+                {
+                    data[j, i] = obj[j];
+                }
                 ++i;
             }
 
@@ -136,17 +161,67 @@ namespace GMS
         public void ShowData(List<string> headers)
         {
             // Write your code here.
-            InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
+            pcPlot = InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
+            string country0 = (string)countries[(uint)0];
+            string country1 = (string)countries[(uint)10];
+            
+            Font font = new Font("Verdana", 6);
+            Color color = Color.DodgerBlue;
 
-            //List<float> max, min;
-            //dataCube.GetData().GetAllColumnMaxMin(out max, out min);
-            //int columns = dataCube.GetData().Data.GetLength(0);
-            //for (int i = 0; i < columns; i++)
+            int countriesCount = countries.Count;
+            uint stride = (uint)countriesCount / 10;
+
+            for (uint i = 0; i < countriesCount; i += 1)
+            {
+                float verticalPosition = 1.0f - (float)i / (float)countriesCount;
+                string country = (string)countries[i];
+
+                pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
+                color, font, verticalPosition);
+            }
+
+            pcPlot.PaddingLeft += 60;
+
+            pcPlot.LinePicked += new EventHandler(pcPlot_LinePicked);
+            pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
+            pcPlot.PickSensitivity = 3;
+        }
+
+        void pcPlot_Picked(object sender, IndexesPickedEventArgs e)
+        {
+            ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
+            List<int> selectedLines = e.PickedIndexes;
+            Font font = new Font("Verdana", 10);
+            Color color = Color.DodgerBlue;
+            int countriesCount = countries.Count;
+
+            //foreach (int countryId in selectedLines)
             //{
-            //    plot.SetMin(i, min[i]);
-            //    plot.SetMax(i, max[i]);
+            //    string country = (string)countries[(uint)countryId];
+            //    float verticalPosition = (float)countryId / (float)countriesCount;
+
+            //plot.AddText("Very nice country", ParallelCoordinatesPlot.TextRelativePosition.Left,
+            //    color, new Font("Verdana", 10), 0.3f);
             //}
 
+            pcPlot.SetSelectedLines(selectedLines, true, true);
+        }
+
+        void pcPlot_LinePicked(object sender, EventArgs e)
+        {
+            List<int> selectedLines =((ParallelCoordinatesPlot)sender).GetSelectedLineIndexes();
+            Font font = new Font("Verdana", 10);
+            Color color = Color.DarkKhaki;
+            int countriesCount = countries.Count;
+
+            foreach (int countryId in selectedLines)
+            {
+                string country = (string)countries[(uint)countryId];
+                float verticalPosition = countryId / countriesCount;
+                
+                pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
+                color, font, verticalPosition);
+            }
 
         }
 

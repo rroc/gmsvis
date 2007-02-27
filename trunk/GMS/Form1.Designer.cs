@@ -39,7 +39,7 @@ namespace GMS
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Size = new System.Drawing.Size(950, 550);
-            this.splitContainer1.SplitterDistance = 316;
+            this.splitContainer1.SplitterDistance = 800;
             this.splitContainer1.TabIndex = 0;
             // 
             // Form1
