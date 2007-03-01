@@ -18,7 +18,10 @@ namespace GMS
         private object[,] data;
         List<string> headers;
 
+        // filters
         private DataCube dataCube;
+        private KMeansFilter kMeansFilter;
+
         private Renderer renderer;
 
         ParallelCoordinatesPlot pcPlot;
@@ -28,8 +31,6 @@ namespace GMS
 
         // Lookup table to get country names
         Hashtable countries;
-
-        KMeansFilter kMeansFilter;
 
         public ParallelPlotCountries(DB aDatabase, Panel aDestinationPanel, 
             Renderer aRenderer)
@@ -97,6 +98,58 @@ namespace GMS
             return filterPlot;
         }
 
+      
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    ToggleFilter
+        // FullName:  GMS.ParallelPlotCountries.ToggleFilter
+        // Access:    public 
+        // Returns:   void
+        //////////////////////////////////////////////////////////////////////////
+        public void ToggleFilter(string aClusters)
+        {
+            if (aClusters.Equals("None"))
+            {
+                ChangePC(-1);
+            }
+            else
+            {
+                this.kMeansFilter.SetNumberOfClusters(int.Parse(aClusters));
+                ChangePC(kMeansFilter.GetData().Data.GetLength(0) - 1);
+            }
+
+            pcPlot.Invalidate();
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    ChangePC
+        // FullName:  GMS.ParallelPlotCountries.ChangePC
+        // Access:    private 
+        // Returns:   void
+        // Parameter: int columnIndex
+        //////////////////////////////////////////////////////////////////////////
+        private void ChangePC(int columnIndex)
+        {
+            // to color according to clusters
+            if (columnIndex != -1)
+            {
+                pcPlot.Input = kMeansFilter;
+                pcPlot.ColorMap.Input = kMeansFilter;
+                pcPlot.ColorMap.Index = columnIndex;
+            }
+            else
+            {
+                pcPlot.Input = dataCube;
+                pcPlot.ColorMap.Input = dataCube;
+                /************************************************************************/
+                /* TODO: COLOR ACCORDING TO COUNTRY NAMES                             */
+                /************************************************************************/
+                pcPlot.ColorMap.Index = dataCube.Data.GetLength(0) - 1;
+            }
+
+            pcPlot.Enabled = true;
+        }
+
+
         //////////////////////////////////////////////////////////////////////////
         // Method:    SetupData
         // FullName:  GMS.ParallelPlotCountries.SetupData
@@ -150,6 +203,7 @@ namespace GMS
 
             dataCube = new DataCube();
             dataCube.SetData(data);
+            kMeansFilter.Input = dataCube;
         }
 
 

@@ -236,5 +236,9 @@ namespace GMS
             //return sum / len;
         }
 
+        public void SetNumberOfClusters(int aClusters)
+        {
+            nClusters = aClusters;
+        }
     }
 }

@@ -43,5 +43,12 @@ namespace GMS
 
             //doc.ShowData(headers, kMeansFilter);
         }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ToolStripComboBox combo = (ToolStripComboBox)sender;
+            string clusters = (string)combo.SelectedItem;
+            pcCountries.ToggleFilter(clusters);
+        }
     }
 }
