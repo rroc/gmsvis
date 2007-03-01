@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using Gav.Data;
+
 namespace GMS
 {
     public partial class Form1 : Form
@@ -27,10 +29,23 @@ namespace GMS
 
             doc = new GMSDocument(splitContainer1.Panel1, this);
             doc.ReadDB(dir + iDataPath + iDBFileName);
+            
             List<string> headers = new List<string>();
+            headers.Add("Country");
+            headers.Add("Median Age");
+            headers.Add("Number of Releases");
+            headers.Add("Unemployment Rate");
+            headers.Add("GDB Per Capita");
 
-            doc.FillDummieCube(headers);
-            doc.ShowData(headers);
+//            doc.FillDummieCube(headers);
+            DataCube dc = doc.CreateDataCube();
+
+            headers.Add("Clusters");
+            KMeansFilter kMeansFilter = new KMeansFilter(4);
+            kMeansFilter.Input = dc;
+
+
+            doc.ShowData(headers, kMeansFilter);
         }
     }
 }
