@@ -24,18 +24,22 @@ namespace GMS
         ParallelCoordinatesPlot pcPlot;
         Panel panel;
 
-        GMSDocument document;
+        DB database;
 
         // Lookup table to get country names
         Hashtable countries;
 
-        public ParallelPlotCountries(GMSDocument aDoc, Panel aDestinationPanel, 
+        KMeansFilter kMeansFilter;
+
+        public ParallelPlotCountries(DB aDatabase, Panel aDestinationPanel, 
             Renderer aRenderer)
         {
-            document = aDoc;
+            database = aDatabase;
             panel = aDestinationPanel;
             countries = new Hashtable();
             renderer = aRenderer;
+            headers = new List<string>();
+            kMeansFilter = new KMeansFilter(3);
 
             SetupData();
             SetupView();
@@ -79,13 +83,11 @@ namespace GMS
             ColorMap colorMap = CreateColorMap();
             colorMap.Input = filter;
 
-            /************************************************************************/
-            /* DO WE NEED THIS ?????                                                */
-            /************************************************************************/
-            //if (columnIndex != -1)
-            //{
-            //    colorMap.Index = columnIndex;
-            //}
+            // to color according to clusters
+            if (columnIndex != -1)
+            {
+                colorMap.Index = columnIndex;
+            }
 
             filterPlot.ColorMap = colorMap;
 
@@ -95,7 +97,13 @@ namespace GMS
             return filterPlot;
         }
 
-        public void SetupData()
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    SetupData
+        // FullName:  GMS.ParallelPlotCountries.SetupData
+        // Access:    private 
+        // Returns:   void
+        //////////////////////////////////////////////////////////////////////////
+        private void SetupData()
         {
             this.headers.Add("Country");
             this.headers.Add("Median Age");
@@ -104,7 +112,7 @@ namespace GMS
             this.headers.Add("GDB Per Capita");
 
             List<object[]> filteredCountries = new List<object[]>();
-            ArrayList sortedCountries = new ArrayList( document.GetCountries() );
+            ArrayList sortedCountries = new ArrayList( database.countries.Values );
             sortedCountries.Sort(new CountryComparer());
 
             uint i = 0;
@@ -141,18 +149,16 @@ namespace GMS
             }
 
             dataCube = new DataCube();
-            dataCube.Data = data;
-            //dataCube.SetData(data);
+            dataCube.SetData(data);
         }
 
 
-        public void SetupView(List<string> headers)
+        private void SetupView()
         {
             pcPlot = InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
 
             Font font = new Font("Verdana", 6);
             Color color = Color.DodgerBlue;
-
 
             int countriesCount = countries.Count;
 

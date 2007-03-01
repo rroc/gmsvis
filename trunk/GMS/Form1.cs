@@ -8,12 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 
 using Gav.Data;
+using Gav.Graphics;
 
 namespace GMS
 {
     public partial class Form1 : Form
     {
         GMSDocument doc;
+        Renderer renderer;
         ParallelPlotCountries pcCountries;
 
         public Form1()
@@ -28,27 +30,18 @@ namespace GMS
             string iDataPath = "\\..\\..\\..\\data\\";
             string iDBFileName = "db.bin";
 
-            doc = new GMSDocument(splitContainer1.Panel1, this);
+            renderer = new Renderer(this);
+            doc = new GMSDocument();
             doc.ReadDB(dir + iDataPath + iDBFileName);
             
-            List<string> headers = new List<string>();
-            headers.Add("Country");
-            headers.Add("Median Age");
-            headers.Add("Number of Releases");
-            headers.Add("Unemployment Rate");
-            headers.Add("GDB Per Capita");
+            pcCountries = new ParallelPlotCountries(doc.GetDatabase(), splitContainer1.Panel1, renderer);
 
-            //pcCountries = new ParallelPlotCountries(doc, splitContainer1.Panel1, )
-
-//            doc.FillDummieCube(headers);
-            DataCube dc = doc.CreateDataCube();
-
-            headers.Add("Clusters");
-            KMeansFilter kMeansFilter = new KMeansFilter(4);
-            kMeansFilter.Input = dc;
+            //headers.Add("Clusters");
+            //KMeansFilter kMeansFilter = new KMeansFilter(3);
+            //kMeansFilter.Input = dc;
 
 
-            doc.ShowData(headers, kMeansFilter);
+            //doc.ShowData(headers, kMeansFilter);
         }
     }
 }
