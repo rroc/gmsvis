@@ -14,6 +14,7 @@ namespace GMS
     public partial class Form1 : Form
     {
         GMSDocument doc;
+        ParallelPlotCountries pcCountries;
 
         public Form1()
         {
@@ -36,6 +37,8 @@ namespace GMS
             headers.Add("Number of Releases");
             headers.Add("Unemployment Rate");
             headers.Add("GDB Per Capita");
+
+            //pcCountries = new ParallelPlotCountries(doc, splitContainer1.Panel1, )
 
 //            doc.FillDummieCube(headers);
             DataCube dc = doc.CreateDataCube();
