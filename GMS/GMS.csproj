@@ -72,6 +72,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GMSDocument.cs" />
+    <Compile Include="ParallelPlotCountries.cs" />
     <Compile Include="KMeansFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
