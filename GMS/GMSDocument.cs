@@ -11,7 +11,9 @@ using System.Drawing;
 
 namespace GMS
 {
-
+    /*
+     * 
+     */
     class CountryComparer : IComparer
     {
         // Comparator class for countries
@@ -21,6 +23,36 @@ namespace GMS
             Country c2 = (Country)y;
 
             return c1.name.CompareTo(c2.name);
+        }
+    };
+
+    /*
+     * Style Comparer
+     */
+    class StyleRelevanceComparer : IComparer
+    {
+        // Comparator class for music styles
+        int IComparer.Compare(object x, object y)
+        {
+            Style s1 = (Style)x;
+            Style s2 = (Style)y;
+
+            return s2.releases.Count -  s1.releases.Count;
+        }
+    };
+
+    /*
+     * Artist Comparer
+     */
+    class ArtistRelevanceComparer : IComparer
+    {
+        // Comparator class for music styles
+        int IComparer.Compare(object x, object y)
+        {
+            Artist s1 = (Artist)x;
+            Artist s2 = (Artist)y;
+
+            return s2.albums.Count - s1.albums.Count;
         }
     };
 
@@ -59,6 +91,57 @@ namespace GMS
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    SortStyles
+        // FullName:  GMS.GMSDocument.SortStyles
+        // Access:    public 
+        // Returns:   void
+        //////////////////////////////////////////////////////////////////////////
+        public void SortStyles()
+        {
+            ArrayList sortedStyles = new ArrayList(db.styles.Values);
+            sortedStyles.Sort(new StyleRelevanceComparer());
+
+            int i = 0;
+            foreach (Style style in sortedStyles)
+	        {
+                Console.WriteLine(i + ": " + style.name + ": " + style.releases.Count);
+                if( ++i > 29)
+                {
+                    break;
+                }
+	        }
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    SortArtists
+        // FullName:  GMS.GMSDocument.SortArtists
+        // Access:    public 
+        // Returns:   void
+        //////////////////////////////////////////////////////////////////////////
+        public void SortArtists()
+        {
+            ArrayList sortedArtists = new ArrayList(db.artists.Values);
+            sortedArtists.Sort(new ArtistRelevanceComparer());
+
+            int i = 0;
+            foreach (Artist artist in sortedArtists)
+            {
+                Console.WriteLine(i + ": " + artist.name + ": " + artist.albums.Count);
+                if (++i > 29)
+                {
+                    break;
+                }
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    FillDummieCube
+        // FullName:  GMS.GMSDocument.FillDummieCube
+        // Access:    public 
+        // Returns:   void
+        // Parameter: List<string> headers
+        //////////////////////////////////////////////////////////////////////////
         public void FillDummieCube(List<string> headers)
         {
             headers.Add("Country");
@@ -80,7 +163,8 @@ namespace GMS
                     filteredCountries.Add(new object[5]{
                         i, 
                         country.medianAge, 
-                        country.releases.Count, 
+                        Math.Log(country.releases.Count, 2), 
+                        //country.releases.Count, 
                         country.unemploymentRate, 
                         country.gdbPerCapita});
                     
@@ -158,6 +242,13 @@ namespace GMS
             return filterPlot;
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    ShowData
+        // FullName:  GMS.GMSDocument.ShowData
+        // Access:    public 
+        // Returns:   void
+        // Parameter: List<string> headers
+        //////////////////////////////////////////////////////////////////////////
         public void ShowData(List<string> headers)
         {
             // Write your code here.
@@ -173,7 +264,7 @@ namespace GMS
 
             for (uint i = 0; i < countriesCount; i += 1)
             {
-                float verticalPosition = 1.0f - (float)i / (float)countriesCount;
+                float verticalPosition = 1.0f - (float)i / (float)(countriesCount - 1);
                 string country = (string)countries[i];
 
                 pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
@@ -187,6 +278,14 @@ namespace GMS
             pcPlot.PickSensitivity = 3;
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    pcPlot_Picked
+        // FullName:  GMS.GMSDocument.pcPlot_Picked
+        // Access:    public 
+        // Returns:   void
+        // Parameter: object sender
+        // Parameter: IndexesPickedEventArgs e
+        //////////////////////////////////////////////////////////////////////////
         void pcPlot_Picked(object sender, IndexesPickedEventArgs e)
         {
             ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
