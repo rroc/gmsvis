@@ -136,13 +136,64 @@ namespace GMS
         }
 
         //////////////////////////////////////////////////////////////////////////
+        // Method:    CreateDataCube
+        // FullName:  GMS.GMSDocument.CreateDataCube
+        // Access:    public 
+        // Returns:   DataCube
+        //////////////////////////////////////////////////////////////////////////
+        public DataCube CreateDataCube() 
+        {
+            List<object[]> filteredCountries = new List<object[]>();
+            ArrayList sortedCountries = new ArrayList(db.countries.Values);
+            sortedCountries.Sort(new CountryComparer());
+
+            uint i = 0;
+            foreach (Country country in sortedCountries)
+            {
+                // if any albums were release in that country
+                if (country.releases.Count != 0)
+                {
+                    filteredCountries.Add(new object[5]{
+                        i, 
+                        country.medianAge, 
+                        Math.Log(country.releases.Count, 2), 
+                        //country.releases.Count, 
+                        country.unemploymentRate, 
+                        country.gdbPerCapita});
+
+                    string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(country.name);
+
+                    countries.Add(i++, countryTitleCase);
+                }
+            }
+
+            data = new object[5, filteredCountries.Count];
+
+            i = 0;
+            foreach (object[] obj in filteredCountries)
+            {
+                // copy every attribute
+                for (int j = 0; j < 5; j++)
+                {
+                    data[j, i] = obj[j];
+                }
+                ++i;
+            }
+
+            DataCube dc = new DataCube();
+            dc.SetData(data);
+
+            return dc;
+        } 
+
+        //////////////////////////////////////////////////////////////////////////
         // Method:    FillDummieCube
         // FullName:  GMS.GMSDocument.FillDummieCube
         // Access:    public 
         // Returns:   void
         // Parameter: List<string> headers
         //////////////////////////////////////////////////////////////////////////
-        public void FillDummieCube(List<string> headers)
+        public void FillDummieCube( List<string> headers)
         {
             headers.Add("Country");
             headers.Add("Median Age");
@@ -249,10 +300,12 @@ namespace GMS
         // Returns:   void
         // Parameter: List<string> headers
         //////////////////////////////////////////////////////////////////////////
-        public void ShowData(List<string> headers)
+        public void ShowData(List<string> headers, IDataCubeProvider<float> data )
         {
             // Write your code here.
-            pcPlot = InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
+//            pcPlot = InitializeParallelCoordinatesPlot(panel, data, -1, headers);
+            pcPlot = InitializeParallelCoordinatesPlot(panel, data, (data.GetData().Data.GetLength(0)-1), headers);
+            
             string country0 = (string)countries[(uint)0];
             string country1 = (string)countries[(uint)10];
             
