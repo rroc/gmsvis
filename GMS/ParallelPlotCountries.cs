@@ -48,12 +48,10 @@ namespace GMS
             SetupView();
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    CreateColorMap
-        // FullName:  GMS.GMSDocument.CreateColorMap
-        // Access:    private 
-        // Returns:   Gav.Data.ColorMap
-        //////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Creates a HSV(0.0, 180.0) Color Map
+        /// </summary>
+        /// <returns></returns>
         private ColorMap CreateColorMap()
         {
             ColorMap map = new ColorMap();
@@ -66,15 +64,15 @@ namespace GMS
         }
 
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    InitializeParallelCoordinatesPlot
-        // FullName:  GMS.GMSDocument.InitializeParallelCoordinatesPlot
-        // Access:    private 
-        // Returns:   Gav.Graphics.ParallelCoordinatesPlot
-        // Parameter: Panel panel
-        // Parameter: IDataCubeProvider<float> filter
-        // Parameter: int columnIndex
-        //////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Creates the PC plot given
+        /// </summary>
+        /// <param name="panel"></param>
+        /// <param name="filter"></param>
+        /// <param name="columnIndex">the column index for which we're clustering the data
+        /// in case we're using K-Means</param>
+        /// <param name="headers"></param>
+        /// <returns></returns>
         private ParallelCoordinatesPlot InitializeParallelCoordinatesPlot(Panel panel,
             IDataCubeProvider<float> filter, int columnIndex, List<string> headers)
         {
@@ -101,13 +99,10 @@ namespace GMS
         }
 
       
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    ToggleFilter
-        // FullName:  GMS.ParallelPlotCountries.ToggleFilter
-        // Access:    public 
-        // Returns:   void
-        //////////////////////////////////////////////////////////////////////////
-        // three slashes!!!!!
+        /// <summary>
+        /// Toggles the fiter: K-Means / Regular Data
+        /// </summary>
+        /// <param name="aClusters">the number of clusters or -1, if regular data is to be used</param>
         public void ToggleFilter(string aClusters)
         {
             if (aClusters.Equals("None"))
@@ -118,25 +113,17 @@ namespace GMS
             {
                 this.kMeansFilter.SetNumberOfClusters(int.Parse(aClusters));
                 ChangePC(kMeansFilter.GetData().Data.GetLength(0) - 1);
-                //kMeansFilter.CommitChanges();
-                ////pcPlot.ColorMap.Invalidate();
-                //pcPlot.ColorMap.Index = kMeansFilter.GetData().Data.GetLength(0) - 1;
-                //pcPlot.Invalidate();
-                
-         //       ChangePC(kMeansFilter.GetData().Data.GetLength(0) - 1);
             }
 
             pcPlot.Invalidate();
             GC.Collect();
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    ChangePC
-        // FullName:  GMS.ParallelPlotCountries.ChangePC
-        // Access:    private 
-        // Returns:   void
-        // Parameter: int columnIndex
-        //////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Changes the PC to used K-Means with the specified column for the clusters
+        /// or uses the regular data
+        /// </summary>
+        /// <param name="columnIndex"></param>
         private void ChangePC(int columnIndex)
         {
             // to color according to clusters
@@ -160,17 +147,13 @@ namespace GMS
                 pcPlot.ColorMap.Index = dataCube.Data.GetLength(0) - 1;
             }
             pcPlot.GuideLineEnabled = true;
-            //pcPlot.AxisPresentedNumber = 3;
-            //pcPlot.Enabled = true;
         }
 
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    SetupData
-        // FullName:  GMS.ParallelPlotCountries.SetupData
-        // Access:    private 
-        // Returns:   void
-        //////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Sorts the data by Country name and adds the data to the K-Means filter
+        /// and the regular Data Cube
+        /// </summary>
         private void SetupData()
         {
             this.headers.Add("Country");
@@ -221,7 +204,10 @@ namespace GMS
             kMeansFilter.Input = dataCube;
         }
 
-
+        /// <summary>
+        /// Initializes the view components: PC plot, its SubComponents and
+        /// its properties
+        /// </summary>
         private void SetupView()
         {
             pcPlot = InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
@@ -248,25 +234,22 @@ namespace GMS
 
                 //pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
                 //color, font, verticalPosition);
-                textLens.AddLabel(country, verticalPosition);
+                textLens.AddLabel(country, verticalPosition, (int)i);
             }
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    pcPlot_Picked
-        // FullName:  GMS.GMSDocument.pcPlot_Picked
-        // Access:    public 
-        // Returns:   void
-        // Parameter: object sender
-        // Parameter: IndexesPickedEventArgs e
-        //////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Handles the event of mouse pressing over the PC plot
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void pcPlot_Picked(object sender, IndexesPickedEventArgs e)
         {
             ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
             List<int> selectedLines = e.PickedIndexes;
-            Font font = new Font("Verdana", 10);
-            Color color = Color.DodgerBlue;
-            int countriesCount = countries.Count;
+            //Font font = new Font("Verdana", 10);
+            //Color color = Color.DodgerBlue;
+            //int countriesCount = countries.Count;
 
             //foreach (int countryId in selectedLines)
             //{

@@ -14,18 +14,20 @@ namespace Gav.Graphics
         public string text;
         public float verticalPosition;
         public int colorARGB;
+        public System.Drawing.Point defaultPosition;
+        public int id;
 
-
-        public Label(string aText, float aVerticalPosition)
-            : this(aText, aVerticalPosition, System.Drawing.Color.Blue)
+        public Label(string aText, float aVerticalPosition, int aID)
+            : this(aText, aVerticalPosition, aID, System.Drawing.Color.Blue)
         {
         }
 
-        public Label(string aText, float aVerticalPosition, System.Drawing.Color aColor)
+        public Label(string aText, float aVerticalPosition, int aID, System.Drawing.Color aColor)
         {
             text = aText;
             verticalPosition = aVerticalPosition;
             colorARGB = aColor.ToArgb();
+            id = aID;
         }
 
        
@@ -35,8 +37,35 @@ namespace Gav.Graphics
     {
         private ParallelCoordinatesPlot plot;
 
+        /// <summary>
+        /// The default 3D Font used to draw the text on the viewport
+        /// </summary>
         private Font d3dFont;
+
+        /// <summary>
+        /// The default Windows Font selected for the text
+        /// </summary>
         private System.Drawing.Font systemFont;
+
+        /// <summary>
+        /// The default 3D Font used to draw the Lens text on the viewport
+        /// </summary>
+        private Font d3dLensFont;
+
+        /// <summary>
+        /// The default Windows Font selected for the Lens text
+        /// </summary>
+        private System.Drawing.Font systemLensFont;
+
+        /// <summary>
+        /// The default Font height
+        /// </summary>
+        private int defaultTextHeight;
+
+        /// <summary>
+        /// The Lens Font height
+        /// </summary>
+        private int lensTextHeight;
 
         private Panel panel;
 
@@ -68,35 +97,58 @@ namespace Gav.Graphics
             panel = aPanel;
             graphicsObj = panel.CreateGraphics();
             systemFont = new System.Drawing.Font("Verdana", 6);
+            systemLensFont = new System.Drawing.Font("Verdana", 16);
             labels = new List<Label>();
             maxLabelWidth = 0.0f;
             mouseOverText = false;
+
+            System.Drawing.SizeF size = graphicsObj.MeasureString("foobar", systemFont);
+            defaultTextHeight = (int)size.Height;
+
+            size = graphicsObj.MeasureString("foobar", systemLensFont);
+            lensTextHeight = (int)size.Height;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="device"></param>
         protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
         {
             d3dFont = new Font(device, systemFont);
+            d3dLensFont = new Font(device, systemLensFont);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void InternalInvalidate()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void UpdateSize()
         {
 
         }
 
-        public void AddLabel(string label, float verticalPosition)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="verticalPosition"></param>
+        public void AddLabel(string label, float verticalPosition, int id)
         {
             float width = graphicsObj.MeasureString(label, systemFont).Width;
-            
+
             if (width > maxLabelWidth)
             {
                 maxLabelWidth = width;
             }
-            
-            labels.Add(new Label(label, verticalPosition));
+
+            labels.Add(new Label(label, verticalPosition, id));
         }
 
         //public void setLabels(List<string> labels)
@@ -104,8 +156,25 @@ namespace Gav.Graphics
         //    _labels.AddRange(labels);
         //}
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="label"></param>
+        private void InitLabelDefaultPosition(Label label)
+        {
+            //System.Drawing.SizeF size = graphicsObj.MeasureString(label.text, systemFont);
+            int textHalfHeight = defaultTextHeight / 2;
 
+            int yPos = plot.YPositionToScreen(plot.PadPositionY(label.verticalPosition)) - textHalfHeight;
+            int xPos = plot.XPositionToScreen(plot.PadPositionX(0)) - (int)maxLabelWidth;
+
+            label.defaultPosition = new System.Drawing.Point(xPos, yPos - textHalfHeight);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="device"></param>
         protected override void InternalRender(Microsoft.DirectX.Direct3D.Device device)
         {
 
@@ -115,46 +184,57 @@ namespace Gav.Graphics
                 labelTop = plot.YPositionToScreen(plot.PadPositionY(0.0f));
                 labelRight = plot.XPositionToScreen(plot.PadPositionX(0));
                 labelLeft = labelRight - (int)maxLabelWidth;
+
+                // initialize every label's default position
+                foreach (Label label in labels)
+                {
+                    InitLabelDefaultPosition(label);
+                }
+
                 inited = true;
             }
 
             foreach (Label label in labels)
             {
-                int yPos = plot.YPositionToScreen(plot.PadPositionY(label.verticalPosition));
-                System.Drawing.SizeF size = graphicsObj.MeasureString(label.text, systemFont);
-
-                int xPos = plot.XPositionToScreen(plot.PadPositionX(0)) - (int)maxLabelWidth;
-                int textHalfHeight = (int)(size.Height / 2);
-
-                System.Drawing.Point position = new System.Drawing.Point(xPos, yPos - textHalfHeight);
-
-                if (mouseOverText && (mouseY < yPos + textHalfHeight) && (mouseY > yPos - textHalfHeight))
+                if (mouseOverText && (mouseY < label.defaultPosition.Y + defaultTextHeight) && 
+                    (mouseY > label.defaultPosition.Y))
                 {
-                    d3dFont.DrawText(null, label.text, position, System.Drawing.Color.Red.ToArgb());
+                    System.Drawing.Point p = new System.Drawing.Point(label.defaultPosition.X, label.defaultPosition.Y);
+                    p.Y -= (lensTextHeight - defaultTextHeight) / 2;
+
+                    //System.Drawing.Font f = new System.Drawing.Font("Verdana", 16);
+                    //Microsoft.DirectX.Direct3D.Font d3dLensFont = new Font(device, f);
+                    d3dLensFont.DrawText(null, label.text, p,
+                        System.Drawing.Color.Red.ToArgb());
+
+                    List<int> selection = new List<int>();
+                    selection.Add( label.id );
+                    plot.SetSelectedLines(selection, false, true);
+
+                    //d3dFont.DrawText(null, label.text, label.defaultPosition, 
+                    //    System.Drawing.Color.Red.ToArgb());
                 }
                 else
                 {
-                    d3dFont.DrawText(null, label.text, position, label.colorARGB);
+                    d3dFont.DrawText(null, label.text, label.defaultPosition, label.colorARGB);
                 }
             }
 
             if (mouseOverText)
             {
-                //plot.Invalidate();
                 mouseOverText = false;
             }
-
-            //int yPos = plot.YPositionToScreen(plot.PadPositionY(0.5f));
-            //System.Drawing.SizeF size = graphicsObj.MeasureString("Hello", systemFont);
-
-            //System.Drawing.Point position = new System.Drawing.Point(100, yPos - (int)(size.Height / 2));
-            //d3dFont.DrawText(null, "Hello", position, System.Drawing.Color.Blue.ToArgb());
-
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         protected override bool InternalMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
-            if ((e.X < labelRight) && (e.X > labelLeft) && (e.Y > labelTop) && (e.Y < labelBottom))
+            // if mouse if over the label area trigger the mouse boolean
+            if ((e.X < labelRight) && (e.X > labelLeft) && (e.Y >= labelTop) && (e.Y <= labelBottom))
             {
                 mouseOverText = true;
                 mouseY = e.Y;
@@ -165,11 +245,21 @@ namespace Gav.Graphics
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         protected override bool InternalMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         protected override bool InternalMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
             return false;
