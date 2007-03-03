@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
 using Gav.Data;
+
+
 
 namespace GMS
 {
@@ -22,8 +23,6 @@ namespace GMS
                 clusters.Add( new List<int>() );
                 clusterMeans.Add(new List<float>());
             }
-
-            
 
             nClusters = aNClusters;
             randomClustersReady = false;
@@ -196,11 +195,26 @@ namespace GMS
 
                 CopyClusterData(output, columnCount);
 
+                for (int i = 0; i < nClusters; i++ )
+                {
+                    clusters[i].Clear();
+                    clusterMeans[i].Clear();
+                }
+
+
                 _dataCube.Data = output;
             }
 
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    CopyClusterData
+        // FullName:  GMS.KMeansFilter.CopyClusterData
+        // Access:    private 
+        // Returns:   void
+        // Parameter: float[, ,] output
+        // Parameter: int columnCount
+        //////////////////////////////////////////////////////////////////////////
         private void CopyClusterData(float[, ,] output, int columnCount)
         {
             for(int i = 0; i < clusters.Count; i++)
@@ -215,6 +229,15 @@ namespace GMS
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    GetColumnMean
+        // FullName:  GMS.KMeansFilter.GetColumnMean
+        // Access:    private 
+        // Returns:   float
+        // Parameter: List<int> cluster
+        // Parameter: float[, ,] inputData
+        // Parameter: int column
+        //////////////////////////////////////////////////////////////////////////
         private float GetColumnMean(List<int> cluster, float[, ,] inputData, int column)
         {
             float sum = 0.0f;
@@ -236,9 +259,37 @@ namespace GMS
             //return sum / len;
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Method:    SetNumberOfClusters
+        // FullName:  GMS.KMeansFilter.SetNumberOfClusters
+        // Access:    public 
+        // Returns:   void
+        // Parameter: int aClusters
+        //////////////////////////////////////////////////////////////////////////
         public void SetNumberOfClusters(int aClusters)
         {
+            int previousNClusters = nClusters;
             nClusters = aClusters;
+
+            int diff = nClusters - previousNClusters;
+
+            // if there are any differences in sizes: remove or add
+            if( diff > 0)
+            {
+                for (int i = 0; i < diff; i++)
+                {
+                    clusters.Add(new List<int>());
+                    clusterMeans.Add(new List<float>());
+                }
+            }
+            else
+            {
+                for (int i = 0; i < diff; i++)
+                {
+                    clusters.RemoveAt(clusters.Count - 1);
+                    clusterMeans.RemoveAt(clusterMeans.Count - 1);
+                }
+            }
         }
     }
 }
