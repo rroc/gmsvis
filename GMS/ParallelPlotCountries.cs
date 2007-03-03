@@ -21,10 +21,12 @@ namespace GMS
         // filters
         private DataCube dataCube;
         private KMeansFilter kMeansFilter;
+        private bool kMeansClusteringOn = false;
 
         private Renderer renderer;
 
         ParallelCoordinatesPlot pcPlot;
+        TextLensSubComponent textLens;
         Panel panel;
 
         DB database;
@@ -105,6 +107,7 @@ namespace GMS
         // Access:    public 
         // Returns:   void
         //////////////////////////////////////////////////////////////////////////
+        // three slashes!!!!!
         public void ToggleFilter(string aClusters)
         {
             if (aClusters.Equals("None"))
@@ -115,9 +118,16 @@ namespace GMS
             {
                 this.kMeansFilter.SetNumberOfClusters(int.Parse(aClusters));
                 ChangePC(kMeansFilter.GetData().Data.GetLength(0) - 1);
+                //kMeansFilter.CommitChanges();
+                ////pcPlot.ColorMap.Invalidate();
+                //pcPlot.ColorMap.Index = kMeansFilter.GetData().Data.GetLength(0) - 1;
+                //pcPlot.Invalidate();
+                
+         //       ChangePC(kMeansFilter.GetData().Data.GetLength(0) - 1);
             }
 
             pcPlot.Invalidate();
+            GC.Collect();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -132,21 +142,26 @@ namespace GMS
             // to color according to clusters
             if (columnIndex != -1)
             {
-                pcPlot.Input = kMeansFilter;
-                pcPlot.ColorMap.Input = kMeansFilter;
+                if( ! kMeansClusteringOn )
+                {
+                    pcPlot.Input = kMeansFilter;
+                    pcPlot.ColorMap.Input = kMeansFilter;
+                    kMeansClusteringOn = ! kMeansClusteringOn;
+                }
+                
                 pcPlot.ColorMap.Index = columnIndex;
+                kMeansFilter.CommitChanges();
             }
-            else
+            else if (kMeansClusteringOn)
             {
                 pcPlot.Input = dataCube;
                 pcPlot.ColorMap.Input = dataCube;
-                /************************************************************************/
-                /* TODO: COLOR ACCORDING TO COUNTRY NAMES                             */
-                /************************************************************************/
+                kMeansClusteringOn = !kMeansClusteringOn;
                 pcPlot.ColorMap.Index = dataCube.Data.GetLength(0) - 1;
             }
-
-            pcPlot.Enabled = true;
+            pcPlot.GuideLineEnabled = true;
+            //pcPlot.AxisPresentedNumber = 3;
+            //pcPlot.Enabled = true;
         }
 
 
@@ -210,6 +225,15 @@ namespace GMS
         private void SetupView()
         {
             pcPlot = InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
+            
+            // Padding: so the names of the countries don't be cut
+            pcPlot.PaddingLeft += 60;
+
+            pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
+            pcPlot.PickSensitivity = 3;
+
+            textLens = new TextLensSubComponent(pcPlot, panel);
+            pcPlot.AddSubComponent(textLens);
 
             Font font = new Font("Verdana", 6);
             Color color = Color.DodgerBlue;
@@ -222,16 +246,10 @@ namespace GMS
                 float verticalPosition = 1.0f - (float)i / (float)(countriesCount - 1);
                 string country = (string)countries[i];
 
-                pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
-                color, font, verticalPosition);
+                //pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
+                //color, font, verticalPosition);
+                textLens.AddLabel(country, verticalPosition);
             }
-
-            // Padding: so the names of the countries don't be cut
-            pcPlot.PaddingLeft += 60;
-
-            //pcPlot.LinePicked += new EventHandler(pcPlot_LinePicked);
-            pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
-            pcPlot.PickSensitivity = 3;
         }
 
         //////////////////////////////////////////////////////////////////////////
