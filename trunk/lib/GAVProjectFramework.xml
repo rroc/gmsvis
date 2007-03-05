@@ -4,104 +4,102 @@
         <name>GAVProjectFramework</name>
     </assembly>
     <members>
+        <member name="T:Gav.Graphics.MapLayerLodHandler">
+            <summary>
+            Abstract class enabling the posibility to fade in and out layers depending on map position and zoom.
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.MapLayerLodHandler.GetLayerAlpha(System.Int32)">
+            <summary>
+            Calculates the alpha of the map layer with the passed index. The alpha depends on the position and zom.
+            </summary>
+            <param name="id">Layer id</param>
+            <returns>The alpha value (0-255).</returns>
+        </member>
+        <member name="M:Gav.Graphics.MapLayer.ParseIndex(System.Int32)">
+            <summary>
+            Maps the passed index from the set StringIndexMapper. If the IndexMapper property is null this method will return the input index.
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Gav.Graphics.MapLayer.Invalidate">
+            <summary>
+            Invalidates the MapLayer.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapLayer.IndexMapper">
+            <summary>
+            Gets or sets the StringIndexMapper. If the property is set, the MapLayer will use this to map indexes in the ParseIndex method.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapLayer.Translation">
+            <summary>
+            Gets or sets the translation of the layer.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapLayer.IndexVisibilityHandler">
+            <summary>
+            Gets or sets the IndexVisibilityHandler used for visibility testing. If null, all the glyphs are visible. 
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapLayer.Alpha">
+            <summary>
+            Sets the alpha value of the layer. Values from 0 to 255 are valid, where 0 is not visible and 255 is opaque.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapLayer.MapData">
+            <summary>
+            Gets or sets the MapData object.
+            </summary>
+        </member>
+        <member name="T:Gav.Graphics.DataCubeViewer">
+            <summary>
+            DataCubeViewer shows the input data in a DataGridView. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.VizComponent.AddSubComponent(Gav.Graphics.VizSubComponent)">
+            <summary>
+            Add a VizSubComponent to be rendered on the same surface.
+            </summary>
+            <param name="component"></param>
+        </member>
+        <member name="M:Gav.Graphics.VizComponent.Invalidate">
+            <summary>
+            Invalidate the component. This will update invalidate-dependent changes and render the component.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.VizComponent.Name">
+            <summary>
+            Gets or sets the name of the VizComponent.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.VizComponent.BackgroundColor">
+            <summary>
+            Get or set the clear color of the component.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.VizComponent.Enabled">
+            <summary>
+            Set or get if the component should be rendered or not. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.DataCubeViewer.SetHeaders(System.Collections.Generic.List{System.String})">
+            <summary>
+            Sets the column headers. 
+            </summary>
+            <param name="headers"></param>
+        </member>
+        <member name="P:Gav.Graphics.DataCubeViewer.Input">
+            <summary>
+            Gets or sets the data to show.
+            </summary>
+        </member>
         <member name="T:Gav.Data.IDataCubeProvider`1">
             <summary>
             Interface for the IDataCubeProvider
             </summary>
             <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:Gav.Data.DataCube">
-            <summary>
-            This class stores a three-dimensional float array with some helper methods. Most of the functionality in GAV only supports a DataCube with z = 1, meaning that the depth of the cube is 1. In GAV parts of the cube are often refered to as rows and columns. Row with index i are the following values in the cube array, data[*,i ,0]. Column with index j are the following values int the cube array, data[j,*,0].
-            </summary>
-        </member>
-        <member name="M:Gav.Data.DataCube.CalculateMD5Sum">
-            <summary>
-            Calculate the MD5 sum of the data contained in the DataCube.
-            </summary>
-            <returns>Returns the MD5 sum as a string.</returns>
-        </member>
-        <member name="M:Gav.Data.DataCube.GetAxisLength(Gav.Data.Axis)">
-            <summary>
-            Get the length of the axis.
-            </summary>
-            <param name="axis"></param>
-            <returns>Returns the length of the axis.</returns>
-        </member>
-        <member name="M:Gav.Data.DataCube.SetData(System.Single[0:,0:])">
-            <summary>
-            SetData sets the passed float data.
-            </summary>
-            <param name="data">The float array to be inserted in the cube.</param>
-        </member>
-        <member name="M:Gav.Data.DataCube.SetData(System.Object[0:,0:])">
-            <summary>
-            The object array to be inserted into the cube. It will be parsed to float.
-            If an object[i,j].ToString() cannot be parsed to float the position [i, j, 0]
-            in the cube will be set to float.NaN.
-            </summary>
-            <param name="data"></param>
-        </member>
-        <member name="M:Gav.Data.DataCube.SetData(System.Object[0:,0:,0:])">
-            <summary>
-            The object array to be inserted into the cube. It will be parsed to float.
-            If an object[i,j,k].ToString() cannot be parsed to float the position [i, j, k]
-            in the cube will be set to float.NaN.
-            </summary>
-            <param name="data"></param>
-        </member>
-        <member name="M:Gav.Data.DataCube.GetColumnMaxMin(System.Int32,System.Single@,System.Single@)">
-            <summary>
-            Gets the max and min value of a column in the cube. A column is defined along the x-axis of the cube.
-            </summary>
-            <param name="columnIndex">The column to get max and min from.</param>
-            <param name="max">When the method returns, max will contain the max value in the column with index columnIndex</param>
-            <param name="min">When the method returns, min will contain the min value in the column with index columnIndex</param>
-        </member>
-        <member name="M:Gav.Data.DataCube.GetAllColumnMaxMin(System.Collections.Generic.List{System.Single}@,System.Collections.Generic.List{System.Single}@)">
-            <summary>
-            Get the max min values for every column (on the x axis). This only works for a two dimensional cube (z-axis size  equals 1)
-            </summary>
-            <param name="maxList">When this method returns, contains the max values for each column.</param>
-            <param name="minList">When this method returns, contains the min values for each column.</param>
-        </member>
-        <member name="M:Gav.Data.DataCube.GetData">
-            <summary>
-            Returns the current object. This method is here to make it possible to use a DataCube object as an IDataCubeProvider. If a DataCube is created the following statement is always true. (dataCube == dataCube.GetData()).
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Gav.Data.DataCube.Data">
-            <summary>
-            Get or set the data array in the DataCube.
-            </summary>
-        </member>
-        <member name="E:Gav.Data.DataCube.Changed">
-            <summary>
-            This event handler will not trigger any events from this class.
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.IDeviceFactory">
-            <summary>
-            Interface used in the Renderer class. If you want to handle the setup of the Microsoft.DirectX.Direct3D device yourself, inherit this class and pass it as an argument to the Renderer constructor.
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.GlyphScaler">
-            <summary>
-            Performs area dependent scaling. 
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.GlyphScaler.GetScale(System.Int32)">
-            <summary>
-            Gets the scale calculated according to the passed area index. 
-            </summary>
-            <param name="index">Area index</param>
-            <returns>The scale</returns>
-        </member>
-        <member name="P:Gav.Graphics.GlyphScaler.MapData">
-            <summary>
-            Gets or sets the MapData object. 
-            </summary>
         </member>
         <member name="T:Gav.Data.CubeSubsetFilter">
             <summary>
@@ -143,33 +141,190 @@
             Sets or gets where to end on the z-axis.
             </summary>
         </member>
+        <member name="T:Gav.Data.Axis">
+            <summary>
+            Axis Enum
+            </summary>
+        </member>
+        <member name="T:Gav.Graphics.GlyphPositioner">
+            <summary>
+            This class handles position of items related to an index in the assigned MapData object. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.GlyphPositioner.GetPosition(System.Int32)">
+            <summary>
+            Returns the calculated position.
+            </summary>
+            <param name="index">Area index</param>
+            <returns>Calculated poistion</returns>
+        </member>
+        <member name="P:Gav.Graphics.GlyphPositioner.MapData">
+            <summary>
+            Gets or sets the MapData object. 
+            </summary>
+        </member>
+        <member name="T:Gav.Data.ShapeFileReader">
+            <summary>
+            This class creates a MapData object from a shapefile (.shp).
+            </summary>
+        </member>
+        <member name="M:Gav.Data.ShapeFileReader.Read(System.String,System.String,System.String)">
+            <summary>
+            Creates a MapData object from the provided files. 
+            </summary>
+            <param name="shpFile">Shapefile</param>
+            <param name="dbfFile">DBF file</param>
+            <param name="shxFile">SHX file</param>
+            <returns></returns>
+        </member>
+        <member name="T:Gav.Graphics.ScatterPlot2D">
+            <summary>
+            A scatter plot component providing two spatial dimensions.
+            </summary>
+        </member>
+        <member name="T:Gav.Graphics.AbstractScatterPlot">
+            <summary>
+            The AbstractScatterPlot is the base class for the ScatterPlot2D and ScatterPlot3D components.
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.AbstractScatterPlot.SetSelectedGlyphs(System.Collections.Generic.List{System.Int32},System.Boolean)">
+            <summary>
+            Sets the indexes of the glyphs that the ScatterPlot should color with the SelectedGlyphColor. If add is true the list with indexes will be added to the current list of selected glyph indexes.
+            </summary>
+            <param name="selectedGlyphIndexes">List of indexes to be selected.</param>
+            <param name="add">True if the list should be addes, false if not.</param>
+        </member>
+        <member name="E:Gav.Graphics.AbstractScatterPlot.Picked">
+            <summary>
+            Occurs when the left mouse button is clicked inside the components render area. A list containing the picked glyphs indexes is stored in the IndexesPickedEventArgs. (In ScatterPlot3D, the list of picked indexes is sorted with the closest glyph first)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.SelectedGlyphColor">
+            <summary>
+            Gets or sets the color of selected glyphs.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisXText">
+            <summary>
+            Gets or sets text assigned to the X-axis. (In ScatterPlot3D this property needs Invalidate() to apply changes)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisTextFont">
+            <summary>
+            Sets or gets the font used for axis text.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisYText">
+            <summary>
+            Gets or sets text assigned to the Y-axis. (In ScatterPlot3D this property needs Invalidate() to apply changes)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisZText">
+            <summary>
+            Gets or sets text assigned to the Z-axis. (In ScatterPlot3D this property needs Invalidate() to apply changes)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisTextColor">
+            <summary>
+            Gets or sets the color of the axis-assigned text.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisColor">
+            <summary>
+            Gets or sets color of the axes.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphSize">
+            <summary>
+            Gets or sets the glyph standard size. Value can be between 0 and 1, where 1 is the size of the plot. If the AxisIndexSize is -1 (not assigned) this is the size of all glyphs. (Currently this property has no effect in ScatterPlot2D)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphMaxSize">
+            <summary>
+            Gets or sets the maximum size of a glyph. This value is only used if the AxisIndexSize is in use (not equal to -1). If used, the size of the glyphs are mapped between GlyphMinSize and GlyphMaxSize. (Currently this property has no effect in ScatterPlot2D)        
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphMinSize">
+            <summary>
+            Gets or sets the minimum size of a glyph. This value is only used if the AxisIndexSize is in use (not equal to -1). If used, the size of the glyphs are mapped between GlyphMinSize and GlyphMaxSize. (Currently this property has no effect in ScatterPlot2D)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.ColorMap">
+            <summary>
+            Gets or sets the IColorMap used for glyph coloring.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.Input">
+            <summary>
+            Gets or sets the data input.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexX">
+            <summary>
+            Gets or sets which input column the x-axis should map.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexY">
+            <summary>
+            Gets or sets which input column the y-axis should map.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexZ">
+            <summary>
+            Gets or sets which input column the z-axis should map (This property has no effect in ScatterPlot2D).
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexSize">
+            <summary>
+            Gets or sets which input column the glyph size should map.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.IndexVisibilityHandler">
+            <summary>
+            Gets or sets the IndexVisibilityHandler used for visibility testing. If null, all the glyphs are visible. 
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingTop">
+            <summary>
+            Sets or gets the padding from the top edge of the render area.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingBottom">
+            <summary>
+            Sets or gets the padding from the bottom edge of the render area.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingRight">
+            <summary>
+            Sets or gets the padding from the right edge of the render area.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingLeft">
+            <summary>
+            Sets or gets the padding from the left edge of the render area.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.NumberOfGridLines">
+            <summary>
+            Sets or gets number of lines in the grid.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.GlyphTransparency">
+            <summary>
+            Sets or gets the glyph transparency. (Values from 0 to 255 are valid)
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.ShowGrid">
+            <summary>
+            Sets or gets if to show the background grid.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot2D.PickSensitivity">
+            <summary>
+            Get or sets the pick sensitivity in pixels;
+            </summary>
+        </member>
         <!-- Badly formed XML comment ignored for member "T:Gav.Graphics.ParallelCoordinatesPlot" -->
-        <member name="M:Gav.Graphics.VizComponent.AddSubComponent(Gav.Graphics.VizSubComponent)">
-            <summary>
-            Add a VizSubComponent to be rendered on the same surface.
-            </summary>
-            <param name="component"></param>
-        </member>
-        <member name="M:Gav.Graphics.VizComponent.Invalidate">
-            <summary>
-            Invalidate the component. This will update invalidate-dependent changes and render the component.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.VizComponent.Name">
-            <summary>
-            Gets or sets the name of the VizComponent.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.VizComponent.BackgroundColor">
-            <summary>
-            Get or set the clear color of the component.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.VizComponent.Enabled">
-            <summary>
-            Set or get if the component should be rendered or not. 
-            </summary>
-        </member>
         <member name="M:Gav.Graphics.ParallelCoordinatesPlot.#ctor">
             <summary>
             Constructor
@@ -503,6 +658,123 @@
             The last header to be clicked. 
             </summary>
         </member>
+        <member name="T:Gav.Graphics.MapPolygonLayer">
+            <summary>
+            This class handles the rendering of the areas in the assigned MapData object. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.MapPolygonLayer.SetSelectedPolygonIndexes(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Sets which polygons that are selected. The polygons will be colored with the SelectedPolygonColor.
+            </summary>
+            <param name="selectedPolygonIndexes">List of polygon indexes.</param>
+        </member>
+        <member name="P:Gav.Graphics.MapPolygonLayer.SelectedPolygonColor">
+            <summary>
+            Gets or sets the color of selected polygons. To set which polygons that are selectet use the SetSelectedPolygonIndexes method.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapPolygonLayer.PolygonColor">
+            <summary>
+            Gets or sets the color to fill the areas with. This property is not used when a ColorMap is assigned to the layer. 
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MapPolygonLayer.ColorMap">
+            <summary>
+            Gets or sets the assigned ColorMap. The areas will retrieve their colors based on their respective index. 
+            </summary>
+        </member>
+        <member name="T:Gav.Data.MapData">
+            <summary>
+            GAV storage of data needed to build a map.
+            </summary>
+        </member>
+        <member name="P:Gav.Data.MapData.RegionIds">
+            <summary>
+            Gets or sets the list of region IDs. One ID per defined region. 
+            </summary>
+        </member>
+        <member name="T:Gav.Data.IndexVisibilityList">
+            <summary>
+            The IndexVisibiliyList holds the visibility a number of indexes. Max number of columns assigned to one list is 32. This because the visibility for one index is stored in one Int32. Each bit in that Int32 holds the visibility for one column.
+            </summary>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityList.#ctor(System.Int32)">
+            <summary>
+            Creates a new IndexVisibilityList.
+            </summary>
+            <param name="size">Max number of index visibilities to store.</param>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityList.SetVisibility(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Sets the visibility for e specified index on a specified "column".
+            </summary>
+            <param name="index">The index that the visibility will be set on.</param>
+            <param name="column">Column</param>
+            <param name="visible">True or false.</param>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityList.Clear">
+            <summary>
+            Clear the visibility list (all visibilities are set to visible).
+            </summary>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityList.GetVisibility(System.Int32)">
+            <summary>
+            Get the visibility for a specified index.
+            </summary>
+            <param name="index">Index</param>
+            <returns>The visibility (true for visible and false for not visible.</returns>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityList.CommitChanges">
+            <summary>
+            This method must be called in order for changes to take effect. 
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Gav.Graphics.ScatterPlot3D" -->
+        <member name="P:Gav.Graphics.ScatterPlot3D.RotationAndTranslationEnabled">
+            <summary>
+            Gets or sets whether the component will rotate or translate from mouse input.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ScatterPlot3D.LightEnabled">
+            <summary>
+            Gets or sets if to use light. 
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.VizSubComponent.Enabled">
+            <summary>
+            Set or get if the component should be rendered or not. 
+            </summary>
+        </member>
+        <member name="T:Gav.Graphics.CenterGlyphPositioner">
+            <summary>
+            This class provides positions from the set MapData object. The position in centered in the area with index passed. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.CenterGlyphPositioner.GetPosition(System.Int32)">
+            <summary>
+            Returns the position in center of the area with passed index.
+            </summary>
+            <param name="index">Area index</param>
+            <returns>Centered position.</returns>
+        </member>
+        <member name="T:Gav.Graphics.GlyphScaler">
+            <summary>
+            Performs area dependent scaling. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.GlyphScaler.GetScale(System.Int32)">
+            <summary>
+            Gets the scale calculated according to the passed area index. 
+            </summary>
+            <param name="index">Area index</param>
+            <returns>The scale</returns>
+        </member>
+        <member name="P:Gav.Graphics.GlyphScaler.MapData">
+            <summary>
+            Gets or sets the MapData object. 
+            </summary>
+        </member>
         <member name="T:Gav.Data.AxisMap">
             <summary>
             This class contains functionality to map, in this case normalize, the values in a DataCube column. Which column to map is set by the Index property. The max value in the mapped column will be normalized to 1 and the min value to 0.
@@ -557,168 +829,62 @@
             Gets the mapped values. (The DoMapping method needs to be called. If not, this property will return null)
             </summary>
         </member>
-        <member name="T:Gav.Graphics.ScatterPlot2D">
+        <member name="T:Gav.Graphics.IDeviceFactory">
             <summary>
-            A scatter plot component providing two spatial dimensions.
+            Interface used in the Renderer class. If you want to handle the setup of the Microsoft.DirectX.Direct3D device yourself, inherit this class and pass it as an argument to the Renderer constructor.
             </summary>
         </member>
-        <member name="T:Gav.Graphics.AbstractScatterPlot">
+        <member name="T:Gav.Graphics.ChoroplethMap">
             <summary>
-            The AbstractScatterPlot is the base class for the ScatterPlot2D and ScatterPlot3D components.
+            This class handles the overall functionality to handle the rendering of a choropleth map. The map is built up by one or more MapLayer objects. 
             </summary>
         </member>
-        <member name="M:Gav.Graphics.AbstractScatterPlot.SetSelectedGlyphs(System.Collections.Generic.List{System.Int32},System.Boolean)">
+        <member name="M:Gav.Graphics.ChoroplethMap.ConvertScreenCoordinatesToMapCoordinates(System.Drawing.Point)">
             <summary>
-            Sets the indexes of the glyphs that the ScatterPlot should color with the SelectedGlyphColor. If add is true the list with indexes will be added to the current list of selected glyph indexes.
+            Converts the passed screen coordinate Point to map coordinates. The Point should be represent the position on the render surface.
             </summary>
-            <param name="selectedGlyphIndexes">List of indexes to be selected.</param>
-            <param name="add">True if the list should be addes, false if not.</param>
+            <param name="p">Point</param>
+            <returns>Position in map coordinates.</returns>
         </member>
-        <member name="E:Gav.Graphics.AbstractScatterPlot.Picked">
+        <member name="M:Gav.Graphics.ChoroplethMap.AddLayer(Gav.Graphics.MapLayer)">
             <summary>
-            Occurs when the left mouse button is clicked inside the components render area. A list containing the picked glyphs indexes is stored in the IndexesPickedEventArgs. (In ScatterPlot3D, the list of picked indexes is sorted with the closest glyph first)
+            Adds a layer to the map.
             </summary>
+            <param name="layer">Layer to be added.</param>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.SelectedGlyphColor">
+        <member name="E:Gav.Graphics.ChoroplethMap.ZoomInternallyChanged">
             <summary>
-            Gets or sets the color of selected glyphs.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisXText">
-            <summary>
-            Gets or sets text assigned to the X-axis. (In ScatterPlot3D this property needs Invalidate() to apply changes)
+            Occurs when the zoom is changed from inside the component. The event is not triggered when the Zoom property is changed.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisTextFont">
+        <member name="E:Gav.Graphics.ChoroplethMap.PositionInternallyChanged">
             <summary>
-            Sets or gets the font used for axis text.
+            Occurs when the position is changed from inside the component. The event is not triggered when the Position property is changed.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisYText">
+        <member name="P:Gav.Graphics.ChoroplethMap.GlobalGlyphPositioner">
             <summary>
-            Gets or sets text assigned to the Y-axis. (In ScatterPlot3D this property needs Invalidate() to apply changes)
+            Gets or sets the GlyphPositioner used by the GlyphMapLayer objects in the MapLayer collection. 
             </summary>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisZText">
+        <member name="P:Gav.Graphics.ChoroplethMap.GlobalGlyphScaler">
             <summary>
-            Gets or sets text assigned to the Z-axis. (In ScatterPlot3D this property needs Invalidate() to apply changes)
+            Gets or sets the GlyphScaler used by the GlyphMapLayer objects in the MapLayer collection. 
             </summary>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisTextColor">
+        <member name="P:Gav.Graphics.ChoroplethMap.GlyphLodHandler">
             <summary>
-            Gets or sets the color of the axis-assigned text.
+            Gets or sets the level of detail handler for the layers. 
             </summary>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisColor">
+        <member name="P:Gav.Graphics.ChoroplethMap.Zoom">
             <summary>
-            Gets or sets color of the axes.
+            Gets or sets map zoom.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphSize">
+        <member name="P:Gav.Graphics.ChoroplethMap.Position">
             <summary>
-            Gets or sets the glyph standard size. Value can be between 0 and 1, where 1 is the size of the plot. If the AxisIndexSize is -1 (not assigned) this is the size of all glyphs. (Currently this property has no effect in ScatterPlot2D)
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphMaxSize">
-            <summary>
-            Gets or sets the maximum size of a glyph. This value is only used if the AxisIndexSize is in use (not equal to -1). If used, the size of the glyphs are mapped between GlyphMinSize and GlyphMaxSize. (Currently this property has no effect in ScatterPlot2D)        
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphMinSize">
-            <summary>
-            Gets or sets the minimum size of a glyph. This value is only used if the AxisIndexSize is in use (not equal to -1). If used, the size of the glyphs are mapped between GlyphMinSize and GlyphMaxSize. (Currently this property has no effect in ScatterPlot2D)
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.ColorMap">
-            <summary>
-            Gets or sets the IColorMap used for glyph coloring.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.Input">
-            <summary>
-            Gets or sets the data input.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexX">
-            <summary>
-            Gets or sets which input column the x-axis should map.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexY">
-            <summary>
-            Gets or sets which input column the y-axis should map.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexZ">
-            <summary>
-            Gets or sets which input column the z-axis should map (This property has no effect in ScatterPlot2D).
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisIndexSize">
-            <summary>
-            Gets or sets which input column the glyph size should map.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.AbstractScatterPlot.IndexVisibilityHandler">
-            <summary>
-            Gets or sets the IndexVisibilityHandler used for visibility testing. If null, all the glyphs are visible. 
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingTop">
-            <summary>
-            Sets or gets the padding from the top edge of the render area.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingBottom">
-            <summary>
-            Sets or gets the padding from the bottom edge of the render area.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingRight">
-            <summary>
-            Sets or gets the padding from the right edge of the render area.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.PaddingLeft">
-            <summary>
-            Sets or gets the padding from the left edge of the render area.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.NumberOfGridLines">
-            <summary>
-            Sets or gets number of lines in the grid.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.GlyphTransparency">
-            <summary>
-            Sets or gets the glyph transparency. (Values from 0 to 255 are valid)
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.ShowGrid">
-            <summary>
-            Sets or gets if to show the background grid.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ScatterPlot2D.PickSensitivity">
-            <summary>
-            Get or sets the pick sensitivity in pixels;
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.GlyphPositioner">
-            <summary>
-            This class handles position of items related to an index in the assigned MapData object. 
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.GlyphPositioner.GetPosition(System.Int32)">
-            <summary>
-            Returns the calculated position.
-            </summary>
-            <param name="index">Area index</param>
-            <returns>Calculated poistion</returns>
-        </member>
-        <member name="P:Gav.Graphics.GlyphPositioner.MapData">
-            <summary>
-            Gets or sets the MapData object. 
+            Gets or sets the map position.
             </summary>
         </member>
         <member name="T:Gav.Graphics.InteractiveColorLegend">
@@ -727,11 +893,6 @@
             Thresholding sliders at the upper and/or lower part of the legend.
             Color edge sliders to interact with the LinearColorMaps of the ColorMapPartCollection, interactively changing the proportions of the colormaps.
             Value sliders that gets a value at the position of the slider, not thresholding or changing the colormaps.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.VizSubComponent.Enabled">
-            <summary>
-            Set or get if the component should be rendered or not. 
             </summary>
         </member>
         <member name="M:Gav.Graphics.InteractiveColorLegend.#ctor">
@@ -1054,115 +1215,311 @@
             Position the text to the left of the slider.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:Gav.Graphics.ScatterPlot3D" -->
-        <member name="P:Gav.Graphics.ScatterPlot3D.RotationAndTranslationEnabled">
+        <member name="T:Gav.Data.SimpleColorMapPart">
             <summary>
-            Gets or sets whether the component will rotate or translate from mouse input.
+            SimpleColorMapPart class.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.ScatterPlot3D.LightEnabled">
+        <member name="T:Gav.Data.IColorMapPart">
             <summary>
-            Gets or sets if to use light. 
+            Interface for IColorMapPart
             </summary>
         </member>
-        <member name="T:Gav.Graphics.MapPolygonLayer">
+        <member name="M:Gav.Data.SimpleColorMapPart.#ctor(System.Drawing.Color)">
             <summary>
-            This class handles the rendering of the areas in the assigned MapData object. 
+            Creates a SimpleColorMapPart with the specified color.
+            </summary>
+            <param name="color">The color</param>
+        </member>
+        <member name="M:Gav.Data.SimpleColorMapPart.GetColor(System.Single)">
+            <summary>
+            The value doesn't matter. The GetColor will always return the same color.
+            </summary>
+            <param name="value">Not used</param>
+            <returns>The Color passed in the constructor when created.</returns>
+        </member>
+        <member name="M:Gav.Data.SimpleColorMapPart.Invalidate">
+            <summary>
+            Invalidates the SimpleColorMapPart
             </summary>
         </member>
-        <member name="M:Gav.Graphics.MapLayer.ParseIndex(System.Int32)">
+        <member name="T:Gav.Data.DataCube">
             <summary>
-            Maps the passed index from the set StringIndexMapper. If the IndexMapper property is null this method will return the input index.
+            This class stores a three-dimensional float array with some helper methods. Most of the functionality in GAV only supports a DataCube with z = 1, meaning that the depth of the cube is 1. In GAV parts of the cube are often refered to as rows and columns. Row with index i are the following values in the cube array, data[*,i ,0]. Column with index j are the following values int the cube array, data[j,*,0].
+            </summary>
+        </member>
+        <member name="M:Gav.Data.DataCube.CalculateMD5Sum">
+            <summary>
+            Calculate the MD5 sum of the data contained in the DataCube.
+            </summary>
+            <returns>Returns the MD5 sum as a string.</returns>
+        </member>
+        <member name="M:Gav.Data.DataCube.GetAxisLength(Gav.Data.Axis)">
+            <summary>
+            Get the length of the axis.
+            </summary>
+            <param name="axis"></param>
+            <returns>Returns the length of the axis.</returns>
+        </member>
+        <member name="M:Gav.Data.DataCube.SetData(System.Single[0:,0:])">
+            <summary>
+            SetData sets the passed float data.
+            </summary>
+            <param name="data">The float array to be inserted in the cube.</param>
+        </member>
+        <member name="M:Gav.Data.DataCube.SetData(System.Object[0:,0:])">
+            <summary>
+            The object array to be inserted into the cube. It will be parsed to float.
+            If an object[i,j].ToString() cannot be parsed to float the position [i, j, 0]
+            in the cube will be set to float.NaN.
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:Gav.Data.DataCube.SetData(System.Object[0:,0:,0:])">
+            <summary>
+            The object array to be inserted into the cube. It will be parsed to float.
+            If an object[i,j,k].ToString() cannot be parsed to float the position [i, j, k]
+            in the cube will be set to float.NaN.
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:Gav.Data.DataCube.GetColumnMaxMin(System.Int32,System.Single@,System.Single@)">
+            <summary>
+            Gets the max and min value of a column in the cube. A column is defined along the x-axis of the cube.
+            </summary>
+            <param name="columnIndex">The column to get max and min from.</param>
+            <param name="max">When the method returns, max will contain the max value in the column with index columnIndex</param>
+            <param name="min">When the method returns, min will contain the min value in the column with index columnIndex</param>
+        </member>
+        <member name="M:Gav.Data.DataCube.GetAllColumnMaxMin(System.Collections.Generic.List{System.Single}@,System.Collections.Generic.List{System.Single}@)">
+            <summary>
+            Get the max min values for every column (on the x axis). This only works for a two dimensional cube (z-axis size  equals 1)
+            </summary>
+            <param name="maxList">When this method returns, contains the max values for each column.</param>
+            <param name="minList">When this method returns, contains the min values for each column.</param>
+        </member>
+        <member name="M:Gav.Data.DataCube.GetData">
+            <summary>
+            Returns the current object. This method is here to make it possible to use a DataCube object as an IDataCubeProvider. If a DataCube is created the following statement is always true. (dataCube == dataCube.GetData()).
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Gav.Data.DataCube.Data">
+            <summary>
+            Get or set the data array in the DataCube.
+            </summary>
+        </member>
+        <member name="E:Gav.Data.DataCube.Changed">
+            <summary>
+            This event handler will not trigger any events from this class.
+            </summary>
+        </member>
+        <member name="T:Gav.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Gav.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Gav.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:Gav.Graphics.Renderer">
+            <summary>
+            The Renderer handles when, where and how a VizComponent should be rendered. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.#ctor(System.Windows.Forms.Form)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="form">The top form where all the renderings are performed.</param>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.Add(Gav.Graphics.VizComponent,System.Windows.Forms.Control)">
+            <summary>
+            Add a component to render on a specified control.
+            </summary>
+            <param name="component">Component to be rendered</param>
+            <param name="renderTarget">The control to render on</param>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.EnableAll">
+            <summary>
+            Enable all VizComponents for rendering on their respective render targets. 
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.GetVizComponent(System.Windows.Forms.Control)">
+            <summary>
+            Retrieves the VizComponent associated with the Control.
+            </summary>
+            <param name="renderTarget">Control the VizComponent is rendered on.</param>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.GetRenderTarget(Gav.Graphics.VizComponent)">
+            <summary>
+            Retrieves the Control associated with the VizComponent.
+            </summary>
+            <param name="renderTarget">VizComponent which is rendered on the Control.</param>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.DisableAll">
+            <summary>
+            Disables all rendering.
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.InvalidateAll">
+            <summary>
+            Invalidates all added VizComponents.
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.RenderAll">
+            <summary>
+            Renders all VizComponent's added.
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.Remove(Gav.Graphics.VizComponent)">
+            <summary>
+            Removes a VizComponent and its associated Control from the Renderer.
+            </summary>
+            <param name="vizComponent">VizComponent to remove.</param>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.ContainsRenderTarget(System.Windows.Forms.Control)">
+            <summary>
+            Removes a Control and its associated VizComponent from the Renderer.
+            </summary>
+            <param name="renderTarget"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Gav.Graphics.Renderer.ContainsVizComponent(Gav.Graphics.VizComponent)">
+            <summary>
+            Returns true if Renderer contains the VizComponent.
+            </summary>
+            <param name="component">VizComponent to check for.</param>
+            <returns>True if the Renderer contains the VizComponent component, else false.</returns>
+        </member>
+        <member name="P:Gav.Graphics.Renderer.RenderDuringResize">
+            <summary>
+            Gets or sets if the components should render during resize of the form. 
+            </summary>
+        </member>
+        <member name="T:Gav.Graphics.MouseHoverController">
+            <summary>
+            MouseHoverControllers purpose is to send events when the mouse is hovering over a Control.
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.MouseHoverController.#ctor(System.Windows.Forms.Control,System.Int32,System.Int32)">
+            <summary>
+            Creates a new MouseHoverController.
+            </summary>
+            <param name="control">Control on which to look for hover.</param>
+            <param name="sensitivity">The distance the mouse has to move before hovering ends.</param>
+            <param name="waitBeforeHover">The time in milliseconds the mouse has to be still before hovering starts.</param>
+        </member>
+        <member name="E:Gav.Graphics.MouseHoverController.Hover">
+            <summary>
+            Occurs when the mouse hovers over a Control. 
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.MouseHoverController.HoverEnd">
+            <summary>
+            Occurs when the hovering ends.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MouseHoverController.HoverPosition">
+            <summary>
+            Gets the position where the hovering takes place. 
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.MouseHoverController.HoverScreenPosition">
+            <summary>
+            Gets the position where the hovering takes place. (In screen coordinates)
+            </summary>
+        </member>
+        <member name="T:Gav.Data.IndexVisibilityHandler">
+            <summary>
+            IndexVisibilityHandler stores a collection of VisibilityLists. When a visibility is calculated for a specific index, the visibility for that index is combined from all the visibility lists. 
+            </summary>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityHandler.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of IndexVisibilityHandler
+            </summary>
+            <param name="indexCount">Max number of index visibilities to store.</param>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityHandler.GetVisibility(System.Int32)">
+            <summary>
+            Gets visibility for a specific index.
             </summary>
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="M:Gav.Graphics.MapLayer.Invalidate">
+        <member name="M:Gav.Data.IndexVisibilityHandler.CreateVisibilityList">
             <summary>
-            Invalidates the MapLayer.
+            Creates and returns a new IndexVisibilityList. The list is also added to the internal collection. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Gav.Data.IndexVisibilityHandler.Clear">
+            <summary>
+            Clears the visibilities (all indexes is set to visible).
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapLayer.IndexMapper">
+        <member name="T:Gav.Data.IndexesPickedEventArgs">
             <summary>
-            Gets or sets the StringIndexMapper. If the property is set, the MapLayer will use this to map indexes in the ParseIndex method.
+            Provides data for the Picked event.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapLayer.Translation">
+        <member name="F:Gav.Data.IndexesPickedEventArgs.PickedIndexes">
             <summary>
-            Gets or sets the translation of the layer.
+            List of picked indexes.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapLayer.IndexVisibilityHandler">
+        <member name="T:Gav.Graphics.MapGlyphLayer">
             <summary>
-            Gets or sets the IndexVisibilityHandler used for visibility testing. If null, all the glyphs are visible. 
+            This class handles the rendering of a glyphs.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapLayer.Alpha">
+        <member name="P:Gav.Graphics.MapGlyphLayer.ActiveGlyphScaler">
             <summary>
-            Sets the alpha value of the layer. Values from 0 to 255 are valid, where 0 is not visible and 255 is opaque.
+            Sets or gets the GlyphScaler assigned to this layer. The glyphs in the layer are scaled with the scale provided by the GlyphScaler.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapLayer.MapData">
+        <member name="P:Gav.Graphics.MapGlyphLayer.ActiveGlyphPositioner">
             <summary>
-            Gets or sets the MapData object.
+            Sets or gets the GlyphPositioner assigned to this layer. The glyphs in the layer are positioned at the position provided by the GlyphPositioner.
             </summary>
         </member>
-        <member name="M:Gav.Graphics.MapPolygonLayer.SetSelectedPolygonIndexes(System.Collections.Generic.List{System.Int32})">
+        <member name="T:Gav.Data.IColorMap">
             <summary>
-            Sets which polygons that are selected. The polygons will be colored with the SelectedPolygonColor.
-            </summary>
-            <param name="selectedPolygonIndexes">List of polygon indexes.</param>
-        </member>
-        <member name="P:Gav.Graphics.MapPolygonLayer.SelectedPolygonColor">
-            <summary>
-            Gets or sets the color of selected polygons. To set which polygons that are selectet use the SetSelectedPolygonIndexes method.
+            Interface for IColorMap
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapPolygonLayer.PolygonColor">
+        <member name="T:Gav.Data.LinearColorMapPart">
             <summary>
-            Gets or sets the color to fill the areas with. This property is not used when a ColorMap is assigned to the layer. 
+            LinearColorMapPart interpolates colors between the MaxColor and MinColor.
             </summary>
         </member>
-        <member name="P:Gav.Graphics.MapPolygonLayer.ColorMap">
+        <member name="M:Gav.Data.LinearColorMapPart.#ctor(System.Drawing.Color,System.Drawing.Color)">
             <summary>
-            Gets or sets the assigned ColorMap. The areas will retrieve their colors based on their respective index. 
+            Creates a new LinearColorMapPart.
+            </summary>
+            <param name="minColor">Min color.</param>
+            <param name="maxColor">Max color.</param>
+        </member>
+        <member name="M:Gav.Data.LinearColorMapPart.Invalidate">
+            <summary>
+            Invalidates the LinearColorMapPart.
             </summary>
         </member>
-        <member name="T:Gav.Data.IndexVisibilityList">
+        <member name="M:Gav.Data.LinearColorMapPart.GetColor(System.Single)">
             <summary>
-            The IndexVisibiliyList holds the visibility a number of indexes. Max number of columns assigned to one list is 32. This because the visibility for one index is stored in one Int32. Each bit in that Int32 holds the visibility for one column.
+            Returns the color for a specific value. This value must be between 0 and 1. 
             </summary>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityList.#ctor(System.Int32)">
-            <summary>
-            Creates a new IndexVisibilityList.
-            </summary>
-            <param name="size">Max number of index visibilities to store.</param>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityList.SetVisibility(System.Int32,System.Int32,System.Boolean)">
-            <summary>
-            Sets the visibility for e specified index on a specified "column".
-            </summary>
-            <param name="index">The index that the visibility will be set on.</param>
-            <param name="column">Column</param>
-            <param name="visible">True or false.</param>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityList.Clear">
-            <summary>
-            Clear the visibility list (all visibilities are set to visible).
-            </summary>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityList.GetVisibility(System.Int32)">
-            <summary>
-            Get the visibility for a specified index.
-            </summary>
-            <param name="index">Index</param>
-            <returns>The visibility (true for visible and false for not visible.</returns>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityList.CommitChanges">
-            <summary>
-            This method must be called in order for changes to take effect. 
-            </summary>
+            <param name="value"></param>
+            <returns></returns>
         </member>
         <member name="T:Gav.Data.StringIndexMapper">
             <summary>
@@ -1199,135 +1556,6 @@
             <param name="mappedIndex">When this method returns, contains the mapped index. (The corresponding index in the listToMap)</param>
             <returns>True if the index is found in the listToMap, else false.</returns>
         </member>
-        <member name="T:Gav.Properties.Resources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:Gav.Properties.Resources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:Gav.Properties.Resources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.MouseHoverController">
-            <summary>
-            MouseHoverControllers purpose is to send events when the mouse is hovering over a Control.
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.MouseHoverController.#ctor(System.Windows.Forms.Control,System.Int32,System.Int32)">
-            <summary>
-            Creates a new MouseHoverController.
-            </summary>
-            <param name="control">Control on which to look for hover.</param>
-            <param name="sensitivity">The distance the mouse has to move before hovering ends.</param>
-            <param name="waitBeforeHover">The time in milliseconds the mouse has to be still before hovering starts.</param>
-        </member>
-        <member name="E:Gav.Graphics.MouseHoverController.Hover">
-            <summary>
-            Occurs when the mouse hovers over a Control. 
-            </summary>
-        </member>
-        <member name="E:Gav.Graphics.MouseHoverController.HoverEnd">
-            <summary>
-            Occurs when the hovering ends.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.MouseHoverController.HoverPosition">
-            <summary>
-            Gets the position where the hovering takes place. 
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.MouseHoverController.HoverScreenPosition">
-            <summary>
-            Gets the position where the hovering takes place. (In screen coordinates)
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.SimpleGlyphScaler">
-            <summary>
-            This class provides a simple scaling of glyphs. All glyphs will be scaled with the scale set in the Scale property.
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.SimpleGlyphScaler.GetScale(System.Int32)">
-            <summary>
-            Returns the scale set in the Scale property. The passed index is not used. 
-            </summary>
-            <param name="index">GlyphIndex</param>
-            <returns>Scale</returns>
-        </member>
-        <member name="P:Gav.Graphics.SimpleGlyphScaler.Scale">
-            <summary>
-            Gets or sets the scaling that should be performed on all glyphs.
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.MapPolygonBorderLayer">
-            <summary>
-            This class handles the rendering of area borders provided by the assigned MapData object.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.MapPolygonBorderLayer.BorderColor">
-            <summary>
-            Gets or sets the color of the borders. 
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.ChoroplethMap">
-            <summary>
-            This class handles the overall functionality to handle the rendering of a choropleth map. The map is built up by one or more MapLayer objects. 
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.ChoroplethMap.ConvertScreenCoordinatesToMapCoordinates(System.Drawing.Point)">
-            <summary>
-            Converts the passed screen coordinate Point to map coordinates. The Point should be represent the position on the render surface.
-            </summary>
-            <param name="p">Point</param>
-            <returns>Position in map coordinates.</returns>
-        </member>
-        <member name="M:Gav.Graphics.ChoroplethMap.AddLayer(Gav.Graphics.MapLayer)">
-            <summary>
-            Adds a layer to the map.
-            </summary>
-            <param name="layer">Layer to be added.</param>
-        </member>
-        <member name="E:Gav.Graphics.ChoroplethMap.ZoomInternallyChanged">
-            <summary>
-            Occurs when the zoom is changed from inside the component. The event is not triggered when the Zoom property is changed.
-            </summary>
-        </member>
-        <member name="E:Gav.Graphics.ChoroplethMap.PositionInternallyChanged">
-            <summary>
-            Occurs when the position is changed from inside the component. The event is not triggered when the Position property is changed.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ChoroplethMap.GlobalGlyphPositioner">
-            <summary>
-            Gets or sets the GlyphPositioner used by the GlyphMapLayer objects in the MapLayer collection. 
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ChoroplethMap.GlobalGlyphScaler">
-            <summary>
-            Gets or sets the GlyphScaler used by the GlyphMapLayer objects in the MapLayer collection. 
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ChoroplethMap.GlyphLodHandler">
-            <summary>
-            Gets or sets the level of detail handler for the layers. 
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ChoroplethMap.Zoom">
-            <summary>
-            Gets or sets map zoom.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ChoroplethMap.Position">
-            <summary>
-            Gets or sets the map position.
-            </summary>
-        </member>
         <member name="T:Gav.Data.ColorMap">
             <summary>
             The ColorMap is in charge of calculating colors between the max and min values. 
@@ -1335,11 +1563,6 @@
             set by the Index property. Each data item in the cube (one row, one index) will 
             get a color based on its value in the column set by the Index property. The ColorMap 
             needs one or more IColorMapPart(s) to calculate the values. 
-            </summary>
-        </member>
-        <member name="T:Gav.Data.IColorMap">
-            <summary>
-            Interface for IColorMap
             </summary>
         </member>
         <member name="M:Gav.Data.ColorMap.AddColorMapPart(Gav.Data.IColorMapPart)">
@@ -1441,177 +1664,31 @@
             Gets the number of parts.
             </summary>
         </member>
-        <member name="T:Gav.Data.IColorMapPart">
+        <member name="T:Gav.Graphics.SimpleGlyphScaler">
             <summary>
-            Interface for IColorMapPart
+            This class provides a simple scaling of glyphs. All glyphs will be scaled with the scale set in the Scale property.
             </summary>
         </member>
-        <member name="T:Gav.Graphics.Renderer">
+        <member name="M:Gav.Graphics.SimpleGlyphScaler.GetScale(System.Int32)">
             <summary>
-            The Renderer handles when, where and how a VizComponent should be rendered. 
+            Returns the scale set in the Scale property. The passed index is not used. 
+            </summary>
+            <param name="index">GlyphIndex</param>
+            <returns>Scale</returns>
+        </member>
+        <member name="P:Gav.Graphics.SimpleGlyphScaler.Scale">
+            <summary>
+            Gets or sets the scaling that should be performed on all glyphs.
             </summary>
         </member>
-        <member name="M:Gav.Graphics.Renderer.#ctor(System.Windows.Forms.Form)">
+        <member name="T:Gav.Graphics.MapPolygonBorderLayer">
             <summary>
-            Constructor
-            </summary>
-            <param name="form">The top form where all the renderings are performed.</param>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.Add(Gav.Graphics.VizComponent,System.Windows.Forms.Control)">
-            <summary>
-            Add a component to render on a specified control.
-            </summary>
-            <param name="component">Component to be rendered</param>
-            <param name="renderTarget">The control to render on</param>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.EnableAll">
-            <summary>
-            Enable all VizComponents for rendering on their respective render targets. 
+            This class handles the rendering of area borders provided by the assigned MapData object.
             </summary>
         </member>
-        <member name="M:Gav.Graphics.Renderer.GetVizComponent(System.Windows.Forms.Control)">
+        <member name="P:Gav.Graphics.MapPolygonBorderLayer.BorderColor">
             <summary>
-            Retrieves the VizComponent associated with the Control.
-            </summary>
-            <param name="renderTarget">Control the VizComponent is rendered on.</param>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.GetRenderTarget(Gav.Graphics.VizComponent)">
-            <summary>
-            Retrieves the Control associated with the VizComponent.
-            </summary>
-            <param name="renderTarget">VizComponent which is rendered on the Control.</param>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.DisableAll">
-            <summary>
-            Disables all rendering.
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.InvalidateAll">
-            <summary>
-            Invalidates all added VizComponents.
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.RenderAll">
-            <summary>
-            Renders all VizComponent's added.
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.Remove(Gav.Graphics.VizComponent)">
-            <summary>
-            Removes a VizComponent and its associated Control from the Renderer.
-            </summary>
-            <param name="vizComponent">VizComponent to remove.</param>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.ContainsRenderTarget(System.Windows.Forms.Control)">
-            <summary>
-            Removes a Control and its associated VizComponent from the Renderer.
-            </summary>
-            <param name="renderTarget"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Gav.Graphics.Renderer.ContainsVizComponent(Gav.Graphics.VizComponent)">
-            <summary>
-            Returns true if Renderer contains the VizComponent.
-            </summary>
-            <param name="component">VizComponent to check for.</param>
-            <returns>True if the Renderer contains the VizComponent component, else false.</returns>
-        </member>
-        <member name="P:Gav.Graphics.Renderer.RenderDuringResize">
-            <summary>
-            Gets or sets if the components should render during resize of the form. 
-            </summary>
-        </member>
-        <member name="T:Gav.Data.SimpleColorMapPart">
-            <summary>
-            SimpleColorMapPart class.
-            </summary>
-        </member>
-        <member name="M:Gav.Data.SimpleColorMapPart.#ctor(System.Drawing.Color)">
-            <summary>
-            Creates a SimpleColorMapPart with the specified color.
-            </summary>
-            <param name="color">The color</param>
-        </member>
-        <member name="M:Gav.Data.SimpleColorMapPart.GetColor(System.Single)">
-            <summary>
-            The value doesn't matter. The GetColor will always return the same color.
-            </summary>
-            <param name="value">Not used</param>
-            <returns>The Color passed in the constructor when created.</returns>
-        </member>
-        <member name="M:Gav.Data.SimpleColorMapPart.Invalidate">
-            <summary>
-            Invalidates the SimpleColorMapPart
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.DataCubeViewer">
-            <summary>
-            DataCubeViewer shows the input data in a DataGridView. 
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.DataCubeViewer.SetHeaders(System.Collections.Generic.List{System.String})">
-            <summary>
-            Sets the column headers. 
-            </summary>
-            <param name="headers"></param>
-        </member>
-        <member name="P:Gav.Graphics.DataCubeViewer.Input">
-            <summary>
-            Gets or sets the data to show.
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.MapGlyphLayer">
-            <summary>
-            This class handles the rendering of a glyphs.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.MapGlyphLayer.ActiveGlyphScaler">
-            <summary>
-            Sets or gets the GlyphScaler assigned to this layer. The glyphs in the layer are scaled with the scale provided by the GlyphScaler.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.MapGlyphLayer.ActiveGlyphPositioner">
-            <summary>
-            Sets or gets the GlyphPositioner assigned to this layer. The glyphs in the layer are positioned at the position provided by the GlyphPositioner.
-            </summary>
-        </member>
-        <member name="T:Gav.Data.IndexVisibilityHandler">
-            <summary>
-            IndexVisibilityHandler stores a collection of VisibilityLists. When a visibility is calculated for a specific index, the visibility for that index is combined from all the visibility lists. 
-            </summary>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityHandler.#ctor(System.Int32)">
-            <summary>
-            Creates a new instance of IndexVisibilityHandler
-            </summary>
-            <param name="indexCount">Max number of index visibilities to store.</param>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityHandler.GetVisibility(System.Int32)">
-            <summary>
-            Gets visibility for a specific index.
-            </summary>
-            <param name="index"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityHandler.CreateVisibilityList">
-            <summary>
-            Creates and returns a new IndexVisibilityList. The list is also added to the internal collection. 
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Gav.Data.IndexVisibilityHandler.Clear">
-            <summary>
-            Clears the visibilities (all indexes is set to visible).
-            </summary>
-        </member>
-        <member name="T:Gav.Data.IndexesPickedEventArgs">
-            <summary>
-            Provides data for the Picked event.
-            </summary>
-        </member>
-        <member name="F:Gav.Data.IndexesPickedEventArgs.PickedIndexes">
-            <summary>
-            List of picked indexes.
+            Gets or sets the color of the borders. 
             </summary>
         </member>
         <member name="T:Gav.Data.DbfFileHeader">
@@ -1664,83 +1741,6 @@
             <summary>
             length of the dbf file, in bytes - (position of the end of stream)
             </summary>
-        </member>
-        <member name="T:Gav.Data.LinearColorMapPart">
-            <summary>
-            LinearColorMapPart interpolates colors between the MaxColor and MinColor.
-            </summary>
-        </member>
-        <member name="M:Gav.Data.LinearColorMapPart.#ctor(System.Drawing.Color,System.Drawing.Color)">
-            <summary>
-            Creates a new LinearColorMapPart.
-            </summary>
-            <param name="minColor">Min color.</param>
-            <param name="maxColor">Max color.</param>
-        </member>
-        <member name="M:Gav.Data.LinearColorMapPart.Invalidate">
-            <summary>
-            Invalidates the LinearColorMapPart.
-            </summary>
-        </member>
-        <member name="M:Gav.Data.LinearColorMapPart.GetColor(System.Single)">
-            <summary>
-            Returns the color for a specific value. This value must be between 0 and 1. 
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Gav.Data.Axis">
-            <summary>
-            Axis Enum
-            </summary>
-        </member>
-        <member name="T:Gav.Data.ShapeFileReader">
-            <summary>
-            This class creates a MapData object from a shapefile (.shp).
-            </summary>
-        </member>
-        <member name="M:Gav.Data.ShapeFileReader.Read(System.String,System.String,System.String)">
-            <summary>
-            Creates a MapData object from the provided files. 
-            </summary>
-            <param name="shpFile">Shapefile</param>
-            <param name="dbfFile">DBF file</param>
-            <param name="shxFile">SHX file</param>
-            <returns></returns>
-        </member>
-        <member name="T:Gav.Data.MapData">
-            <summary>
-            GAV storage of data needed to build a map.
-            </summary>
-        </member>
-        <member name="P:Gav.Data.MapData.RegionIds">
-            <summary>
-            Gets or sets the list of region IDs. One ID per defined region. 
-            </summary>
-        </member>
-        <member name="T:Gav.Graphics.CenterGlyphPositioner">
-            <summary>
-            This class provides positions from the set MapData object. The position in centered in the area with index passed. 
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.CenterGlyphPositioner.GetPosition(System.Int32)">
-            <summary>
-            Returns the position in center of the area with passed index.
-            </summary>
-            <param name="index">Area index</param>
-            <returns>Centered position.</returns>
-        </member>
-        <member name="T:Gav.Graphics.MapLayerLodHandler">
-            <summary>
-            Abstract class enabling the posibility to fade in and out layers depending on map position and zoom.
-            </summary>
-        </member>
-        <member name="M:Gav.Graphics.MapLayerLodHandler.GetLayerAlpha(System.Int32)">
-            <summary>
-            Calculates the alpha of the map layer with the passed index. The alpha depends on the position and zom.
-            </summary>
-            <param name="id">Layer id</param>
-            <returns>The alpha value (0-255).</returns>
         </member>
     </members>
 </doc>
