@@ -17,6 +17,7 @@ namespace GMS
         GMSDocument doc;
         Renderer renderer;
         ParallelPlotCountries pcCountries;
+        MapPlot mapPlot;
 
         public Form1()
         {
@@ -34,14 +35,9 @@ namespace GMS
             doc = new GMSDocument();
             doc.ReadDB(dir + iDataPath + iDBFileName);
             
-            pcCountries = new ParallelPlotCountries(doc.GetDatabase(), splitContainer1.Panel1, renderer);
+            pcCountries = new ParallelPlotCountries(doc.GetDatabase(), pcSplitContainer.Panel1, renderer);
+            mapPlot = new MapPlot(doc.GetDatabase(), mainSplitContainer.Panel1, renderer);
 
-            //headers.Add("Clusters");
-            //KMeansFilter kMeansFilter = new KMeansFilter(3);
-            //kMeansFilter.Input = dc;
-
-
-            //doc.ShowData(headers, kMeansFilter);
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)

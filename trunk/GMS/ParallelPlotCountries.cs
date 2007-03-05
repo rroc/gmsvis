@@ -14,7 +14,6 @@ namespace GMS
     class ParallelPlotCountries
     {
         // Private Attributes
-        //private string[] titles;
         private object[,] data;
         List<string> headers;
 
