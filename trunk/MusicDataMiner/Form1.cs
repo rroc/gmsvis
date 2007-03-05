@@ -27,17 +27,17 @@ namespace MusicDataminer
             InitializeComponent();
 
             //set all the styles to selected
-            //this.styleCheckBoxList.SetItemChecked(0, true);
-            //this.styleCheckBoxList.SetItemChecked(1, true);
-            //this.styleCheckBoxList.SetItemChecked(2, true);
-            //this.styleCheckBoxList.SetItemChecked(3, true);
-            //this.styleCheckBoxList.SetItemChecked(4, true);
-            //this.styleCheckBoxList.SetItemChecked(5, true);
-            //this.styleCheckBoxList.SetItemChecked(6, true);
-            //this.styleCheckBoxList.SetItemChecked(7, true);
+            this.styleCheckBoxList.SetItemChecked(0, true);
+            this.styleCheckBoxList.SetItemChecked(1, true);
+            this.styleCheckBoxList.SetItemChecked(2, true);
+            this.styleCheckBoxList.SetItemChecked(3, true);
+            this.styleCheckBoxList.SetItemChecked(4, true);
+            this.styleCheckBoxList.SetItemChecked(5, true);
+            this.styleCheckBoxList.SetItemChecked(6, true);
+            this.styleCheckBoxList.SetItemChecked(7, true);
             this.styleCheckBoxList.SetItemChecked(8, true);
-            //this.styleCheckBoxList.SetItemChecked(9, true);
-            //this.styleCheckBoxList.SetItemChecked(10, true);
+            this.styleCheckBoxList.SetItemChecked(9, true);
+            this.styleCheckBoxList.SetItemChecked(10, true);
             this.outputBox.Text = "Ready.\r\n";
 
             iThreadList = new Hashtable();

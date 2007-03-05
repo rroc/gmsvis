@@ -28,7 +28,7 @@ namespace MusicDataminer
         };
 
         // private attributes
-        private DB dataBase;
+        private volatile DB dataBase;
         private Hashtable iLineCount;
 
         //Constructor
