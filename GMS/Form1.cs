@@ -38,6 +38,13 @@ namespace GMS
             pcCountries = new ParallelPlotCountries(doc.GetDatabase(), pcSplitContainer.Panel1, renderer);
             mapPlot = new MapPlot(doc.GetDatabase(), mainSplitContainer.Panel1, renderer);
 
+
+            //headers.Add("Clusters");
+            //KMeansFilter kMeansFilter = new KMeansFilter(3);
+            //kMeansFilter.Input = dc;
+
+
+            //doc.ShowData(headers, kMeansFilter);
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
