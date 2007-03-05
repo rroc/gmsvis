@@ -29,23 +29,15 @@ namespace GMS
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
-            this.splitContainer1.SuspendLayout();
+            this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.pcSplitContainer = new System.Windows.Forms.SplitContainer();
             this.toolStrip1.SuspendLayout();
+            this.mainSplitContainer.Panel2.SuspendLayout();
+            this.mainSplitContainer.SuspendLayout();
+            this.pcSplitContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(950, 522);
-            this.splitContainer1.SplitterDistance = 920;
-            this.splitContainer1.TabIndex = 0;
             // 
             // toolStrip1
             // 
@@ -53,7 +45,7 @@ namespace GMS
             this.toolStripComboBox1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(950, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1267, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -69,26 +61,52 @@ namespace GMS
             "6",
             "None"});
             this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(50, 21);
+            this.toolStripComboBox1.Size = new System.Drawing.Size(65, 25);
             this.toolStripComboBox1.Sorted = true;
             this.toolStripComboBox1.Text = "None";
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
             // 
+            // mainSplitContainer
+            // 
+            this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 25);
+            this.mainSplitContainer.Name = "mainSplitContainer";
+            this.mainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // mainSplitContainer.Panel2
+            // 
+            this.mainSplitContainer.Panel2.Controls.Add(this.pcSplitContainer);
+            this.mainSplitContainer.Size = new System.Drawing.Size(1267, 652);
+            this.mainSplitContainer.SplitterDistance = 326;
+            this.mainSplitContainer.TabIndex = 2;
+            // 
+            // pcSplitContainer
+            // 
+            this.pcSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pcSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.pcSplitContainer.Name = "pcSplitContainer";
+            this.pcSplitContainer.Size = new System.Drawing.Size(1267, 322);
+            this.pcSplitContainer.SplitterDistance = 1224;
+            this.pcSplitContainer.TabIndex = 0;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(950, 550);
+            this.ClientSize = new System.Drawing.Size(1267, 677);
+            this.Controls.Add(this.mainSplitContainer);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "GeoMusic Visualization";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.splitContainer1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.mainSplitContainer.Panel2.ResumeLayout(false);
+            this.mainSplitContainer.ResumeLayout(false);
+            this.pcSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -96,9 +114,10 @@ namespace GMS
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+        private System.Windows.Forms.SplitContainer mainSplitContainer;
+        private System.Windows.Forms.SplitContainer pcSplitContainer;
     }
 }
 
