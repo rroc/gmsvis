@@ -43,8 +43,20 @@ namespace GMS
             headers = new List<string>();
             kMeansFilter = new KMeansFilter(3);
 
+            panel.Resize += new EventHandler(panel_Resize);
+
             SetupData();
             SetupView();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void panel_Resize(object sender, EventArgs e)
+        {
+            textLens.RecomputeTextSize();
         }
 
         /// <summary>
@@ -213,15 +225,16 @@ namespace GMS
             
             // Padding: so the names of the countries don't be cut
             pcPlot.PaddingLeft += 60;
+            pcPlot.PickSensitivity = 3;
 
             pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
-            pcPlot.PickSensitivity = 3;
+            pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
             textLens = new TextLensSubComponent(pcPlot, panel);
             pcPlot.AddSubComponent(textLens);
 
-            Font font = new Font("Verdana", 6);
-            Color color = Color.DodgerBlue;
+            //Font font = new Font("Verdana", 6);
+            //Color color = Color.DodgerBlue;
 
             int countriesCount = countries.Count;
 
@@ -235,6 +248,13 @@ namespace GMS
                 //color, font, verticalPosition);
                 textLens.AddLabel(country, verticalPosition, (int)i);
             }
+        }
+
+        void pcPlot_FilterChanged(object sender, EventArgs e)
+        {
+            ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
+
+            textLens.VisibilityChanged(plot.IndexVisibilityHandler);
         }
 
         /// <summary>
@@ -259,7 +279,15 @@ namespace GMS
             //    color, new Font("Verdana", 10), 0.3f);
             //}
 
-            pcPlot.SetSelectedLines(selectedLines, true, true);
+            // if CTRL is pressed, add the line to the selectio
+            Keys keys = Control.ModifierKeys;
+            bool add = (keys == Keys.Control);
+
+            pcPlot.SetSelectedLines(selectedLines, add, true);
+
+            List<int> overallSelection = pcPlot.GetSelectedLineIndexes();
+
+            textLens.SelectionChanged(overallSelection);
         }
     }
 }
