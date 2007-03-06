@@ -43,20 +43,8 @@ namespace GMS
             headers = new List<string>();
             kMeansFilter = new KMeansFilter(3);
 
-            panel.Resize += new EventHandler(panel_Resize);
-
             SetupData();
             SetupView();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void panel_Resize(object sender, EventArgs e)
-        {
-            textLens.RecomputeTextSize();
         }
 
         /// <summary>
