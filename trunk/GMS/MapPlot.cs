@@ -14,12 +14,16 @@ namespace GMS
 {
     class MapPlot
     {
+        private const string iGeoDataPath = "../../../data/geodata/";
+
         private object[,] data;
 
         List<object> regions;
 
+
         private DataCube dataCube;
         private MapData mapData;
+        private ColorMap colorMap;
 
         private Renderer renderer;
 
@@ -32,13 +36,14 @@ namespace GMS
         Panel panel;
         DB database;
 
-
         public MapPlot(DB aDatabase, Panel aDestinationPanel, Renderer aRenderer)
         {
             database = aDatabase;
             panel = aDestinationPanel;
             renderer = aRenderer;
-
+            colorMap = CreateColorMap();
+            
+            SetupFilteredData();
             SetupMapLayers();
         }
 
@@ -55,6 +60,37 @@ namespace GMS
             map.Invalidate();
             return map;
         }
+
+        /// <summary>
+        /// Sorts the data by Country name and adds the data to the K-Means filter
+        /// and the regular Data Cube
+        /// </summary>
+        private void SetupFilteredData()
+        {
+            List<string> countryFilter = ParseCountryFilter(iGeoDataPath + "countries_acronyms_europe.txt");
+
+            int numOfElements = 5;
+            data = new object[numOfElements, countryFilter.Count];
+
+            //Filter the countries
+            int counter=0;
+            foreach (string filteredCountry in countryFilter) 
+            {
+                Country country = (Country)database.countries[filteredCountry];
+
+                //NOTE: numOfElements
+                data[0, counter] = counter;
+                data[1, counter] = country.medianAge;
+                data[2, counter] = country.releases.Count;
+                data[3, counter] = country.unemploymentRate;
+                data[4, counter] = country.gdbPerCapita;
+                counter++;
+            }
+            dataCube = new DataCube();
+            dataCube.SetData(data);
+            //kMeansFilter.Input = dataCube;
+        }
+
 
         private void SetupMapLayers()
         {
@@ -75,10 +111,10 @@ namespace GMS
             // Polygon Layer
             polygonLayer = new MapPolygonLayer();
             polygonLayer.MapData = mapData;
+            colorMap.Input = dataCube;
+            colorMap.Index = 0;
+            polygonLayer.ColorMap = colorMap;
 
-            //colorMap.Input = dataCube;
-            //colorMap.Index = 5;
-            //polygonLayer.ColorMap = colorMap;
 
             // Glyph Layer
             glyphLayer = new CountryGlyphLayer();
@@ -97,5 +133,38 @@ namespace GMS
 
             renderer.Add(choroMap, panel);
         }
+
+
+
+        public List<string> ParseCountryFilter(string filename)
+        {
+            List<string>  countryFilter = new List<string>();
+
+            // Open the file and read it back.
+            StreamReader sr = File.OpenText(filename);
+            string text = "";
+            countryFilter.Clear();
+
+            while ((text = sr.ReadLine()) != null)
+            {
+                char[] delimiterChars = { '\t' };
+                string[] words = text.Split(delimiterChars);
+
+                // Acronym
+                if ( 2 == words.Length )
+                {
+                    countryFilter.Add(words[0].ToUpperInvariant());
+                }
+            }
+
+            return countryFilter;
+        }
+
+
+
+
+
+
+
     }
 }

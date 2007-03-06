@@ -177,6 +177,7 @@ namespace GMS
             ArrayList sortedCountries = new ArrayList( database.countries.Values );
             sortedCountries.Sort(new CountryComparer());
 
+            //Dynamically allocate memory for the data
             uint i = 0;
             foreach (Country country in sortedCountries)
             {
@@ -197,8 +198,8 @@ namespace GMS
                 }
             }
 
+            //Allocate memory for the datacube data
             data = new object[5, filteredCountries.Count];
-
             i = 0;
             foreach (object[] obj in filteredCountries)
             {
