@@ -14,6 +14,7 @@ EE	Estonia
 ES	Spain
 FI	Finland
 FR	France
+GB	United Kingdom
 GR	Greece
 HR	Croatia
 HU	Hungary
@@ -37,4 +38,5 @@ SE	Sweden
 SI	Slovenia
 SK	Slovakia
 TR	Turkey
+UA	Ukraine
 CS	Serbia
