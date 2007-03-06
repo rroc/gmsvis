@@ -6,6 +6,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 
 using System.Windows.Forms;
+using Gav.Data;
 
 namespace Gav.Graphics
 {
@@ -16,6 +17,8 @@ namespace Gav.Graphics
         public int colorARGB;
         public System.Drawing.Point defaultPosition;
         public int id;
+        public bool visible;
+        public bool selected;
 
         public Label(string aText, float aVerticalPosition, int aID)
             : this(aText, aVerticalPosition, aID, System.Drawing.Color.Blue)
@@ -28,6 +31,8 @@ namespace Gav.Graphics
             verticalPosition = aVerticalPosition;
             colorARGB = aColor.ToArgb();
             id = aID;
+            visible = true;
+            selected = false;
         }
 
        
@@ -67,6 +72,21 @@ namespace Gav.Graphics
         /// </summary>
         private int lensTextHeight;
 
+        /// <summary>
+        /// The regular text color: without zoom/unselected
+        /// </summary>
+        private System.Drawing.Color visibleTextColor;
+
+        /// <summary>
+        /// The text color when the line is not selected on the PCPlot
+        /// </summary>
+        private System.Drawing.Color notVisibleTextColor;
+
+        /// <summary>
+        /// The text color when the line is selected on the PCPlot
+        /// </summary>
+        private System.Drawing.Color selectedTextColor;
+
         private Panel panel;
 
         private System.Drawing.Graphics graphicsObj;
@@ -96,17 +116,21 @@ namespace Gav.Graphics
             plot = aPlot;
             panel = aPanel;
             graphicsObj = panel.CreateGraphics();
-            systemFont = new System.Drawing.Font("Verdana", 6);
+            systemFont = new System.Drawing.Font("Verdana", 4);
             systemLensFont = new System.Drawing.Font("Verdana", 16);
             labels = new List<Label>();
             maxLabelWidth = 0.0f;
             mouseOverText = false;
 
-            System.Drawing.SizeF size = graphicsObj.MeasureString("foobar", systemFont);
+            System.Drawing.SizeF size = graphicsObj.MeasureString("Foobar", systemFont);
             defaultTextHeight = (int)size.Height;
 
-            size = graphicsObj.MeasureString("foobar", systemLensFont);
+            size = graphicsObj.MeasureString("Foobar", systemLensFont);
             lensTextHeight = (int)size.Height;
+
+            notVisibleTextColor = System.Drawing.Color.LightGray;
+            selectedTextColor   = System.Drawing.Color.Blue;
+            visibleTextColor    = System.Drawing.Color.Black;
         }
 
         /// <summary>
@@ -148,7 +172,7 @@ namespace Gav.Graphics
                 maxLabelWidth = width;
             }
 
-            labels.Add(new Label(label, verticalPosition, id));
+            labels.Add(new Label(label, verticalPosition, id, this.visibleTextColor));
         }
 
         //public void setLabels(List<string> labels)
@@ -168,7 +192,7 @@ namespace Gav.Graphics
             int yPos = plot.YPositionToScreen(plot.PadPositionY(label.verticalPosition)) - textHalfHeight;
             int xPos = plot.XPositionToScreen(plot.PadPositionX(0)) - (int)maxLabelWidth;
 
-            label.defaultPosition = new System.Drawing.Point(xPos, yPos - textHalfHeight);
+            label.defaultPosition = new System.Drawing.Point(xPos, yPos);
         }
         
         /// <summary>
@@ -194,25 +218,20 @@ namespace Gav.Graphics
                 inited = true;
             }
 
+            List<int> selection = new List<int>();
             foreach (Label label in labels)
             {
-                if (mouseOverText && (mouseY < label.defaultPosition.Y + defaultTextHeight) && 
-                    (mouseY > label.defaultPosition.Y))
+                if (mouseOverText && (mouseY < label.defaultPosition.Y + defaultTextHeight) &&
+                                    (mouseY > label.defaultPosition.Y))
                 {
                     System.Drawing.Point p = new System.Drawing.Point(label.defaultPosition.X, label.defaultPosition.Y);
                     p.Y -= (lensTextHeight - defaultTextHeight) / 2;
 
-                    //System.Drawing.Font f = new System.Drawing.Font("Verdana", 16);
-                    //Microsoft.DirectX.Direct3D.Font d3dLensFont = new Font(device, f);
                     d3dLensFont.DrawText(null, label.text, p,
                         System.Drawing.Color.Red.ToArgb());
 
-                    List<int> selection = new List<int>();
-                    selection.Add( label.id );
-                    plot.SetSelectedLines(selection, false, true);
-
-                    //d3dFont.DrawText(null, label.text, label.defaultPosition, 
-                    //    System.Drawing.Color.Red.ToArgb());
+                    // add the selected text to the plot list of selected lines
+                    selection.Add(label.id);
                 }
                 else
                 {
@@ -224,6 +243,75 @@ namespace Gav.Graphics
             {
                 mouseOverText = false;
             }
+        }
+
+        /// <summary>
+        /// Change the colors according to the lines selected on the PC Plot
+        /// </summary>
+        /// <param name="selectedIDs"></param>
+        public void SelectionChanged(List<int> selectedIDs)
+        {
+            foreach (Label label in labels)
+            {
+                bool selected = selectedIDs.Contains(label.id);
+                label.selected = selected;
+
+                if (selected)
+                {
+                    if (label.visible)
+                    {
+                        label.colorARGB = selectedTextColor.ToArgb();
+                    }
+                }
+                else
+                {
+                    if (label.visible)
+                    {
+                        label.colorARGB = visibleTextColor.ToArgb();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="visibilityHandler"></param>
+        public void VisibilityChanged(IndexVisibilityHandler visibilityHandler)
+        {
+            foreach (Label label in labels)
+            {
+                bool visible = visibilityHandler.GetVisibility(label.id);
+                label.visible = visible;
+
+                if (visible)
+                {
+                    //visible = true;
+
+                    // if selected we don't want to override that color
+                    if ( ! label.selected )
+                    {
+                        label.colorARGB = visibleTextColor.ToArgb();
+                    }
+                    else // if visible and selected, then show it selected
+                    {
+                        label.colorARGB = selectedTextColor.ToArgb();
+                    }
+                }
+                else
+                {
+                    // NOTE: do not change the selected flag, so we can
+                    // put it back to selected when it's visible again
+                    //label.visible = false;
+                    label.colorARGB = notVisibleTextColor.ToArgb();
+                }
+            }
+        }
+
+        public void RecomputeTextSize()
+        {
+            labelBottom = plot.YPositionToScreen(plot.PadPositionY(1.0f));
+            labelTop = plot.YPositionToScreen(plot.PadPositionY(0.0f));
         }
 
         /// <summary>
