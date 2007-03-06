@@ -38,8 +38,14 @@ namespace Gav.Graphics
        
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
     class TextLensSubComponent : VizSubComponent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private ParallelCoordinatesPlot plot;
 
         /// <summary>
@@ -87,11 +93,26 @@ namespace Gav.Graphics
         /// </summary>
         private System.Drawing.Color selectedTextColor;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Panel panel;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Drawing.Graphics graphicsObj;
 
+        /// <summary>
+        /// The list of labels
+        /// </summary>
         private List<Label> labels;
+
+        private static float minTextSize = 1.0f;
+        private static float minLensTextSize = 10.0f;
+        private static float maxLensTextSize = 14.0f;
+
+        Microsoft.DirectX.Direct3D.Device d3dDevice;
 
         // Text Hovering variables
         bool mouseOverText;
@@ -105,6 +126,7 @@ namespace Gav.Graphics
         /* XXX                                                                  */
         /************************************************************************/
         bool inited = false;
+        bool sizeUpdated = false;
         
         /// <summary>
         /// The maximum width of all labels
@@ -116,21 +138,68 @@ namespace Gav.Graphics
             plot = aPlot;
             panel = aPanel;
             graphicsObj = panel.CreateGraphics();
-            systemFont = new System.Drawing.Font("Verdana", 4);
-            systemLensFont = new System.Drawing.Font("Verdana", 16);
+            
             labels = new List<Label>();
             maxLabelWidth = 0.0f;
             mouseOverText = false;
 
+            notVisibleTextColor = System.Drawing.Color.LightGray;
+            selectedTextColor   = System.Drawing.Color.Blue;
+            visibleTextColor    = System.Drawing.Color.Black;
+        }
+
+        /// <summary>
+        /// Computes the optimal size for the Lens, given the default bounds
+        /// </summary>
+        /// <param name="desiredSize"></param>
+        /// <returns></returns>
+        private float GetBoundedLensTextSize(float desiredSize)
+        {
+            float size = minLensTextSize;
+
+            if (desiredSize > maxLensTextSize)
+            {
+                size = maxLensTextSize;
+            }
+            else if (desiredSize < minLensTextSize)
+            {
+                size = minLensTextSize;
+            }
+
+            return size;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="device"></param>
+        private void InitFonts(Microsoft.DirectX.Direct3D.Device device)
+        {
+            ComputeLensVerticalBounds();
+
+            // Add 10% to provide some some space between them
+            float nLabels = (float)labels.Count * 1.1f;
+
+            float height = Math.Abs(labelTop - labelBottom) / nLabels;
+            
+            // Limit the text size
+            height = height < minTextSize ? minTextSize : height;
+            float lensTextSize = GetBoundedLensTextSize(height * 3.0f);
+            
+            systemFont = new System.Drawing.Font("Verdana", height);
+            systemLensFont = new System.Drawing.Font("Verdana", lensTextSize);
+
+            // Compute text height sizes
             System.Drawing.SizeF size = graphicsObj.MeasureString("Foobar", systemFont);
             defaultTextHeight = (int)size.Height;
 
             size = graphicsObj.MeasureString("Foobar", systemLensFont);
             lensTextHeight = (int)size.Height;
 
-            notVisibleTextColor = System.Drawing.Color.LightGray;
-            selectedTextColor   = System.Drawing.Color.Blue;
-            visibleTextColor    = System.Drawing.Color.Black;
+            // Create the D3D Fonts
+            d3dFont = new Font(device, systemFont);
+            d3dLensFont = new Font(device, systemLensFont);
+
         }
 
         /// <summary>
@@ -139,8 +208,15 @@ namespace Gav.Graphics
         /// <param name="device"></param>
         protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
         {
-            d3dFont = new Font(device, systemFont);
-            d3dLensFont = new Font(device, systemLensFont);
+            d3dDevice = device;
+
+            // Compute the new bounds
+            ComputeLensHorizontalBounds();
+            ComputeLensVerticalBounds();
+
+            InitFonts(d3dDevice);
+
+            ComputeMaxLabelWidth();
         }
 
         /// <summary>
@@ -151,11 +227,33 @@ namespace Gav.Graphics
         }
 
         /// <summary>
+        /// Used as a handler for an update size: MUST BE REFACTORED
+        /// </summary>
+        private void OnSizeUpdate()
+        {
+            InitFonts(d3dDevice);
+
+            // NOTE: invalidate maxLabelWidth because we might be shrinking the text
+            // and also, it must be done before the new LensBounds are computed
+            maxLabelWidth = 0;
+            ComputeMaxLabelWidth();
+
+            // Compute the new bounds: given the new text sizes
+            ComputeLensHorizontalBounds();
+
+            // initialize every label's default position
+            foreach (Label label in labels)
+            {
+                InitLabelDefaultPosition(label);
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         protected override void UpdateSize()
         {
-
+            sizeUpdated = true;
         }
 
         /// <summary>
@@ -165,34 +263,58 @@ namespace Gav.Graphics
         /// <param name="verticalPosition"></param>
         public void AddLabel(string label, float verticalPosition, int id)
         {
-            float width = graphicsObj.MeasureString(label, systemFont).Width;
-
-            if (width > maxLabelWidth)
-            {
-                maxLabelWidth = width;
-            }
-
             labels.Add(new Label(label, verticalPosition, id, this.visibleTextColor));
         }
 
-        //public void setLabels(List<string> labels)
-        //{
-        //    _labels.AddRange(labels);
-        //}
-
         /// <summary>
-        /// 
+        /// NOTE: Must be called after an update to Label Widths
         /// </summary>
         /// <param name="label"></param>
         private void InitLabelDefaultPosition(Label label)
         {
-            //System.Drawing.SizeF size = graphicsObj.MeasureString(label.text, systemFont);
             int textHalfHeight = defaultTextHeight / 2;
 
             int yPos = plot.YPositionToScreen(plot.PadPositionY(label.verticalPosition)) - textHalfHeight;
             int xPos = plot.XPositionToScreen(plot.PadPositionX(0)) - (int)maxLabelWidth;
 
             label.defaultPosition = new System.Drawing.Point(xPos, yPos);
+        }
+
+
+        /// <summary>
+        /// Computes, given the current window, the labels horizontal bounds (according to padding)
+        /// NOTE: Depends on Max Label Width
+        /// </summary>
+        private void ComputeLensHorizontalBounds()
+        {
+            labelRight = plot.XPositionToScreen(plot.PadPositionX(0));
+            labelLeft = labelRight - (int)maxLabelWidth;
+        }
+
+        /// <summary>
+        /// Computes, given the current window, the labels vertical bounds (according to padding)
+        /// </summary>
+        private void ComputeLensVerticalBounds()
+        {
+            labelBottom = plot.YPositionToScreen(plot.PadPositionY(1.0f));
+            labelTop    = plot.YPositionToScreen(plot.PadPositionY(0.0f));
+        }
+
+        /// <summary>
+        /// Computes the Labels max width
+        /// </summary>
+        private void ComputeMaxLabelWidth()
+        {
+            // Compute Label
+            foreach (Label label in labels)
+            {
+                float width = graphicsObj.MeasureString(label.text, systemFont).Width;
+
+                if (width > maxLabelWidth)
+                {
+                    maxLabelWidth = width;
+                }
+            }
         }
         
         /// <summary>
@@ -202,12 +324,13 @@ namespace Gav.Graphics
         protected override void InternalRender(Microsoft.DirectX.Direct3D.Device device)
         {
 
+            /************************************************************************/
+            /* XXX                                                                  */
+            /************************************************************************/
             if ( ! inited )
             {
-                labelBottom = plot.YPositionToScreen(plot.PadPositionY(1.0f));
-                labelTop = plot.YPositionToScreen(plot.PadPositionY(0.0f));
-                labelRight = plot.XPositionToScreen(plot.PadPositionX(0));
-                labelLeft = labelRight - (int)maxLabelWidth;
+                ComputeLensVerticalBounds();
+                ComputeLensHorizontalBounds();
 
                 // initialize every label's default position
                 foreach (Label label in labels)
@@ -218,11 +341,22 @@ namespace Gav.Graphics
                 inited = true;
             }
 
+            /************************************************************************/
+            /* XXX                                                                  */
+            /************************************************************************/
+            if (sizeUpdated)
+            {
+                sizeUpdated = false;
+                OnSizeUpdate();
+            }
+
             List<int> selection = new List<int>();
             foreach (Label label in labels)
             {
-                if (mouseOverText && (mouseY < label.defaultPosition.Y + defaultTextHeight) &&
-                                    (mouseY > label.defaultPosition.Y))
+                // NOTE: just decreasing 30% of the width because of the text overlaps
+                if (mouseOverText && 
+                    (mouseY < label.defaultPosition.Y + (int)((float)defaultTextHeight * 0.7f)) &&
+                    (mouseY > label.defaultPosition.Y))
                 {
                     System.Drawing.Point p = new System.Drawing.Point(label.defaultPosition.X, label.defaultPosition.Y);
                     p.Y -= (lensTextHeight - defaultTextHeight) / 2;
@@ -306,12 +440,6 @@ namespace Gav.Graphics
                     label.colorARGB = notVisibleTextColor.ToArgb();
                 }
             }
-        }
-
-        public void RecomputeTextSize()
-        {
-            labelBottom = plot.YPositionToScreen(plot.PadPositionY(1.0f));
-            labelTop = plot.YPositionToScreen(plot.PadPositionY(0.0f));
         }
 
         /// <summary>
