@@ -29,33 +29,17 @@ namespace GMS
         private CountryGlyphLayer       glyphLayer;
         private ChoroplethMap           choroMap;
 
-        public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer)
+        public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, ColorMap aColorMap )
         {
             iDataCube = aDataCube;
             panel = aDestinationPanel;
             renderer = aRenderer;
+            iColorMap = aColorMap;
 
-            //setup map
-            iColorMap = CreateColorMap();
             SetupMapLayers();
         }
 
-        /// <summary>
-        /// Creates a HSV(0.0, 180.0) Color Map
-        /// </summary>
-        /// <returns></returns>
-        private ColorMap CreateColorMap()
-        {
-            ColorMap map = new ColorMap();
-            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 180.0f);
-            map.AddColorMapPart(hsvMap);
-            hsvMap.Invalidate();
-            map.Invalidate();
-            return map;
-        }
-
-
-        private void SetupMapLayers()
+         private void SetupMapLayers()
         {
             string dir = Directory.GetCurrentDirectory();
             string dataPath = "\\..\\..\\..\\data\\geodata\\maps\\";
@@ -74,8 +58,6 @@ namespace GMS
             // Polygon Layer
             polygonLayer = new MapPolygonLayer();
             polygonLayer.MapData = iMapData;
-            iColorMap.Input = iDataCube;
-            iColorMap.Index = 0;
             polygonLayer.ColorMap = iColorMap;
 
             // Glyph Layer

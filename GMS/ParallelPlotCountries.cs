@@ -27,14 +27,18 @@ namespace GMS
         TextLensSubComponent textLens;
         Panel panel;
 
+        ColorMap iColorMap;
+
         // Lookup table to get country names
         Hashtable iCountryNames;
 
-        public ParallelPlotCountries(DataCube aDataCube, Hashtable aCountryNames, Panel aDestinationPanel, 
-            Renderer aRenderer)
+        public ParallelPlotCountries(DataCube aDataCube, Hashtable aCountryNames, Panel aDestinationPanel,
+            Renderer aRenderer, ColorMap aColorMap)
         {
             iDataCube = aDataCube;
             iCountryNames = aCountryNames;
+            iColorMap = aColorMap;
+
             panel = aDestinationPanel;
 //            iCountryNames = new Hashtable();
             renderer = aRenderer;
@@ -44,22 +48,6 @@ namespace GMS
 
             SetupView();
         }
-
-        /// <summary>
-        /// Creates a HSV(0.0, 180.0) Color Map
-        /// </summary>
-        /// <returns></returns>
-        private ColorMap CreateColorMap()
-        {
-            ColorMap map = new ColorMap();
-            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 180.0f);
-            map.AddColorMapPart(hsvMap);
-            hsvMap.Invalidate();
-            map.Invalidate();
-
-            return map;
-        }
-
 
         /// <summary>
         /// Creates the PC plot given
@@ -78,16 +66,13 @@ namespace GMS
             filterPlot.Input = filter;
             filterPlot.Headers = headers;
 
-            ColorMap colorMap = CreateColorMap();
-            colorMap.Input = filter;
-
             // to color according to clusters
             if (columnIndex != -1)
             {
-                colorMap.Index = columnIndex;
+                iColorMap.Index = columnIndex;
             }
 
-            filterPlot.ColorMap = colorMap;
+            filterPlot.ColorMap = iColorMap;
 
             filterPlot.Enabled = true;
 
@@ -102,6 +87,7 @@ namespace GMS
         /// <param name="aClusters">the number of clusters or -1, if regular data is to be used</param>
         public void ToggleFilter(string aClusters)
         {
+            Console.WriteLine( aClusters );
             if (aClusters.Equals("None"))
             {
                 ChangePC(-1);
@@ -123,25 +109,28 @@ namespace GMS
         /// <param name="columnIndex"></param>
         private void ChangePC(int columnIndex)
         {
-            // to color according to clusters
+            //COLOR according to clusters
             if (columnIndex != -1)
             {
+                //if previously using normal datacube
                 if( ! kMeansClusteringOn )
                 {
-                    pcPlot.Input = kMeansFilter;
                     pcPlot.ColorMap.Input = kMeansFilter;
                     kMeansClusteringOn = ! kMeansClusteringOn;
                 }
-                
                 pcPlot.ColorMap.Index = columnIndex;
                 kMeansFilter.CommitChanges();
             }
+            //CLUSTERING WAS PREVIOUSLY ON
             else if (kMeansClusteringOn)
             {
-                pcPlot.Input = iDataCube;
                 pcPlot.ColorMap.Input = iDataCube;
                 kMeansClusteringOn = !kMeansClusteringOn;
                 pcPlot.ColorMap.Index = iDataCube.Data.GetLength(0) - 1;
+            }
+            else
+            {
+                //None to None
             }
             pcPlot.GuideLineEnabled = true;
         }
