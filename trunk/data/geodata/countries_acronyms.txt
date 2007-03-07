@@ -23,7 +23,7 @@ BJ	Benin	1100	republic	NA	17,6
 BM	Bermuda	69900	parliamentary	2,1	40,2
 BT	Bhutan	1400	monarchy	NA	20,4
 BO	Bolivia	3000	republic	7,8	21,8
-BA	Bosnia and Herzegovina	5500	federal democratic republic	45,5	38,4
+BA	Bosnia and Herz.	5500	federal democratic republic	45,5	38,4
 BW	Botswana	11400	parliamentary republic	23,8	19,4
 BR	Brazil	8600	federative republic	9,6	28,2
 IO	British Virgin Islands	38500	NA	3,6	31,4
