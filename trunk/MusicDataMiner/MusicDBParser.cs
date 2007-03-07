@@ -38,7 +38,7 @@ namespace MusicDataminer
             iLineCount = new Hashtable();
 
             // try to load DataBase
-            bool loaded = MusicDBLoader.LoadDB( iDBFileName, out this.dataBase );
+            bool loaded = MusicDBLoader.LoadDB(iDBFileName, out dataBase);
             
             if ( ! loaded )
             {
