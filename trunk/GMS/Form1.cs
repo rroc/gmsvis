@@ -37,9 +37,9 @@ namespace GMS
             doc.SetupFilteredData("countries_acronyms_europe.txt");
             doc.SetupSortedData();
 
-            //pcCountries = new ParallelPlotCountries(doc.GetSortedDataCube(), doc.GetSortedCountryNames(), pcSplitContainer.Panel1, renderer);
-            pcCountries = new ParallelPlotCountries(doc.GetFilteredDataCube(), doc.GetFilteredCountryNames(), pcSplitContainer.Panel1, renderer);
-            mapPlot = new MapPlot(doc.GetFilteredDataCube(), mainSplitContainer.Panel1, renderer);
+            //pcCountries = new ParallelPlotCountries(doc.GetSortedDataCube(), doc.GetSortedCountryNames(), pcSplitContainer.Panel1, renderer, doc.iSortedColorMap);
+            pcCountries = new ParallelPlotCountries(doc.GetFilteredDataCube(), doc.GetFilteredCountryNames(), pcSplitContainer.Panel1, renderer, doc.iFilteredColorMap);
+            mapPlot = new MapPlot(doc.GetFilteredDataCube(), mainSplitContainer.Panel1, renderer, doc.iFilteredColorMap );
 
         }
 

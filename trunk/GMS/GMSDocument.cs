@@ -29,11 +29,13 @@ namespace GMS
 
         private object[,]   iFilteredData;
         private DataCube    iFilteredDataCube;
-        public Hashtable    iFilteredCountryNames;
+        private Hashtable   iFilteredCountryNames;
+        public  ColorMap    iFilteredColorMap;
 
         private object[,]   iSortedData;
         private DataCube    iSortedDataCube;
         private Hashtable   iSortedCountryNames;
+        public  ColorMap    iSortedColorMap;
 
         /// <summary>
         /// Constructor
@@ -43,45 +45,11 @@ namespace GMS
         }
 
         //GETTERS:
-
-        /// <summary>
-        /// Get the whole database
-        /// </summary>
-        /// <returns>Database</returns>
-        public DB GetDatabase()
-        {
-            return this.iDb;
-        }
-
-        /// <summary>
-        /// Getter method for the filtered datacube
-        /// </summary>
-        /// <returns>Datacube</returns>
-        public DataCube GetFilteredDataCube() 
-        {
-            return this.iFilteredDataCube;
-        }
-
-        /// <summary>
-        /// Getter method for the sorted datacube
-        /// </summary>
-        /// <returns>Datacube</returns>
-        public DataCube GetSortedDataCube()
-        {
-            return this.iSortedDataCube;
-        }
-
-        public Hashtable GetFilteredCountryNames()
-        {
-            return this.iFilteredCountryNames;
-        }
-
-        public Hashtable GetSortedCountryNames()
-        {
-            return this.iSortedCountryNames;
-        }
-
-
+        public DB GetDatabase() { return this.iDb; }
+        public DataCube GetFilteredDataCube() { return this.iFilteredDataCube; }
+        public DataCube GetSortedDataCube() { return this.iSortedDataCube; }
+        public Hashtable GetFilteredCountryNames() { return this.iFilteredCountryNames; }
+        public Hashtable GetSortedCountryNames() { return this.iSortedCountryNames; }
 
         public void ReadDB(string filename)
         {
@@ -93,6 +61,19 @@ namespace GMS
             }
         }
 
+        /// <summary>
+        /// Creates a HSV(0.0, 180.0) Color Map
+        /// </summary>
+        /// <returns></returns>
+        private ColorMap CreateColorMap()
+        {
+            ColorMap map = new ColorMap();
+            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 180.0f);
+            map.AddColorMapPart(hsvMap);
+            hsvMap.Invalidate();
+            map.Invalidate();
+            return map;
+        }
 
         /// <summary>
         /// Create a Datacube accoring to the Filter provided as input (filename).
@@ -100,6 +81,7 @@ namespace GMS
         /// <param name="aFilterFileName">filter filename</param>
         public void SetupFilteredData( string aFilterFileName )
         {
+            iFilteredColorMap = CreateColorMap();
             iFilteredCountryNames = new Hashtable();
             List<string> countryFilter = ParseCountryFilter(iGeoDataPath + aFilterFileName );
 
@@ -124,6 +106,9 @@ namespace GMS
             }
             iFilteredDataCube = new DataCube();
             iFilteredDataCube.SetData( iFilteredData );
+
+            iFilteredColorMap.Input = iFilteredDataCube;
+            iFilteredColorMap.Index = 0;
             //kMeansFilter.Input = dataCube;
         }
 
@@ -135,6 +120,7 @@ namespace GMS
         /// </summary>
         public void SetupSortedData()
         {
+            iSortedColorMap = CreateColorMap();
             iSortedCountryNames = new Hashtable();
             List<object[]> filteredCountries = new List<object[]>();
             ArrayList sortedCountries = new ArrayList( iDb.countries.Values);
@@ -176,6 +162,8 @@ namespace GMS
 
             iSortedDataCube = new DataCube();
             iSortedDataCube.SetData(iSortedData);
+            iSortedColorMap.Input = iSortedDataCube;
+            iSortedColorMap.Index = 0;
             //kMeansFilter.Input = dataCube;
         }
 
