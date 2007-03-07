@@ -19,10 +19,6 @@ namespace GMS
         private Material iMaterial;
         private CustomVertex.PositionTextured[] iGlyphMoney;
 
-        private CustomVertex.PositionOnly[] _verts;
-        private CustomVertex.PositionOnly[] _starVertices;
-        private CustomVertex.PositionOnly[] _boxVertices;
-
         private bool _inited;
         private List<AxisMap> _axisMaps;
 
@@ -36,13 +32,13 @@ namespace GMS
             set { _input = value; }
         }
 
-        private IndexVisibilityHandler _visibilityHandler;
+        //private IndexVisibilityHandler _visibilityHandler;
 
-        public IndexVisibilityHandler IndexVisibilityHandler
-        {
-            get { return _visibilityHandler; }
-            set { _visibilityHandler = value; }
-        }
+        //public IndexVisibilityHandler IndexVisibilityHandler
+        //{
+        //    get { return _visibilityHandler; }
+        //    set { _visibilityHandler = value; }
+        //}
 
 
         //----------------------------------------------------------

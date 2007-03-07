@@ -12,7 +12,7 @@ namespace GMS
         private List<List<int>> clusters;
         private List<List<float>> clusterMeans;
         private int nClusters;
-        private bool randomClustersReady;
+        //private bool randomClustersReady;
 
         public KMeansFilter(int aNClusters)
         {
@@ -25,7 +25,7 @@ namespace GMS
             }
 
             nClusters = aNClusters;
-            randomClustersReady = false;
+            //randomClustersReady = false;
         }
 
         private void GenerateRandomList(int totalElements)
@@ -54,7 +54,7 @@ namespace GMS
                 }
             }
 
-            randomClustersReady = true;
+            //randomClustersReady = true;
         }
 
         private void NormalizeData(float[, ,] normalizedData)

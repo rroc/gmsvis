@@ -34,17 +34,13 @@ namespace GMS
             renderer = new Renderer(this);
             doc = new GMSDocument();
             doc.ReadDB(dir + iDataPath + iDBFileName);
-            
-            pcCountries = new ParallelPlotCountries(doc.GetDatabase(), pcSplitContainer.Panel1, renderer);
-            mapPlot = new MapPlot(doc.GetDatabase(), mainSplitContainer.Panel1, renderer);
+            doc.SetupFilteredData("countries_acronyms_europe.txt");
+            doc.SetupSortedData();
 
+            //pcCountries = new ParallelPlotCountries(doc.GetSortedDataCube(), doc.GetSortedCountryNames(), pcSplitContainer.Panel1, renderer);
+            pcCountries = new ParallelPlotCountries(doc.GetFilteredDataCube(), doc.GetFilteredCountryNames(), pcSplitContainer.Panel1, renderer);
+            mapPlot = new MapPlot(doc.GetFilteredDataCube(), mainSplitContainer.Panel1, renderer);
 
-            //headers.Add("Clusters");
-            //KMeansFilter kMeansFilter = new KMeansFilter(3);
-            //kMeansFilter.Input = dc;
-
-
-            //doc.ShowData(headers, kMeansFilter);
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
