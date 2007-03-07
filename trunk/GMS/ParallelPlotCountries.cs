@@ -159,9 +159,6 @@ namespace GMS
             textLens = new TextLensSubComponent(pcPlot, panel);
             pcPlot.AddSubComponent(textLens);
 
-            //Font font = new Font("Verdana", 6);
-            //Color color = Color.DodgerBlue;
-
             int countriesCount = iCountryNames.Count;
 
             // iterate through all the countries and 
