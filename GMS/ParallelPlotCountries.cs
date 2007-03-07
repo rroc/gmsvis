@@ -14,11 +14,10 @@ namespace GMS
     class ParallelPlotCountries
     {
         // Private Attributes
-        private object[,] data;
         List<string> headers;
 
         // filters
-        private DataCube dataCube;
+        private DataCube iDataCube;
         private KMeansFilter kMeansFilter;
         private bool kMeansClusteringOn = false;
 
@@ -28,22 +27,21 @@ namespace GMS
         TextLensSubComponent textLens;
         Panel panel;
 
-        DB database;
-
         // Lookup table to get country names
-        Hashtable countries;
+        Hashtable iCountryNames;
 
-        public ParallelPlotCountries(DB aDatabase, Panel aDestinationPanel, 
+        public ParallelPlotCountries(DataCube aDataCube, Hashtable aCountryNames, Panel aDestinationPanel, 
             Renderer aRenderer)
         {
-            database = aDatabase;
+            iDataCube = aDataCube;
+            iCountryNames = aCountryNames;
             panel = aDestinationPanel;
-            countries = new Hashtable();
+//            iCountryNames = new Hashtable();
             renderer = aRenderer;
             headers = new List<string>();
             kMeansFilter = new KMeansFilter(3);
+            kMeansFilter.Input = iDataCube;
 
-            SetupData();
             SetupView();
         }
 
@@ -140,68 +138,12 @@ namespace GMS
             }
             else if (kMeansClusteringOn)
             {
-                pcPlot.Input = dataCube;
-                pcPlot.ColorMap.Input = dataCube;
+                pcPlot.Input = iDataCube;
+                pcPlot.ColorMap.Input = iDataCube;
                 kMeansClusteringOn = !kMeansClusteringOn;
-                pcPlot.ColorMap.Index = dataCube.Data.GetLength(0) - 1;
+                pcPlot.ColorMap.Index = iDataCube.Data.GetLength(0) - 1;
             }
             pcPlot.GuideLineEnabled = true;
-        }
-
-
-        /// <summary>
-        /// Sorts the data by Country name and adds the data to the K-Means filter
-        /// and the regular Data Cube
-        /// </summary>
-        private void SetupData()
-        {
-            this.headers.Add("Country");
-            this.headers.Add("Median Age");
-            this.headers.Add("Number of Releases");
-            this.headers.Add("Unemployment Rate");
-            this.headers.Add("GDB Per Capita");
-
-            List<object[]> filteredCountries = new List<object[]>();
-            ArrayList sortedCountries = new ArrayList( database.countries.Values );
-            sortedCountries.Sort(new CountryComparer());
-
-            //Dynamically allocate memory for the data
-            uint i = 0;
-            foreach (Country country in sortedCountries)
-            {
-                // if any albums were release in that country
-                if (country.releases.Count != 0)
-                {
-                    filteredCountries.Add(new object[5]{
-                        i, 
-                        country.medianAge, 
-                        Math.Log(country.releases.Count, 2), 
-                        //country.releases.Count, 
-                        country.unemploymentRate, 
-                        country.gdbPerCapita});
-
-                    string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(country.name);
-
-                    countries.Add(i++, countryTitleCase);
-                }
-            }
-
-            //Allocate memory for the datacube data
-            data = new object[5, filteredCountries.Count];
-            i = 0;
-            foreach (object[] obj in filteredCountries)
-            {
-                // copy every attribute
-                for (int j = 0; j < 5; j++)
-                {
-                    data[j, i] = obj[j];
-                }
-                ++i;
-            }
-
-            dataCube = new DataCube();
-            dataCube.SetData(data);
-            kMeansFilter.Input = dataCube;
         }
 
         /// <summary>
@@ -210,7 +152,13 @@ namespace GMS
         /// </summary>
         private void SetupView()
         {
-            pcPlot = InitializeParallelCoordinatesPlot(panel, dataCube, -1, headers);
+            this.headers.Add("Country");
+            this.headers.Add("Median Age");
+            this.headers.Add("Number of Releases");
+            this.headers.Add("Unemployment Rate");
+            this.headers.Add("GDB Per Capita");
+
+            pcPlot = InitializeParallelCoordinatesPlot(panel, iDataCube, -1, headers);
             
             // Padding: so the names of the countries don't be cut
             pcPlot.PaddingLeft += 60;
@@ -225,13 +173,13 @@ namespace GMS
             //Font font = new Font("Verdana", 6);
             //Color color = Color.DodgerBlue;
 
-            int countriesCount = countries.Count;
+            int countriesCount = iCountryNames.Count;
 
             // iterate through all the countries and 
             for (uint i = 0; i < countriesCount; i++)
             {
                 float verticalPosition = 1.0f - (float)i / (float)(countriesCount - 1);
-                string country = (string)countries[i];
+                string country = (string)iCountryNames[i];
 
                 //pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
                 //color, font, verticalPosition);

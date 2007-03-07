@@ -77,7 +77,7 @@ namespace GMS
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.pcSplitContainer);
             this.mainSplitContainer.Size = new System.Drawing.Size(1267, 652);
-            this.mainSplitContainer.SplitterDistance = 326;
+            this.mainSplitContainer.SplitterDistance = 395;
             this.mainSplitContainer.TabIndex = 2;
             // 
             // pcSplitContainer
@@ -85,8 +85,8 @@ namespace GMS
             this.pcSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pcSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.pcSplitContainer.Name = "pcSplitContainer";
-            this.pcSplitContainer.Size = new System.Drawing.Size(1267, 322);
-            this.pcSplitContainer.SplitterDistance = 1224;
+            this.pcSplitContainer.Size = new System.Drawing.Size(1267, 253);
+            this.pcSplitContainer.SplitterDistance = 1223;
             this.pcSplitContainer.TabIndex = 0;
             // 
             // Form1
