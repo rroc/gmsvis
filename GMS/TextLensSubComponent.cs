@@ -109,7 +109,8 @@ namespace Gav.Graphics
         private List<Label> labels;
 
         private static float minTextSize = 1.0f;
-        private static float minLensTextSize = 10.0f;
+        private static float maxTextSize = 8.0f;
+        private static float minLensTextSize = 12.0f;
         private static float maxLensTextSize = 14.0f;
 
         Microsoft.DirectX.Direct3D.Device d3dDevice;
@@ -133,6 +134,8 @@ namespace Gav.Graphics
         /// </summary>
         private float maxLabelWidth;
 
+        private MouseButtons lastButtonPressed;
+
         public TextLensSubComponent(ParallelCoordinatesPlot aPlot, Panel aPanel)
         {
             plot = aPlot;
@@ -146,6 +149,8 @@ namespace Gav.Graphics
             notVisibleTextColor = System.Drawing.Color.LightGray;
             selectedTextColor   = System.Drawing.Color.Blue;
             visibleTextColor    = System.Drawing.Color.Black;
+
+            lastButtonPressed = MouseButtons.None;
         }
 
         /// <summary>
@@ -170,6 +175,27 @@ namespace Gav.Graphics
         }
 
         /// <summary>
+        /// Computes the optimal size for the regular text, given the default bounds
+        /// </summary>
+        /// <param name="desiredSize"></param>
+        /// <returns></returns>
+        private float GetBoundedTextSize(float desiredSize)
+        {
+            float size = desiredSize;
+
+            if (desiredSize > maxTextSize)
+            {
+                size = maxTextSize;
+            }
+            else if (desiredSize < minTextSize)
+            {
+                size = minTextSize;
+            }
+
+            return size;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="device"></param>
@@ -183,11 +209,17 @@ namespace Gav.Graphics
             float height = Math.Abs(labelTop - labelBottom) / nLabels;
             
             // Limit the text size
-            height = height < minTextSize ? minTextSize : height;
-            float lensTextSize = GetBoundedLensTextSize(height * 3.0f);
-            
+            height = GetBoundedTextSize(height);
+            float lensTextSize = GetBoundedLensTextSize(height * 4.0f);
+
+            if (systemLensFont != null && systemFont != null)
+            {
+                systemLensFont.Dispose();
+                systemFont.Dispose();
+            }
+
             systemFont = new System.Drawing.Font("Verdana", height);
-            systemLensFont = new System.Drawing.Font("Verdana", lensTextSize);
+            systemLensFont = new System.Drawing.Font("Verdana", lensTextSize, System.Drawing.FontStyle.Bold);
 
             // Compute text height sizes
             System.Drawing.SizeF size = graphicsObj.MeasureString("Foobar", systemFont);
@@ -195,6 +227,12 @@ namespace Gav.Graphics
 
             size = graphicsObj.MeasureString("Foobar", systemLensFont);
             lensTextHeight = (int)size.Height;
+
+            if (d3dFont != null && d3dLensFont != null)
+            {
+                d3dFont.Dispose();
+                d3dLensFont.Dispose();
+            }
 
             // Create the D3D Fonts
             d3dFont = new Font(device, systemFont);
@@ -287,7 +325,16 @@ namespace Gav.Graphics
         /// </summary>
         private void ComputeLensHorizontalBounds()
         {
-            labelRight = plot.XPositionToScreen(plot.PadPositionX(0));
+            if (inited)
+            {
+                List<float> axesPositions = plot.GetAxisXPositions();
+                labelRight = plot.XPositionToScreen(axesPositions[0]);
+            }
+            else
+            {
+                labelRight = plot.XPositionToScreen(plot.PadPositionX(0));
+            }
+
             labelLeft = labelRight - (int)maxLabelWidth;
         }
 
@@ -323,10 +370,7 @@ namespace Gav.Graphics
         /// <param name="device"></param>
         protected override void InternalRender(Microsoft.DirectX.Direct3D.Device device)
         {
-
-            /************************************************************************/
-            /* XXX                                                                  */
-            /************************************************************************/
+            // If initalized
             if ( ! inited )
             {
                 ComputeLensVerticalBounds();
@@ -340,10 +384,8 @@ namespace Gav.Graphics
 
                 inited = true;
             }
-
-            /************************************************************************/
-            /* XXX                                                                  */
-            /************************************************************************/
+            
+            // If the panel has been resized
             if (sizeUpdated)
             {
                 sizeUpdated = false;
@@ -362,7 +404,7 @@ namespace Gav.Graphics
                     p.Y -= (lensTextHeight - defaultTextHeight) / 2;
 
                     d3dLensFont.DrawText(null, label.text, p,
-                        System.Drawing.Color.Red.ToArgb());
+                        System.Drawing.Color.Red);
 
                     // add the selected text to the plot list of selected lines
                     selection.Add(label.id);
@@ -371,11 +413,6 @@ namespace Gav.Graphics
                 {
                     d3dFont.DrawText(null, label.text, label.defaultPosition, label.colorARGB);
                 }
-            }
-
-            if (mouseOverText)
-            {
-                mouseOverText = false;
             }
         }
 
@@ -456,6 +493,10 @@ namespace Gav.Graphics
                 mouseY = e.Y;
                 plot.Invalidate();
                 return true;
+            } 
+            else
+            {
+                mouseOverText = false;
             }
 
             return false;
@@ -468,6 +509,7 @@ namespace Gav.Graphics
         /// <returns></returns>
         protected override bool InternalMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
+            lastButtonPressed = Control.MouseButtons;
             return false;
         }
 
@@ -478,35 +520,15 @@ namespace Gav.Graphics
         /// <returns></returns>
         protected override bool InternalMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
+            List<float> axesPositions = plot.GetAxisXPositions();
+            
+            if (lastButtonPressed== MouseButtons.Right)
+            {
+                sizeUpdated = true;
+            }
+
             return false;
         }
 
-        //private void RenderExtraText()
-        //{
-
-        //    foreach (PCText text in _pcTextList)
-        //    {
-        //        int yPos = plot.YPositionToScreen(plot.PadPositionY(0.5f));
-        //        //int ypos = YPositionToScreen(PadPositionY(text.VerticalPosition));
-
-        //        SizeF size = _debugGraphics.MeasureString(text.Text, text.SystemFont);
-
-        //        ypos -= (int)(size.Height / 2.0f);
-
-        //        if (text.Alignment == TextRelativePosition.Left)
-        //        {
-        //            int xpos = 0;
-        //            text.D3DFont.DrawText(null, text.Text, new Rectangle(new Point(xpos, ypos), new Size(XPositionToScreen(PadPositionX(_lineXPositions[0])) - 5, (int)size.Height)), DrawTextFormat.Top | DrawTextFormat.Right, text.Color);
-        //        }
-        //        else
-        //        {
-        //            int xpos = 5 + XPositionToScreen(PadPositionX(_lineXPositions[_lineXPositions.Count - 1]));
-                    
-        //            text.D3DFont.DrawText(null, text.Text, 
-        //                new Rectangle(new Point(xpos, ypos), new Size(PaddingRight - 5, (int)size.Height)), 
-        //                DrawTextFormat.Top | DrawTextFormat.Left, text.Color);
-        //        }
-        //    }
-        //} 
     }
 }
