@@ -108,24 +108,20 @@ namespace Gav.Graphics
         /// </summary>
         private List<Label> labels;
 
-        private static float minTextSize = 1.0f;
-        private static float maxTextSize = 8.0f;
-        private static float minLensTextSize = 12.0f;
-        private static float maxLensTextSize = 14.0f;
-
-        Microsoft.DirectX.Direct3D.Device d3dDevice;
+        private static float minTextSize        = 1.0f;
+        private static float maxTextSize        = 8.0f;
+        private static float minLensTextSize    = 12.0f;
+        private static float maxLensTextSize    = 14.0f;
 
         // Text Hovering variables
-        bool mouseOverText;
-        int labelBottom;
-        int labelTop;
-        int labelRight;
-        int labelLeft;
-        int mouseY;
+        private int labelBottom;
+        private int labelTop;
+        private int labelRight;
+        private int labelLeft;
+        private int mouseX;
+        private int mouseY;
 
-        /************************************************************************/
-        /* XXX                                                                  */
-        /************************************************************************/
+        // Bools used in InternalRender()
         bool inited = false;
         bool sizeUpdated = false;
         
@@ -134,6 +130,8 @@ namespace Gav.Graphics
         /// </summary>
         private float maxLabelWidth;
 
+        // Mouse state variables
+        private bool mouseOverText;
         private MouseButtons lastButtonPressed;
 
         public TextLensSubComponent(ParallelCoordinatesPlot aPlot, Panel aPanel)
@@ -218,8 +216,9 @@ namespace Gav.Graphics
                 systemFont.Dispose();
             }
 
-            systemFont = new System.Drawing.Font("Verdana", height);
-            systemLensFont = new System.Drawing.Font("Verdana", lensTextSize, System.Drawing.FontStyle.Bold);
+            // The two types of font: Lens and Regular Text
+            systemFont      = new System.Drawing.Font("Verdana", height);
+            systemLensFont  = new System.Drawing.Font("Verdana", lensTextSize, System.Drawing.FontStyle.Bold);
 
             // Compute text height sizes
             System.Drawing.SizeF size = graphicsObj.MeasureString("Foobar", systemFont);
@@ -228,14 +227,15 @@ namespace Gav.Graphics
             size = graphicsObj.MeasureString("Foobar", systemLensFont);
             lensTextHeight = (int)size.Height;
 
+            // if previously created, discard them
             if (d3dFont != null && d3dLensFont != null)
             {
                 d3dFont.Dispose();
                 d3dLensFont.Dispose();
             }
 
-            // Create the D3D Fonts
-            d3dFont = new Font(device, systemFont);
+            // Create the new D3D Fonts
+            d3dFont     = new Font(device, systemFont);
             d3dLensFont = new Font(device, systemLensFont);
 
         }
@@ -246,15 +246,15 @@ namespace Gav.Graphics
         /// <param name="device"></param>
         protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
         {
-            d3dDevice = device;
+            //d3dDevice = device;
 
-            // Compute the new bounds
-            ComputeLensHorizontalBounds();
-            ComputeLensVerticalBounds();
+            //// Compute the new bounds
+            //ComputeLensHorizontalBounds();
+            //ComputeLensVerticalBounds();
 
-            InitFonts(d3dDevice);
+            //InitFonts(d3dDevice);
 
-            ComputeMaxLabelWidth();
+            //ComputeMaxLabelWidth();
         }
 
         /// <summary>
@@ -267,9 +267,9 @@ namespace Gav.Graphics
         /// <summary>
         /// Used as a handler for an update size: MUST BE REFACTORED
         /// </summary>
-        private void OnSizeUpdate()
+        private void OnSizeUpdate(Microsoft.DirectX.Direct3D.Device device)
         {
-            InitFonts(d3dDevice);
+            InitFonts(device);
 
             // NOTE: invalidate maxLabelWidth because we might be shrinking the text
             // and also, it must be done before the new LensBounds are computed
@@ -313,7 +313,19 @@ namespace Gav.Graphics
             int textHalfHeight = defaultTextHeight / 2;
 
             int yPos = plot.YPositionToScreen(plot.PadPositionY(label.verticalPosition)) - textHalfHeight;
-            int xPos = plot.XPositionToScreen(plot.PadPositionX(0)) - (int)maxLabelWidth;
+            int axisPos = 0;
+
+            if (inited)
+            {
+                List<float> axesPositions = plot.GetAxisXPositions();
+                axisPos = plot.XPositionToScreen(axesPositions[0]);
+            }
+            else
+            {
+                axisPos = plot.XPositionToScreen(plot.PadPositionX(0));
+            }
+
+            int xPos = axisPos - (int)maxLabelWidth;
 
             label.defaultPosition = new System.Drawing.Point(xPos, yPos);
         }
@@ -352,6 +364,8 @@ namespace Gav.Graphics
         /// </summary>
         private void ComputeMaxLabelWidth()
         {
+            maxLabelWidth = 0;
+
             // Compute Label
             foreach (Label label in labels)
             {
@@ -370,35 +384,34 @@ namespace Gav.Graphics
         /// <param name="device"></param>
         protected override void InternalRender(Microsoft.DirectX.Direct3D.Device device)
         {
-            // If initalized
-            if ( ! inited )
-            {
-                ComputeLensVerticalBounds();
-                ComputeLensHorizontalBounds();
-
-                // initialize every label's default position
-                foreach (Label label in labels)
-                {
-                    InitLabelDefaultPosition(label);
-                }
-
-                inited = true;
-            }
+            //// If initalized
+            //if ( ! inited )
+            //{
+            //    OnSizeUpdate(device);
+            //    inited = true;
+            //}
             
             // If the panel has been resized
-            if (sizeUpdated)
+            if (!inited || sizeUpdated)
             {
+                ComputeLensHorizontalBounds();
                 sizeUpdated = false;
-                OnSizeUpdate();
+                inited = true;
+                OnSizeUpdate(device);
             }
+
+            // if one label has already been selected don't allow any other
+            bool labelSelected = false;
 
             List<int> selection = new List<int>();
             foreach (Label label in labels)
             {
                 // NOTE: just decreasing 30% of the width because of the text overlaps
                 if (mouseOverText && 
-                    (mouseY < label.defaultPosition.Y + (int)((float)defaultTextHeight * 0.7f)) &&
-                    (mouseY > label.defaultPosition.Y))
+                    //(mouseY < label.defaultPosition.Y + (int)((float)defaultTextHeight * 0.7f)) &&
+                    (mouseY < label.defaultPosition.Y + defaultTextHeight) &&
+                    (mouseY > label.defaultPosition.Y) &&
+                    ! labelSelected)
                 {
                     System.Drawing.Point p = new System.Drawing.Point(label.defaultPosition.X, label.defaultPosition.Y);
                     p.Y -= (lensTextHeight - defaultTextHeight) / 2;
@@ -407,12 +420,25 @@ namespace Gav.Graphics
                         System.Drawing.Color.Red);
 
                     // add the selected text to the plot list of selected lines
-                    selection.Add(label.id);
+                    if (this.lastButtonPressed == MouseButtons.Left)
+                    {
+                        selection.Add(label.id);
+                        label.selected = true;
+                    }
+
+                    labelSelected = true;
                 }
                 else
                 {
                     d3dFont.DrawText(null, label.text, label.defaultPosition, label.colorARGB);
                 }
+            }
+
+            // if the label was selected/picked
+            if (selection.Count != 0)
+            {
+                plot.SetSelectedLines(selection, true, true);
+                SelectionChanged(plot.GetSelectedLineIndexes());
             }
         }
 
@@ -491,11 +517,13 @@ namespace Gav.Graphics
             {
                 mouseOverText = true;
                 mouseY = e.Y;
+                //Cursor.Hide();
                 plot.Invalidate();
                 return true;
             } 
             else
             {
+                //Cursor.Show();
                 mouseOverText = false;
             }
 
@@ -510,6 +538,14 @@ namespace Gav.Graphics
         protected override bool InternalMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             lastButtonPressed = Control.MouseButtons;
+            if (lastButtonPressed == MouseButtons.Left)
+            {
+                mouseX = e.X;
+                mouseY = e.Y;
+                plot.Invalidate();
+                // NOTE: NOT returning because parent (PC plot) must handle the selection as well 
+            }
+            
             return false;
         }
 
@@ -524,8 +560,11 @@ namespace Gav.Graphics
             
             if (lastButtonPressed== MouseButtons.Right)
             {
+                // Recompute the new bounds due to the axis displacement
                 sizeUpdated = true;
             }
+
+            lastButtonPressed = MouseButtons.None;
 
             return false;
         }
