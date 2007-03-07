@@ -102,6 +102,10 @@ namespace GMS
                 iFilteredData[4, counter] = country.gdbPerCapita;
                 
                 string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(country.name);
+                if (countryTitleCase.Length > 14)
+                {
+                    countryTitleCase = countryTitleCase.Substring(0, 14);
+                }
                 iFilteredCountryNames.Add(counter++, countryTitleCase);
             }
             iFilteredDataCube = new DataCube();
