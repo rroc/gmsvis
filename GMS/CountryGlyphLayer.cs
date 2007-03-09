@@ -20,11 +20,11 @@ namespace GMS
         private CustomVertex.PositionTextured[] iGlyphMoney;
 
         private bool _inited;
-        private List<AxisMap> _axisMaps;
 
         private IDataCubeProvider<float> _input;
 
-        private ColorMap colorMap;
+        private System.Drawing.Font iSystemFont;
+        private Microsoft.DirectX.Direct3D.Font iD3dFont;
 
         public IDataCubeProvider<float> Input
         {
@@ -32,19 +32,15 @@ namespace GMS
             set { _input = value; }
         }
 
-        //private IndexVisibilityHandler _visibilityHandler;
-
-        //public IndexVisibilityHandler IndexVisibilityHandler
-        //{
-        //    get { return _visibilityHandler; }
-        //    set { _visibilityHandler = value; }
-        //}
 
 
         //----------------------------------------------------------
 
         private void InitMapGlyphs()
         {
+            iSystemFont = new System.Drawing.Font("Verdana", 10);
+            iD3dFont = new Microsoft.DirectX.Direct3D.Font(_device, iSystemFont);
+
             iMaterial = new Material();
 
             iMaterial.Diffuse = Color.White;
@@ -58,14 +54,15 @@ namespace GMS
 
             iTexture = TextureLoader.FromFile(_device, dir+dataPath+"money.jpg");
 
+            float scale = 10;
             iGlyphMoney = new CustomVertex.PositionTextured[6];
-            iGlyphMoney[0].Position = new Vector3(-1.5F, -0.64F, 0);
-            iGlyphMoney[1].Position = new Vector3(1.5F, -0.64F, 0);
-            iGlyphMoney[2].Position = new Vector3(-1.5F, 0.64F, 0);
+            iGlyphMoney[0].Position = new Vector3(scale * -1.5F, scale * -0.64F, 0);
+            iGlyphMoney[1].Position = new Vector3(scale * 1.5F, scale * -0.64F, 0);
+            iGlyphMoney[2].Position = new Vector3(scale * -1.5F, scale * 0.64F, 0);
 
-            iGlyphMoney[3].Position = new Vector3(-1.5F, 0.64F, 0);
-            iGlyphMoney[4].Position = new Vector3(1.5F, -0.64F, 0);
-            iGlyphMoney[5].Position = new Vector3(1.5F, 0.64F, 0);
+            iGlyphMoney[3].Position = new Vector3(scale * -1.5F, scale * 0.64F, 0);
+            iGlyphMoney[4].Position = new Vector3(scale * 1.5F, scale * -0.64F, 0);
+            iGlyphMoney[5].Position = new Vector3(scale * 1.5F, scale * 0.64F, 0);
 
             //Texture coordinates
             iGlyphMoney[0].Tu = 0;
@@ -106,6 +103,14 @@ namespace GMS
             Material _material = new Material();
             Color backcolor = Color.FromArgb(0, 0, 100); //colorMap.GetColor(i * 25);
 
+            //Country Name
+            //Vector2 vec = this.ActiveGlyphPositioner.GetPosition(2);
+            //System.Console.WriteLine("VEC: " + vec.X +"," + vec.Y );
+            //Point position = new Point((int)(_device.Transform.World.M41), (int)(_device.Transform.World.M42));
+            //System.Console.WriteLine("VEC: " + position.X + "," + position.Y);
+//            System.Console.WriteLine("VEC: " + _device.Transform.World.M41 + _device.Transform.World.M42 );
+            //iD3dFont.DrawText(null, "Hello", position, Color.Black);
+
             //Money
             //-----
             int maxValue = 7;
@@ -116,7 +121,7 @@ namespace GMS
             for (int i = 0; i < maxValue; i++)
             {
                 //Translate
-                _device.Transform.World *= Matrix.Translation(0.1F, 0.2F, 0);
+                _device.Transform.World *= Matrix.Translation(0.3F, 0.8F, 0);
 
                 //1. Draw Background
                 _device.RenderState.Lighting = true;
@@ -167,16 +172,6 @@ namespace GMS
 
             _device.RenderState.CullMode = Cull.None;
 
-            Color c = Color.Black;
-
-
-            // Get the mapped values from the first axis map. This axis map is connected to the first column in the data cube.
-            // The index corresponds to the column in the data cube.
-            float[] mappedValues = _axisMaps[0].MappedValues;
-
-            // Tells the device that the next primitives to draw are of type CustomVertex.PositionOnly.
-            _device.VertexFormat = CustomVertex.PositionOnly.Format;
-
             // Loops through the regions in the map.
             for (int i = 0; i < _input.GetData().GetAxisLength(Axis.Y); i++)
             {
@@ -203,7 +198,6 @@ namespace GMS
             }
         }
 
-
         // This method is called once when the glyph is inited. 
         protected override void InternalInit(Device device)
         {
@@ -212,44 +206,9 @@ namespace GMS
             {
                 return;
             }
-
-            CreateAxisMaps();
-
-            colorMap = CreateColorMap();
-            colorMap.Input = _input.GetData();
-            colorMap.Index = 4;
-
             InitMapGlyphs();
 
             _inited = true;
-        }
-
-        private ColorMap CreateColorMap()
-        {
-            ColorMap map = new ColorMap();
-            LinearColorMapPart linearMap = new LinearColorMapPart(Color.Black, Color.White);
-            map.AddColorMapPart(linearMap);
-            linearMap.Invalidate();
-            map.Invalidate();
-
-            return map;
-        }
-
-
-
-        // Creates one axismap per column in the data set. 
-        private void CreateAxisMaps()
-        {
-            _axisMaps = new List<AxisMap>();
-
-            for (int i = 0; i < _input.GetData().GetAxisLength(Axis.X); i++)
-            {
-                AxisMap axisMap = new AxisMap();
-                axisMap.Input = _input;
-                axisMap.Index = i;
-                axisMap.DoMapping();
-                _axisMaps.Add(axisMap);
-            }
         }
 
         protected override void InternalInvalidate() { }

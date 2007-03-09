@@ -38,8 +38,19 @@ namespace GMS
             doc.SetupSortedData();
 
             //pcCountries = new ParallelPlotCountries(doc.GetSortedDataCube(), doc.GetSortedCountryNames(), pcSplitContainer.Panel1, renderer, doc.iSortedColorMap);
-            pcCountries = new ParallelPlotCountries(doc.GetFilteredDataCube(), doc.GetFilteredCountryNames(), pcSplitContainer.Panel1, renderer, doc.iFilteredColorMap);
-            mapPlot = new MapPlot(doc.GetFilteredDataCube(), mainSplitContainer.Panel1, renderer, doc.iFilteredColorMap );
+            pcCountries = new ParallelPlotCountries(  doc.GetFilteredDataCube()
+                                                    , doc.GetFilteredCountryNames()
+                                                    , pcSplitContainer.Panel1
+                                                    , renderer
+                                                    , doc.iFilteredColorMap
+                                                    );
+
+            mapPlot     = new MapPlot( doc.GetFilteredDataCube()
+                                      , mainSplitContainer.Panel1
+                                      , renderer
+                                      , doc.iFilteredColorMap 
+                                      , pcCountries.pcPlot
+                                      );
 
         }
 

@@ -16,30 +16,31 @@ namespace GMS
 {
     class MapPlot
     {
-        private DataCube    iDataCube;
-        private MapData     iMapData;
-        private ColorMap    iColorMap;
+        private DataCube iDataCube;
+        private MapData iMapData;
+        private ColorMap iColorMap;
 
         private Panel panel;
         private Renderer renderer;
 
         // Layers
-        private MapPolygonLayer         polygonLayer;
-        private MapPolygonBorderLayer   borderLayer;
-        private CountryGlyphLayer       glyphLayer;
-        private ChoroplethMap           choroMap;
+        private MapPolygonLayer polygonLayer;
+        private MapPolygonBorderLayer borderLayer;
+        private CountryGlyphLayer glyphLayer;
+        private ChoroplethMap choroMap;
+        private ParallelCoordinatesPlot iPcPlot;
 
-        public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, ColorMap aColorMap )
+        public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, ColorMap aColorMap, ParallelCoordinatesPlot aPcPlot)
         {
             iDataCube = aDataCube;
             panel = aDestinationPanel;
             renderer = aRenderer;
             iColorMap = aColorMap;
-
+            iPcPlot = aPcPlot;
             SetupMapLayers();
         }
 
-         private void SetupMapLayers()
+        private void SetupMapLayers()
         {
             string dir = Directory.GetCurrentDirectory();
             string dataPath = "\\..\\..\\..\\data\\geodata\\maps\\";
@@ -47,9 +48,9 @@ namespace GMS
 
 
             ShapeFileReader shapeReader = new ShapeFileReader();
-            iMapData = shapeReader.Read(  dir + dataPath + fileName + ".shp"
-                                        ,dir + dataPath + fileName + ".dbf"
-                                        ,dir + dataPath + fileName + ".shx");
+            iMapData = shapeReader.Read(dir + dataPath + fileName + ".shp"
+                                        , dir + dataPath + fileName + ".dbf"
+                                        , dir + dataPath + fileName + ".shx");
 
             // Border Layer
             borderLayer = new MapPolygonBorderLayer();
@@ -59,12 +60,16 @@ namespace GMS
             polygonLayer = new MapPolygonLayer();
             polygonLayer.MapData = iMapData;
             polygonLayer.ColorMap = iColorMap;
+            polygonLayer.IndexVisibilityHandler = iPcPlot.IndexVisibilityHandler;
+            iPcPlot.FilterChanged += new EventHandler(iPcPlot_FilterChanged);
+
 
             // Glyph Layer
             glyphLayer = new CountryGlyphLayer();
             glyphLayer.ActiveGlyphPositioner = new CenterGlyphPositioner();
             glyphLayer.ActiveGlyphPositioner.MapData = iMapData;
             glyphLayer.Input = iDataCube;
+            glyphLayer.IndexVisibilityHandler = iPcPlot.IndexVisibilityHandler;
 
             //// Choropleth Map
             choroMap = new ChoroplethMap();
@@ -72,10 +77,15 @@ namespace GMS
             // Add layers on the proper order
             choroMap.AddLayer(polygonLayer);
             choroMap.AddLayer(borderLayer);
-            //choroMap.AddLayer(glyphLayer);
+            choroMap.AddLayer(glyphLayer);
             choroMap.Invalidate();
 
             renderer.Add(choroMap, panel);
+        }
+
+        void iPcPlot_FilterChanged(object sender, EventArgs e)
+        {
+            choroMap.Invalidate();
         }
 
     }

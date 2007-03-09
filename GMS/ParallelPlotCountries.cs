@@ -23,7 +23,7 @@ namespace GMS
 
         private Renderer renderer;
 
-        ParallelCoordinatesPlot pcPlot;
+        public ParallelCoordinatesPlot pcPlot;
         TextLensSubComponent textLens;
         Panel panel;
 
@@ -176,7 +176,6 @@ namespace GMS
         void pcPlot_FilterChanged(object sender, EventArgs e)
         {
             ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
-
             textLens.VisibilityChanged(plot.IndexVisibilityHandler);
         }
 
