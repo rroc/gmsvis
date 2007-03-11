@@ -17,16 +17,6 @@ namespace Treemap
     {
         TreeRectangle iRootRectangle;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TreeMap()
-        {
-            SetData();
-            BuildTreeMap();
-        }
-
-
         class StyleComparer : IComparer
         {
             // Comparator class for countries
@@ -45,7 +35,7 @@ namespace Treemap
             ArrayList sortedStyles = new ArrayList(db.styles.Values);
             sortedStyles.Sort(new StyleComparer());
 
-            int styleLimiter = 1;
+            int styleLimiter = 10;
             foreach (Style style in sortedStyles)
             {
                 if (styleLimiter == 0)
@@ -83,38 +73,20 @@ namespace Treemap
             }
         }
 
-        public void SetData()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TreeMap( int aPanelWidth, int aPanelHeight )
         {
-            float sum = 2549;
+            SetData( aPanelWidth, aPanelHeight);
+            BuildTreeMap();
+        }
 
-            int height = (int)(Math.Sqrt(sum));
-            float width = sum / height;
-            
-            iRootRectangle = new TreeRectangle(0, 0, 0, width, height);
 
-            //TreeRectangle grandchild1 = new TreeRectangle(0.8F);
-            //TreeRectangle grandchild2 = new TreeRectangle(2.2F);
+        public void SetData(int aPanelWidth, int aPanelHeight)
+        {
+            iRootRectangle = new TreeRectangle(0.0f);
 
-            //TreeRectangle child1 = new TreeRectangle(0.0F);
-            //child1.AddRectangle(grandchild1);
-            //grandchild1.SetLabel("A Very Biiiiiiiiiiiiiiiiiiiiiiiiiig Label");
-            //child1.AddRectangle(grandchild2);
-            //TreeRectangle child2 = new TreeRectangle(2.0F);
-            //child2.SetLabel("Child2");
-            //TreeRectangle child3 = new TreeRectangle(1.0F);
-
-            //TreeRectangle parent = new TreeRectangle(0.0F);
-            //parent.AddRectangle(child1);
-            //parent.AddRectangle(child2);
-            //parent.AddRectangle(child3);
-
-            //iRootRectangle.AddRectangle(new TreeRectangle(6.0F));
-            //iRootRectangle.AddRectangle(parent);
-            //iRootRectangle.AddRectangle(new TreeRectangle(4.0F));
-            //iRootRectangle.AddRectangle(new TreeRectangle(3.0F));
-            //iRootRectangle.AddRectangle(new TreeRectangle(2.0F));
-            //iRootRectangle.AddRectangle(new TreeRectangle(2.0F));
-            //iRootRectangle.AddRectangle(new TreeRectangle(1.0F));
             string dir = System.IO.Directory.GetCurrentDirectory();
             string iDataPath = "\\..\\..\\..\\data\\";
             string iDBFileName = "db.bin";
@@ -123,16 +95,47 @@ namespace Treemap
             MusicDBLoader.LoadDB(dir + iDataPath + iDBFileName, out dataBase);
 
             BuildStylesAreasTree(iRootRectangle, dataBase);
-            
+
+            //Calculate data size according to the sreen
+            float sum = iRootRectangle.GetArea();
+            float ratio = aPanelWidth / (float)aPanelHeight;
+            float height = (float)Math.Sqrt(sum / ratio);
+            float width = height * ratio;
+
+            iRootRectangle.SetSize(0, 0, width, height);
         }
 
+        /// <summary>
+        /// Update the data according to the available screenspace
+        /// </summary>
+        /// <param name="aPanelWidth"></param>
+        /// <param name="aPanelHeight"></param>
+        public void UpdateData(int aPanelWidth, int aPanelHeight)
+        {
+            float sum = iRootRectangle.GetArea();
+
+            float ratio = aPanelWidth / (float)aPanelHeight;
+            float height = (float)Math.Sqrt(sum / ratio);
+            float width = height * ratio;
+
+            iRootRectangle.SetSize(0, 0, width, height);
+            BuildTreeMap();
+        }
+
+
+        /// <summary>
+        /// Executes the treemap calculation
+        /// </summary>
         public void BuildTreeMap()
         {
-            SquarifyTree( iRootRectangle, 0);
+            SquarifyTree(iRootRectangle);
         }
 
-
-        public void SquarifyTree( TreeRectangle aRectangle, int aLevel )
+        /// <summary>
+        /// Parse the whole tree squerifying all the nodes
+        /// </summary>
+        /// <param name="aRectangle">current rectangle</param>
+        public void SquarifyTree(TreeRectangle aRectangle)
         {
             if ( 0 == aRectangle.GetChildren().Count) 
             {
@@ -145,16 +148,24 @@ namespace Treemap
 
             foreach (TreeRectangle rect in aRectangle.GetChildren())
                 {
-                    SquarifyTree(rect, 0);
+                    SquarifyTree(rect);
                 }
         }
 
-
+        /// <summary>
+        /// Update the scale for the new screensize
+        /// </summary>
+        /// <param name="aWidth"></param>
+        /// <param name="aHeight"></param>
         public void UpdateScale( int aWidth, int aHeight )
         {
             iRootRectangle.SetScale(aWidth, aHeight);
         }
 
+        /// <summary>
+        /// Draw the whole tree
+        /// </summary>
+        /// <param name="aGraphics"></param>
         public void DrawTree( Graphics aGraphics)
         {
             iRootRectangle.Draw(aGraphics);
