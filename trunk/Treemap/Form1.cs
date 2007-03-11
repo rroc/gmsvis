@@ -20,7 +20,7 @@ namespace Treemap
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            iTreeMap = new TreeMap();
+            iTreeMap = new TreeMap(treemapPanel.Width, treemapPanel.Height);
             iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
         }
 
@@ -33,7 +33,10 @@ namespace Treemap
 
         private void treemapPanel_SizeChanged(object sender, EventArgs e)
         {
+            iTreeMap.UpdateData(treemapPanel.Width, treemapPanel.Height);
+
             iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
+//            iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
             treemapPanel.Invalidate();
         }
     }

@@ -120,6 +120,10 @@ namespace Treemap
             iBorder = (float)Math.Ceiling(Math.Max(iScale.X, iScale.Y) / 100.0f);
         }
 
+        /// <summary>
+        /// Add an existing rectangle to current rectangles childrens
+        /// </summary>
+        /// <param name="aRectangle">a rectangle to be added to the child list</param>
         public void AddRectangle( TreeRectangle aRectangle )
         {
             iArea += aRectangle.iArea;
@@ -151,11 +155,15 @@ namespace Treemap
             }
         }
 
+        /// <summary>
+        /// Draw the label of the rectangle
+        /// </summary>
+        /// <param name="aGraphics"></param>
         private void DrawLabel(Graphics aGraphics)
         {
             SolidBrush brush = new SolidBrush(Color.White);
-            float fontsize = 30.0f * iScale.Y / 100.0f;
-            System.Drawing.Font font = new System.Drawing.Font(FontFamily.GenericMonospace, fontsize);
+            float fontsize = 40.0f * iScale.Y / 50.0f;
+            System.Drawing.Font font = new System.Drawing.Font(FontFamily.GenericSerif, fontsize);
             aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X) * iScale.X + iBorder, (iLowerLeft.Y) * iScale.Y + iBorder);
         }
 
@@ -223,7 +231,7 @@ namespace Treemap
         }
 
         /// <summary>
-        /// Sum of a list
+        /// Sum of a tree list
         /// </summary>
         /// <param name="aRow"></param>
         /// <returns></returns>
@@ -232,19 +240,9 @@ namespace Treemap
             float sum = 0;
             foreach (TreeRectangle rectangle in aRow)
             {
-                sum += rectangle.GetArea();
+                sum += rectangle.iArea;
             }
             return sum;
         }
-
-        //private float Sum(List<float> aRow)
-        //{
-        //    float sum = 0;
-        //    foreach (float value in aRow)
-        //    {
-        //        sum += value;
-        //    }
-        //    return sum;
-        //}
     }
 }
