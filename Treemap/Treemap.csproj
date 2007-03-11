@@ -73,11 +73,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Rectangle.cs" />
+    <Compile Include="TreeRectangle.cs" />
     <Compile Include="TreeMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Music.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MusicDBStructures\MusicDBStructures.csproj">
+      <Project>{E32426DB-1517-4053-B921-56CFE8E0E324}</Project>
+      <Name>MusicDBStructures</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
