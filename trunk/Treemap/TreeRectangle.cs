@@ -27,8 +27,19 @@ namespace Treemap
         /// </summary>
         private static float iBorder;
 
+        //DATA:
         private float iArea;
+        private object iData;
+        private string iLabel;
+
+
         List<TreeRectangle> iChildRectangles;
+
+
+        public TreeRectangle(float aArea)
+            : this( aArea, 0.0F, 0.0F, 0.0F, 0.0F)
+        { 
+        }
 
         /// <summary>
         /// Constructor
@@ -40,16 +51,43 @@ namespace Treemap
         public TreeRectangle(float aArea, float aX1, float aY1, float aX2, float aY2)
         {
             iArea = aArea;
-            iLowerLeft = new Vector2(aX1, aY1);
-            iUpperRight = new Vector2(aX2, aY2);
+            iLabel = iArea.ToString();
             iScale = new Vector2(1, 1);
             iBorder = 2.0f;
 
             iChildRectangles = new List<TreeRectangle>();
+            SetSize(aX1, aY1, aX2, aY2);
+        }
+
+        public List<TreeRectangle> GetChildren()
+        {
+            return iChildRectangles;
+        }
+
+
+        public float GetArea()
+        {
+            return iArea;
+        }
+
+        public void SetSize(float aX1, float aY1, float aX2, float aY2)
+        {
+            iLowerLeft = new Vector2(aX1, aY1);
+            iUpperRight = new Vector2(aX2, aY2);
 
             UpdateFreeSize();
             iWidth = iFreeWidth;
             iHeight = iFreeHeight;
+        }
+
+        public void SetLabel(string aLabel)
+        {
+            iLabel = aLabel;
+        }
+
+        public void SetData(object aData)
+        {
+            iData = aData;
         }
 
         /// <summary>
@@ -82,6 +120,13 @@ namespace Treemap
             iBorder = (float)Math.Ceiling(Math.Max(iScale.X, iScale.Y) / 100.0f);
         }
 
+        public void AddRectangle( TreeRectangle aRectangle )
+        {
+            iArea += aRectangle.iArea;
+            iChildRectangles.Add(aRectangle);
+        }
+
+
         /// <summary>
         /// Draws the rectangle and its children
         /// </summary>
@@ -98,7 +143,7 @@ namespace Treemap
                        LinearGradientMode.Vertical);
             
             aGraphics.FillRectangle( brush, rect );
-            DrawValue(aGraphics);
+            DrawLabel(aGraphics);
 
             foreach (TreeRectangle rectangle in iChildRectangles)
             {
@@ -106,12 +151,12 @@ namespace Treemap
             }
         }
 
-        private void DrawValue(Graphics aGraphics)
+        private void DrawLabel(Graphics aGraphics)
         {
             SolidBrush brush = new SolidBrush(Color.White);
-            float fontsize = 10.0f * iScale.Y / 100.0f;
+            float fontsize = 30.0f * iScale.Y / 100.0f;
             System.Drawing.Font font = new System.Drawing.Font(FontFamily.GenericMonospace, fontsize);
-            aGraphics.DrawString(iArea.ToString(), font, brush, (iLowerLeft.X) * iScale.X + iBorder, (iLowerLeft.Y) * iScale.Y + iBorder);
+            aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X) * iScale.X + iBorder, (iLowerLeft.Y) * iScale.Y + iBorder);
         }
 
         /// <summary>
@@ -119,7 +164,7 @@ namespace Treemap
         /// </summary>
         /// <param name="aRow">Data values</param>
         /// <returns>Size of the free space on this Rectangle</returns>
-        public float LayOutRow(List<float> aRow)
+        public float LayOutRow(List<TreeRectangle> aRow)
         {
             float rowArea = Sum(aRow);
 
@@ -130,18 +175,17 @@ namespace Treemap
                 float rowWidth = 0;
                 float xOffset = 0;
 
-                foreach (float area in aRow)
+                foreach (TreeRectangle rectangle in aRow)
                 {
-                    rowWidth = area / rowHeight;
-                    iChildRectangles.Add(new TreeRectangle(
-                                  area
-                        //lower left
-                                , iLowerLeft.X + xOffset
+                    rowWidth = rectangle.GetArea() / rowHeight;
+                    rectangle.SetSize(
+                                //lower left
+                                iLowerLeft.X + xOffset
                                 , iLowerLeft.Y
 
                                 //upper right
                                 , iLowerLeft.X + xOffset + rowWidth
-                                , iLowerLeft.Y + rowHeight)
+                                , iLowerLeft.Y + rowHeight
                                 );
                     xOffset += rowWidth;
                 }
@@ -156,19 +200,17 @@ namespace Treemap
                 float rowHeight = 0;
                 float yOffset = 0;
 
-                foreach (float area in aRow)
+                foreach (TreeRectangle rectangle in aRow)
                 {
-                    rowHeight = area / rowWidth;
-                    iChildRectangles.Add(new TreeRectangle(
-                                 area
+                    rowHeight = rectangle.GetArea() / rowWidth;
+                    rectangle.SetSize(
                         //lower left
-                               , iLowerLeft.X
+                               iLowerLeft.X
                                , iLowerLeft.Y + yOffset
 
                                //upper right
                                , iLowerLeft.X + rowWidth
                                , iLowerLeft.Y + yOffset + rowHeight
-                               )
                                );
                     yOffset += rowHeight;
                 }
@@ -180,14 +222,29 @@ namespace Treemap
             return MinSideLength();
         }
 
-        private float Sum(List<float> aRow)
+        /// <summary>
+        /// Sum of a list
+        /// </summary>
+        /// <param name="aRow"></param>
+        /// <returns></returns>
+        private float Sum(List<TreeRectangle> aRow)
         {
             float sum = 0;
-            foreach (float value in aRow)
+            foreach (TreeRectangle rectangle in aRow)
             {
-                sum += value;
+                sum += rectangle.GetArea();
             }
             return sum;
         }
+
+        //private float Sum(List<float> aRow)
+        //{
+        //    float sum = 0;
+        //    foreach (float value in aRow)
+        //    {
+        //        sum += value;
+        //    }
+        //    return sum;
+        //}
     }
 }
