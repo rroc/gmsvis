@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicDBStructures", "..\Mus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryDataParser", "..\CountryDataParser\CountryDataParser.csproj", "{29A2014D-DE96-4D50-8CBD-205C5C3439CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treemap", "..\Treemap\Treemap.csproj", "{62458955-6D8D-45B1-AF66-7A5631B5A497}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{29A2014D-DE96-4D50-8CBD-205C5C3439CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29A2014D-DE96-4D50-8CBD-205C5C3439CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29A2014D-DE96-4D50-8CBD-205C5C3439CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62458955-6D8D-45B1-AF66-7A5631B5A497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62458955-6D8D-45B1-AF66-7A5631B5A497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62458955-6D8D-45B1-AF66-7A5631B5A497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62458955-6D8D-45B1-AF66-7A5631B5A497}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
