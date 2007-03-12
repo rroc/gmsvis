@@ -29,6 +29,19 @@ namespace Treemap
             }
         };
 
+        class DictionaryValueComparer : IComparer
+        {
+            // Comparator class for hashtable entries
+            // with integer as its value
+            int IComparer.Compare(object x, object y)
+            {
+                DictionaryEntry c1 = (DictionaryEntry)x;
+                DictionaryEntry c2 = (DictionaryEntry)y;
+
+                return (int)((int)c2.Value - (int)c1.Value);
+            }
+        };
+
         public void BuildStylesAreasTree(TreeRectangle aRectangle, DB db)
         {
             // Sort the styles so we can have only the N most popular ones
@@ -59,9 +72,16 @@ namespace Treemap
                     }
                 }
 
+                /************************************************************************/
+                /* QUICK FIX !!!                                                        */
+                /************************************************************************/
+                ArrayList sortedReleases = new ArrayList(countries);
+                sortedReleases.Sort(new DictionaryValueComparer());
+
                 TreeRectangle styleRectangle = new TreeRectangle(0.0F);
-                foreach (string country in countries.Keys)
+                foreach (DictionaryEntry entry in sortedReleases)
                 {
+                    string country = (string)entry.Key;
                     int releasesCount = (int)countries[country];
                     TreeRectangle rect = new TreeRectangle((float)releasesCount);
                     rect.SetLabel(country);
