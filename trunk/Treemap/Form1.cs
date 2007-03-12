@@ -33,11 +33,14 @@ namespace Treemap
 
         private void treemapPanel_SizeChanged(object sender, EventArgs e)
         {
-            iTreeMap.UpdateData(treemapPanel.Width, treemapPanel.Height);
+            if (iTreeMap != null)
+            {
+                iTreeMap.UpdateData(treemapPanel.Width, treemapPanel.Height);
 
-            iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
-//            iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
-            treemapPanel.Invalidate();
+                iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
+                //            iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
+                treemapPanel.Invalidate();
+            }
         }
     }
 }
