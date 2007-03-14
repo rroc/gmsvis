@@ -11,11 +11,23 @@ using Gav.Data;
 using Gav.Graphics;
 using System.Collections;
 
-namespace Treemap
+namespace GMS
 {
     class TreeMap : VizComponent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         TreeRectangle iRootRectangle;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IColorMap iColorMap;
+
+        /************************************************************************/
+        /*                                                                      */
+        /************************************************************************/
 
         class StyleComparer : IComparer
         {
@@ -42,6 +54,11 @@ namespace Treemap
             }
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aRectangle"></param>
+        /// <param name="db"></param>
         public void BuildStylesAreasTree(TreeRectangle aRectangle, DB db)
         {
             // Sort the styles so we can have only the N most popular ones
@@ -79,6 +96,7 @@ namespace Treemap
                 sortedReleases.Sort(new DictionaryValueComparer());
 
                 TreeRectangle styleRectangle = new TreeRectangle(0.0F);
+                styleRectangle.SetLabel(style.name);
                 foreach (DictionaryEntry entry in sortedReleases)
                 {
                     string country = (string)entry.Key;
@@ -93,6 +111,10 @@ namespace Treemap
             }
         }
 
+        /************************************************************************/
+        /*                                                                      */
+        /************************************************************************/
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -102,7 +124,28 @@ namespace Treemap
             BuildTreeMap();
         }
 
+        /// <summary>
+        /// Sets/Gets the Color Map associated with last level
+        /// </summary>
+        public IColorMap ColorMap
+        {
+            get
+            {
+                return this.iColorMap;
+            }
+            set
+            {
+                this.iColorMap = value;
+            }
+        }
+ 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aPanelWidth"></param>
+        /// <param name="aPanelHeight"></param>
         public void SetData(int aPanelWidth, int aPanelHeight)
         {
             iRootRectangle = new TreeRectangle(0.0f);
@@ -188,7 +231,7 @@ namespace Treemap
         /// <param name="aGraphics"></param>
         public void DrawTree( Graphics aGraphics)
         {
-            iRootRectangle.Draw(aGraphics);
+            iRootRectangle.Draw(aGraphics, iColorMap);
         }
 
         /// <summary>
