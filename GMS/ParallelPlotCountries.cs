@@ -13,7 +13,7 @@ namespace GMS
 {
     class ParallelPlotCountries
     {
-        // Private Attributes
+        #region Private Attributes
         List<string> headers;
 
         // filters
@@ -32,6 +32,8 @@ namespace GMS
         // Lookup table to get country names
         Hashtable iCountryNames;
 
+        #endregion // Private Attributes
+
         public ParallelPlotCountries(DataCube aDataCube, Hashtable aCountryNames, Panel aDestinationPanel,
             Renderer aRenderer, ColorMap aColorMap)
         {
@@ -43,10 +45,34 @@ namespace GMS
 //            iCountryNames = new Hashtable();
             renderer = aRenderer;
             headers = new List<string>();
-            kMeansFilter = new KMeansFilter(3);
-            kMeansFilter.Input = iDataCube;
 
+            InitKMeans(aDataCube);
             SetupView();
+        }
+
+        /// <summary>
+        /// Initializes the KMeans filter removing the countries from it
+        /// </summary>
+        /// <param name="aDataCube"></param>
+        private void InitKMeans(DataCube aDataCube)
+        {
+            kMeansFilter = new KMeansFilter(3);
+
+            // Copy the data, removing the countries from it
+            float[, ,] data = iDataCube.Data;
+            float[, ,] cleanData = new float[data.GetLength(0) - 1, data.GetLength(1), 1];
+
+            for (int i = 0; i < data.GetLength(1); i++)
+            {
+                for (int j = 1; j < data.GetLength(0); j++)
+                {
+                    cleanData[j - 1, i, 0] = data[j, i, 0];
+                }
+            }
+
+            DataCube cube = new DataCube();
+            cube.Data = cleanData;
+            kMeansFilter.Input = cube;
         }
 
         /// <summary>
