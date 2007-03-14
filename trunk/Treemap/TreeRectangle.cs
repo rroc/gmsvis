@@ -4,11 +4,16 @@ using System.Text;
 using System.Drawing;
 
 using Microsoft.DirectX;
+using Gav.Data;
 
 namespace Treemap
 {
     class TreeRectangle
     {
+        /// <summary>
+        /// The remaining space when squarifying the current
+        /// rectangle
+        /// </summary>
         private float iFreeWidth;
         private float iFreeHeight;
 
@@ -17,6 +22,12 @@ namespace Treemap
 
         private Vector2 iLowerLeft;
         private Vector2 iUpperRight;
+
+        /// <summary>
+        /// The current position of the lower left corner
+        /// while squarifying the current rectangle
+        /// </summary>
+        private Vector2 iCurrentLowerLeft;
 
         /// <summary>
         /// Static scale
@@ -73,6 +84,7 @@ namespace Treemap
         public void SetSize(float aX1, float aY1, float aX2, float aY2)
         {
             iLowerLeft = new Vector2(aX1, aY1);
+            iCurrentLowerLeft = new Vector2(aX1, aY1);
             iUpperRight = new Vector2(aX2, aY2);
 
             UpdateFreeSize();
@@ -95,8 +107,11 @@ namespace Treemap
         /// </summary>
         private void UpdateFreeSize()
         {
-            iFreeWidth = iUpperRight.X - iLowerLeft.X;
-            iFreeHeight = iUpperRight.Y - iLowerLeft.Y;
+            //iFreeWidth = iUpperRight.X - iLowerLeft.X;
+            //iFreeHeight = iUpperRight.Y - iLowerLeft.Y;
+            iFreeWidth = iUpperRight.X - iCurrentLowerLeft.X;
+            iFreeHeight = iUpperRight.Y - iCurrentLowerLeft.Y;
+
         }
 
         /// <summary>
@@ -135,23 +150,76 @@ namespace Treemap
         /// Draws the rectangle and its children
         /// </summary>
         /// <param name="aGraphics">the graphics container</param>
-        public void Draw(Graphics aGraphics)
+        public void Draw(Graphics aGraphics, IColorMap aColorMap)
         {
-            System.Drawing.RectangleF rect = new System.Drawing.RectangleF(iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y, iFreeWidth * iScale.X - iBorder, iFreeHeight * iScale.Y - iBorder);
-
-            //SolidBrush brush = new SolidBrush(Color.FromArgb(10, 10, 100));
-            System.Drawing.Drawing2D.LinearGradientBrush brush = new
-                       System.Drawing.Drawing2D.LinearGradientBrush(
-                       rect,
-                       Color.MidnightBlue, Color.Indigo, System.Drawing.Drawing2D.
-                       LinearGradientMode.Vertical);
-            
-            aGraphics.FillRectangle( brush, rect );
-            DrawLabel(aGraphics);
-
             foreach (TreeRectangle rectangle in iChildRectangles)
             {
-                rectangle.Draw(aGraphics);
+                rectangle.DrawChild(aGraphics, aColorMap);
+            }
+
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
+                (int)(iLowerLeft.X * iScale.X),
+                (int)(iLowerLeft.Y * iScale.Y),
+                (int)(iWidth * iScale.X),
+                (int)(iHeight * iScale.Y));
+
+            //System.Drawing.Drawing2D.LinearGradientBrush brush = new
+            //           System.Drawing.Drawing2D.LinearGradientBrush(
+            //           rect,
+            //           Color.MidnightBlue, Color.Indigo, 
+            //           System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+            
+            //aGraphics.FillRectangle( brush, rect );
+
+            SolidBrush borderPen = new SolidBrush(Color.YellowGreen);
+            Pen pen = new Pen(borderPen, iBorder);
+            aGraphics.DrawRectangle(pen, rect);
+
+            borderPen.Dispose();
+            pen.Dispose();
+
+            DrawLabel(aGraphics);
+        }
+
+        private void DrawChild(Graphics aGraphics, IColorMap aColorMap)
+        {
+            System.Drawing.RectangleF fillRectangle = new System.Drawing.RectangleF(
+                (iLowerLeft.X * iScale.X),
+                (iLowerLeft.Y * iScale.Y),
+                (iWidth * iScale.X),
+                (iHeight * iScale.Y));
+
+            // Last level: Draw Label and Fill Rectangle
+            if (iChildRectangles.Count == 0)
+            {
+                //System.Drawing.Drawing2D.LinearGradientBrush brush = new
+                //       System.Drawing.Drawing2D.LinearGradientBrush(
+                //       fillRectangle,
+                //       Color.MidnightBlue, Color.Indigo,
+                //       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+                aColorMap.
+                SolidBrush borderPen = new SolidBrush(Color.Red);
+
+                aGraphics.FillRectangle(brush, fillRectangle);
+                DrawLabel(aGraphics);
+            }
+            else
+            {
+                // Call children recursively
+                foreach (TreeRectangle rectangle in iChildRectangles)
+                {
+                    rectangle.DrawChild(aGraphics);
+                }
+
+                System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(
+                    (int)(iLowerLeft.X * iScale.X),
+                    (int)(iLowerLeft.Y * iScale.Y),
+                    (int)(iWidth * iScale.X),
+                    (int)(iHeight * iScale.Y));
+                
+                SolidBrush borderPen = new SolidBrush(Color.Red);
+                Pen pen = new Pen(borderPen, iBorder);
+                aGraphics.DrawRectangle(pen, borderRectangle);
             }
         }
 
@@ -188,18 +256,18 @@ namespace Treemap
                     rowWidth = rectangle.GetArea() / rowHeight;
                     rectangle.SetSize(
                                 //lower left
-                                iLowerLeft.X + xOffset
-                                , iLowerLeft.Y
+                                iCurrentLowerLeft.X + xOffset
+                                , iCurrentLowerLeft.Y
 
                                 //upper right
-                                , iLowerLeft.X + xOffset + rowWidth
-                                , iLowerLeft.Y + rowHeight
+                                , iCurrentLowerLeft.X + xOffset + rowWidth
+                                , iCurrentLowerLeft.Y + rowHeight
                                 );
                     xOffset += rowWidth;
                 }
 
                 //update the rectangle height
-                iLowerLeft.Y += rowHeight;
+                iCurrentLowerLeft.Y += rowHeight;
             }
             //adding the new row vertically
             else
@@ -213,17 +281,17 @@ namespace Treemap
                     rowHeight = rectangle.GetArea() / rowWidth;
                     rectangle.SetSize(
                         //lower left
-                               iLowerLeft.X
-                               , iLowerLeft.Y + yOffset
+                               iCurrentLowerLeft.X
+                               , iCurrentLowerLeft.Y + yOffset
 
                                //upper right
-                               , iLowerLeft.X + rowWidth
-                               , iLowerLeft.Y + yOffset + rowHeight
+                               , iCurrentLowerLeft.X + rowWidth
+                               , iCurrentLowerLeft.Y + yOffset + rowHeight
                                );
                     yOffset += rowHeight;
                 }
                 //update the rectangle width
-                iLowerLeft.X += rowWidth;
+                iCurrentLowerLeft.X += rowWidth;
             }
 
             UpdateFreeSize();

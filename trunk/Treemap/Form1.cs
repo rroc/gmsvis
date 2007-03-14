@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Gav.Data;
 
 namespace Treemap
 {
@@ -18,10 +19,22 @@ namespace Treemap
 
         }
 
+        private ColorMap CreateColorMap()
+        {
+            ColorMap map = new ColorMap();
+            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 180.0f);
+            map.AddColorMapPart(hsvMap);
+            hsvMap.Invalidate();
+            map.Invalidate();
+            return map;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             iTreeMap = new TreeMap(treemapPanel.Width, treemapPanel.Height);
             iTreeMap.UpdateScale(treemapPanel.Width, treemapPanel.Height);
+            iTreeMap.ColorMap = CreateColorMap();
+
         }
 
         private void treemapPanel_Paint(object sender, PaintEventArgs e)
