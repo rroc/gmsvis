@@ -18,6 +18,7 @@ namespace GMS
         Renderer renderer;
         ParallelPlotCountries pcCountries;
         MapPlot mapPlot;
+        TreeMap iTreeMap;
 
         public Form1()
         {
@@ -37,20 +38,24 @@ namespace GMS
             doc.SetupFilteredData("countries_acronyms_europe.txt");
             doc.SetupSortedData();
 
-            //pcCountries = new ParallelPlotCountries(doc.GetSortedDataCube(), doc.GetSortedCountryNames(), pcSplitContainer.Panel1, renderer, doc.iSortedColorMap);
             pcCountries = new ParallelPlotCountries(  doc.GetFilteredDataCube()
                                                     , doc.GetFilteredCountryNames()
-                                                    , pcSplitContainer.Panel1
+                                                    , PCMapSplitContainer.Panel2
                                                     , renderer
                                                     , doc.iFilteredColorMap
                                                     );
 
-            mapPlot     = new MapPlot( doc.GetFilteredDataCube()
-                                      , mainSplitContainer.Panel1
-                                      , renderer
-                                      , doc.iFilteredColorMap 
-                                      , pcCountries.pcPlot
-                                      );
+            //mapPlot     = new MapPlot( doc.GetFilteredDataCube()
+            //                          , PCMapSplitContainer.Panel1
+            //                          , renderer
+            //                          , doc.iFilteredColorMap 
+            //                          , pcCountries.pcPlot
+            //                          );
+
+            // Initialize Tree Map
+            iTreeMap = new TreeMap(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
+            iTreeMap.UpdateScale(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
+            iTreeMap.ColorMap = doc.iFilteredColorMap;
 
         }
 
@@ -59,6 +64,24 @@ namespace GMS
             ToolStripComboBox combo = (ToolStripComboBox)sender;
             string clusters = (string)combo.SelectedItem;
             pcCountries.ToggleFilter(clusters);
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = mainSplitContainer.Panel2.CreateGraphics();
+            iTreeMap.DrawTree(g);
+            g.Dispose();
+        }
+
+        private void splitContainer1_Panel2_SizeChanged(object sender, EventArgs e)
+        {
+            if (iTreeMap != null)
+            {
+                iTreeMap.UpdateData(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
+
+                iTreeMap.UpdateScale(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
+                mainSplitContainer.Panel2.Invalidate();
+            }
         }
     }
 }
