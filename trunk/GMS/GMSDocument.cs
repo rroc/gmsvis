@@ -68,7 +68,7 @@ namespace GMS
         private ColorMap CreateColorMap()
         {
             ColorMap map = new ColorMap();
-            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 180.0f);
+            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 359.0f);
             map.AddColorMapPart(hsvMap);
             hsvMap.Invalidate();
             map.Invalidate();

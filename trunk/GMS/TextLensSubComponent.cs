@@ -273,7 +273,6 @@ namespace Gav.Graphics
 
             // NOTE: invalidate maxLabelWidth because we might be shrinking the text
             // and also, it must be done before the new LensBounds are computed
-            maxLabelWidth = 0;
             ComputeMaxLabelWidth();
 
             // Compute the new bounds: given the new text sizes
@@ -517,13 +516,11 @@ namespace Gav.Graphics
             {
                 mouseOverText = true;
                 mouseY = e.Y;
-                //Cursor.Hide();
                 plot.Invalidate();
                 return true;
             } 
             else
             {
-                //Cursor.Show();
                 mouseOverText = false;
             }
 
