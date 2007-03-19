@@ -10,6 +10,7 @@ using Microsoft.DirectX;
 using Gav.Data;
 using Gav.Graphics;
 using System.Collections;
+using System.Windows.Forms;
 
 namespace GMS
 {
@@ -29,7 +30,15 @@ namespace GMS
 
         private System.Windows.Forms.Panel iPanel;
 
+        private GavToolTip iToolTip;
 
+        private Point iMouseLocation;
+
+        private Timer iToolTipTimer;
+
+        private const int TIMER_DELAY = 200;
+
+        private const int TOOLTIP_FADE_DELAY = 500;
 
 
         /************************************************************************/
@@ -110,14 +119,14 @@ namespace GMS
                 TreeRectangle styleRectangle = new TreeRectangle(0.0F);
                 
                 //Style name
-                styleRectangle.SetLabel(style.name);
+                styleRectangle.Label = style.name;
                 
                 foreach (DictionaryEntry entry in sortedReleases)
                 {
                     string country = (string)entry.Key;
                     int releasesCount = (int)countries[country];
                     TreeRectangle rect = new TreeRectangle((float)releasesCount);
-                    rect.SetLabel(country);
+                    rect.Label = country;
                     rect.id = filter.IndexOf(country);
                     styleRectangle.AddRectangle(rect);
                 }
@@ -139,8 +148,82 @@ namespace GMS
             iPanel = aPanel;
             iPanel.SizeChanged += new EventHandler(iPanel_SizeChanged);
             iPanel.Paint += new System.Windows.Forms.PaintEventHandler(iPanel_Paint);
+            iToolTip = new GavToolTip(iPanel);
             SetData( aDatabase, aFilter );
             BuildTreeMap();
+            iToolTip.FadeEnable = true;
+            iToolTip.FadeTime = TOOLTIP_FADE_DELAY;
+            iToolTip.Show(iMouseLocation);
+            iToolTip.Hide();
+
+            iToolTipTimer = new Timer();
+            iToolTipTimer.Interval = TIMER_DELAY;
+            iToolTipTimer.Tick += new EventHandler(iToolTipTimer_Tick);
+
+            iPanel.MouseHover   += new EventHandler(iPanel_MouseHover);
+            iPanel.MouseMove    += new System.Windows.Forms.MouseEventHandler(iPanel_MouseMove);
+            iPanel.MouseLeave   += new EventHandler(iPanel_MouseLeave);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void iPanel_MouseLeave(object sender, EventArgs e)
+        {
+            iToolTip.Hide();
+            iToolTipTimer.Stop();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void iToolTipTimer_Tick(object sender, EventArgs e)
+        {
+            iToolTip.Hide();
+            object label = OnHoverRectangle(iMouseLocation);
+            //iToolTip.Text = "I'm over the (" + iMouseLocation.X + ", " + iMouseLocation.Y + ") position";
+            iToolTip.Text = (string)label;
+
+            /************************************************************************/
+            /* XXX: HACK :P                                                        */
+            /************************************************************************/
+            Point mousePos = iMouseLocation;
+            mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
+            mousePos.Y += 46;
+
+            iToolTip.Show(mousePos);
+            iToolTipTimer.Stop();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void iPanel_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            iToolTipTimer.Stop();
+
+            // XXX: The ToolTip Show() method is invalidating the form which
+            // causes the MouseMove event to be called repeatedly
+            if (iMouseLocation != e.Location)
+            {
+                iToolTipTimer.Start();
+            }
+            
+            iMouseLocation = e.Location;
+        }
+
+        void iPanel_MouseHover(object sender, EventArgs e)
+        {
+            //iToolTip.Hide();
+            //iToolTip.Text = "I'm over the (" + iMouseLocation.X + ", " + iMouseLocation.Y + ") position";
+            //iToolTip.Show(iMouseLocation);
+            //Console.WriteLine("I'm over the TreeMap");
         }
 
         void iPanel_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
@@ -171,6 +254,17 @@ namespace GMS
             }
         }
  
+        private object OnHoverRectangle(Point location)
+        {
+            TreeRectangle rectangle = iRootRectangle.LocationInsideRectangle(location);
+            
+            if (rectangle != null)
+            {
+                return rectangle.Label;
+            }
+
+            return null;
+        }
 
 
         /// <summary>
@@ -345,39 +439,42 @@ namespace GMS
             return sum;
         }
 
-        protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
+        protected override void InternalMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
-            this.InternalInvalidate();
-        }
-
-        protected override void InternalInvalidate()
-        {
-            iPanel.Invalidate();
+            //iToolTip.Hide();
+            //iToolTip.Text = "I'm over the (" + e.X + ", " + e.Y + ") position";
+            //iToolTip.Show(e.Location);
         }
 
         protected override void InternalMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
-        protected override void InternalMouseMove(System.Windows.Forms.MouseEventArgs e)
+        protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
         {
-            throw new Exception("The method or operation is not implemented.");
+            // TODO: something maybe :)
+        }
+
+        protected override void InternalInvalidate()
+        {
+            //DrawTree();
         }
 
         protected override void InternalMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
-            throw new Exception("The method or operation is not implemented.");
+            
         }
 
         protected override void InternalRender(Microsoft.DirectX.Direct3D.Device device)
         {
-            throw new Exception("The method or operation is not implemented.");
+            //DrawTree();
         }
 
         protected override void InternalUpdateSize()
         {
-            throw new Exception("The method or operation is not implemented.");
+            //UpdateData();
+            //UpdateScale();
+            //iPanel.Invalidate();
         }
     }
 }

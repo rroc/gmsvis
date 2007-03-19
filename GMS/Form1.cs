@@ -57,7 +57,6 @@ namespace GMS
             iTreeMap = new TreeMap(  doc.GetDatabase(), doc.GetFilteredCountryNames(), mainSplitContainer.Panel2 );
             iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
-
             pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
         }
 
