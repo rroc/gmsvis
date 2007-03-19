@@ -58,6 +58,25 @@
             DataCubeViewer shows the input data in a DataGridView. 
             </summary>
         </member>
+        <member name="M:Gav.Graphics.VizComponent.AddDragAndDropSource(System.Object)">
+            <summary>
+            Add a new drag and drop source.
+            </summary>
+            <param name="source">Source</param>
+        </member>
+        <member name="M:Gav.Graphics.VizComponent.GetDragAndDropSources">
+            <summary>
+            Get the drag and drop sources.
+            </summary>
+            <returns>List of drag and drop sources</returns>
+        </member>
+        <member name="M:Gav.Graphics.VizComponent.IsAllowedDragAndDropSource(System.Object)">
+            <summary>
+            Checks if the passed source is a drag and drop source for this component. 
+            </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
         <member name="M:Gav.Graphics.VizComponent.AddSubComponent(Gav.Graphics.VizSubComponent)">
             <summary>
             Add a VizSubComponent to be rendered on the same surface.
@@ -67,6 +86,36 @@
         <member name="M:Gav.Graphics.VizComponent.Invalidate">
             <summary>
             Invalidate the component. This will update invalidate-dependent changes and render the component.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.VizComponent.VizComponentMouseDown">
+            <summary>
+            Occurs when a mouse button is pressed down over the component.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.VizComponent.VizComponentMouseUp">
+            <summary>
+            Occurs when a mouse button is released over the component.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.VizComponent.VizComponentMouseMove">
+            <summary>
+            Occurs when the mouse is moves over the component.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.VizComponent.Drop">
+            <summary>
+            Occurs when a valid drag and drop item id dropped over the component.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.VizComponent.DragOver">
+            <summary>
+            Occurs when a valid drag and drop item is dragged over the component.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.VizComponent.DragLeave">
+            <summary>
+            Occurs when a valid drag and drop item leaves the component.
             </summary>
         </member>
         <member name="P:Gav.Graphics.VizComponent.Name">
@@ -231,7 +280,22 @@
         </member>
         <member name="P:Gav.Graphics.AbstractScatterPlot.AxisColor">
             <summary>
-            Gets or sets color of the axes.
+            Sets color of the axes.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisColorX">
+            <summary>
+            Gets or sets the x-axis color.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisColorY">
+            <summary>
+            Gets or sets the y-axis color.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.AbstractScatterPlot.AxisColorZ">
+            <summary>
+            Gets or sets the z-axis color. (This property has no effect in ScatterPlot2D)
             </summary>
         </member>
         <member name="P:Gav.Graphics.AbstractScatterPlot.GlyphSize">
@@ -282,6 +346,51 @@
         <member name="P:Gav.Graphics.AbstractScatterPlot.IndexVisibilityHandler">
             <summary>
             Gets or sets the IndexVisibilityHandler used for visibility testing. If null, all the glyphs are visible. 
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._glyphTexture">
+            <summary>
+            Texture containing the glyph used in the plot.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._sprite">
+            <summary>
+            Sprite object used to render glyphs.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._d3dFont">
+            <summary>
+            The DirectX Font object used to render the text.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._d3dLine">
+            <summary>
+            The DirectX line object used to render lines in the plot. 
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._paddingTop">
+            <summary>
+            The distance in pixels from the render surface top to the plot.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._paddingBottom">
+            <summary>
+            The distance in pixels from the render surface bottom to the plot.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._paddingRight">
+            <summary>
+            The distance in pixels from the render surface right border to the plot.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._paddingLeft">
+            <summary>
+            The distance in pixels from the render surface left border to the plot.
+            </summary>
+        </member>
+        <member name="F:Gav.Graphics.ScatterPlot2D._glyphTextureSize">
+            <summary>
+            The size of the texture containing the glyph.
             </summary>
         </member>
         <member name="P:Gav.Graphics.ScatterPlot2D.PaddingTop">
@@ -428,13 +537,13 @@
             <param name="xPos"></param>
             <returns></returns>
         </member>
-        <member name="M:Gav.Graphics.ParallelCoordinatesPlot.Picking(System.Drawing.Point,System.Int32,System.Boolean)">
+        <member name="M:Gav.Graphics.ParallelCoordinatesPlot.GetLineIndexesAtPosition(System.Drawing.Point,System.Int32)">
             <summary>
-            Given a position, creates or adds to a list of indexes of selected lines
+            Gets the line indexes at a certain position.
             </summary>
-            <param name="_mouseScreenPosition"></param>
-            <param name="_sensitivity"></param>
-            <param name="_multiSelect"></param>
+            <param name="position">Position in render target coordinates.</param>
+            <param name="pickSensitivity">The sensitivity</param>
+            <returns>A list of indexes at the specified position.</returns>
         </member>
         <member name="M:Gav.Graphics.ParallelCoordinatesPlot.GetSelectedLineIndexes">
             <summary>
@@ -528,6 +637,21 @@
             Occurs when the picking is done inside the component. A list containing the picked glyphs indexes is stored in the IndexesPickedEventArgs.
             </summary>
         </member>
+        <member name="P:Gav.Graphics.ParallelCoordinatesPlot.FontHeaders">
+            <summary>
+            Gets or sets the font used for the headers. Needs an invalidate to update.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ParallelCoordinatesPlot.FontSelectedHeaders">
+            <summary>
+            Gets or sets the font used for the selected headers. Needs an invalidate to update.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.ParallelCoordinatesPlot.FontMaxMinValues">
+            <summary>
+            Gets or sets the font used for the max min values. Needs an invalidate to update.
+            </summary>
+        </member>
         <member name="E:Gav.Graphics.ParallelCoordinatesPlot.FilterChanged">
             <summary>
             Occurs when a filter has changed.
@@ -536,6 +660,11 @@
         <member name="E:Gav.Graphics.ParallelCoordinatesPlot.HeaderClicked">
             <summary>
             Occurs when a header is clicked.
+            </summary>
+        </member>
+        <member name="E:Gav.Graphics.ParallelCoordinatesPlot.AxisExtendedStateChanged">
+            <summary>
+            Occurs when an axis changes extended state.
             </summary>
         </member>
         <member name="P:Gav.Graphics.ParallelCoordinatesPlot.IndexVisibilityHandler">
@@ -576,11 +705,6 @@
         <member name="P:Gav.Graphics.ParallelCoordinatesPlot.LineTransparencySelected">
             <summary>
             Sets the transparency for the lines that are selected.
-            </summary>
-        </member>
-        <member name="P:Gav.Graphics.ParallelCoordinatesPlot.AxisPresentedNumber">
-            <summary>
-            Sets the number of axis to be rendered. 
             </summary>
         </member>
         <member name="P:Gav.Graphics.ParallelCoordinatesPlot.SelectedLineColor">
@@ -1436,6 +1560,48 @@
         <member name="P:Gav.Graphics.MouseHoverController.HoverScreenPosition">
             <summary>
             Gets the position where the hovering takes place. (In screen coordinates)
+            </summary>
+        </member>
+        <member name="M:Gav.Graphics.GavToolTip.#ctor(System.Windows.Forms.Control)">
+            <summary>
+            Creates a new ToolTip.
+            </summary>
+            <param name="owner">The owner control.</param>
+        </member>
+        <member name="M:Gav.Graphics.GavToolTip.Show(System.Drawing.Point)">
+            <summary>
+            Shows the tool tip at the specified position.
+            </summary>
+            <param name="location">Position.</param>
+        </member>
+        <member name="M:Gav.Graphics.GavToolTip.Hide">
+            <summary>
+            Hides the tool tip.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.GavToolTip.FadeTime">
+            <summary>
+            Gets or sets the time it takes for the tool tip to fade in.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.GavToolTip.FadeEnable">
+            <summary>
+            Gets or sets if the tool tip should fade.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.GavToolTip.Text">
+            <summary>
+            Gets or sets the text shown in the tool tip.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.GavToolTip.BackColor">
+            <summary>
+            Gets or sets the tool tip background color.
+            </summary>
+        </member>
+        <member name="P:Gav.Graphics.GavToolTip.Size">
+            <summary>
+            Gets or sets the size of the tool tip.
             </summary>
         </member>
         <member name="T:Gav.Data.IndexVisibilityHandler">
