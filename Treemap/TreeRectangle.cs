@@ -192,13 +192,12 @@ namespace Treemap
             // Last level: Draw Label and Fill Rectangle
             if (iChildRectangles.Count == 0)
             {
-                //System.Drawing.Drawing2D.LinearGradientBrush brush = new
-                //       System.Drawing.Drawing2D.LinearGradientBrush(
-                //       fillRectangle,
-                //       Color.MidnightBlue, Color.Indigo,
-                //       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
-                aColorMap.
-                SolidBrush borderPen = new SolidBrush(Color.Red);
+                System.Drawing.Drawing2D.LinearGradientBrush brush = new
+                       System.Drawing.Drawing2D.LinearGradientBrush(
+                       fillRectangle,
+                       Color.MidnightBlue, Color.Indigo,
+                       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+                //SolidBrush borderPen = new SolidBrush(Color.Red);
 
                 aGraphics.FillRectangle(brush, fillRectangle);
                 DrawLabel(aGraphics);
@@ -208,7 +207,7 @@ namespace Treemap
                 // Call children recursively
                 foreach (TreeRectangle rectangle in iChildRectangles)
                 {
-                    rectangle.DrawChild(aGraphics);
+                    rectangle.DrawChild(aGraphics, aColorMap);
                 }
 
                 System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(

@@ -45,18 +45,25 @@ namespace GMS
                                                     , doc.iFilteredColorMap
                                                     );
 
-            //mapPlot     = new MapPlot( doc.GetFilteredDataCube()
-            //                          , PCMapSplitContainer.Panel1
-            //                          , renderer
-            //                          , doc.iFilteredColorMap 
-            //                          , pcCountries.pcPlot
-            //                          );
+            mapPlot = new MapPlot(doc.GetFilteredDataCube()
+                                      , PCMapSplitContainer.Panel1
+                                      , renderer
+                                      , doc.iFilteredColorMap
+                                      , pcCountries.pcPlot
+                                      );
+
 
             // Initialize Tree Map
-            iTreeMap = new TreeMap(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
-            iTreeMap.UpdateScale(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
+            iTreeMap = new TreeMap(  doc.GetDatabase(), doc.GetFilteredCountryNames(), mainSplitContainer.Panel2 );
+            iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
 
+            pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
+        }
+
+        void pcPlot_FilterChanged(object sender, EventArgs e)
+        {
+            iTreeMap.Invalidate();
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -64,24 +71,8 @@ namespace GMS
             ToolStripComboBox combo = (ToolStripComboBox)sender;
             string clusters = (string)combo.SelectedItem;
             pcCountries.ToggleFilter(clusters);
+            iTreeMap.Invalidate();
         }
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = mainSplitContainer.Panel2.CreateGraphics();
-            iTreeMap.DrawTree(g);
-            g.Dispose();
-        }
-
-        private void splitContainer1_Panel2_SizeChanged(object sender, EventArgs e)
-        {
-            if (iTreeMap != null)
-            {
-                iTreeMap.UpdateData(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
-
-                iTreeMap.UpdateScale(mainSplitContainer.Panel2.Width, mainSplitContainer.Panel2.Height);
-                mainSplitContainer.Panel2.Invalidate();
-            }
-        }
     }
 }

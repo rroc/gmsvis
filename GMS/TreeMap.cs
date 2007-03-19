@@ -15,15 +15,22 @@ namespace GMS
 {
     class TreeMap : VizComponent
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        TreeRectangle iRootRectangle;
+        //VARIABLES
 
         /// <summary>
         /// 
         /// </summary>
-        IColorMap iColorMap;
+        private TreeRectangle iRootRectangle;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private IColorMap iColorMap;
+
+        private System.Windows.Forms.Panel iPanel;
+
+
+
 
         /************************************************************************/
         /*                                                                      */
@@ -59,8 +66,9 @@ namespace GMS
         /// </summary>
         /// <param name="aRectangle"></param>
         /// <param name="db"></param>
-        public void BuildStylesAreasTree(TreeRectangle aRectangle, DB db)
+        public void BuildStylesAreasTree(TreeRectangle aRectangle, DB db, Hashtable aFilter)
         {
+            ArrayList filter = new ArrayList(aFilter.Values);
             // Sort the styles so we can have only the N most popular ones
             ArrayList sortedStyles = new ArrayList(db.styles.Values);
             sortedStyles.Sort(new StyleComparer());
@@ -78,14 +86,18 @@ namespace GMS
                 // count all the occurrences in the countries
                 foreach (MusicBrainzRelease release in style.releases)
                 {
-                    if (countries.ContainsKey(release.country.name))
+                    //according to the filter used on pcplot
+                    if (filter.Contains(release.country.name) )
                     {
-                        int i = (int)countries[release.country.name];
-                        countries[release.country.name] = i + 1;
-                    }
-                    else
-                    {
-                        countries.Add(release.country.name, 1);
+                        if (countries.ContainsKey(release.country.name))
+                        {
+                            int oldvalue = (int)countries[release.country.name];
+                            countries[release.country.name] = oldvalue + 1;
+                        }
+                        else
+                        {
+                            countries.Add(release.country.name, 1);
+                        }
                     }
                 }
 
@@ -96,15 +108,17 @@ namespace GMS
                 sortedReleases.Sort(new DictionaryValueComparer());
 
                 TreeRectangle styleRectangle = new TreeRectangle(0.0F);
+                
+                //Style name
                 styleRectangle.SetLabel(style.name);
-                int j = 0;
+                
                 foreach (DictionaryEntry entry in sortedReleases)
                 {
                     string country = (string)entry.Key;
                     int releasesCount = (int)countries[country];
                     TreeRectangle rect = new TreeRectangle((float)releasesCount);
                     rect.SetLabel(country);
-                    rect.id = j++;
+                    rect.id = filter.IndexOf(country);
                     styleRectangle.AddRectangle(rect);
                 }
 
@@ -120,10 +134,26 @@ namespace GMS
         /// <summary>
         /// Constructor
         /// </summary>
-        public TreeMap( int aPanelWidth, int aPanelHeight )
+        public TreeMap(DB aDatabase, Hashtable aFilter, System.Windows.Forms.Panel aPanel ) //int aPanelWidth, int aPanelHeight)
         {
-            SetData( aPanelWidth, aPanelHeight);
+            iPanel = aPanel;
+            iPanel.SizeChanged += new EventHandler(iPanel_SizeChanged);
+            iPanel.Paint += new System.Windows.Forms.PaintEventHandler(iPanel_Paint);
+            SetData( aDatabase, aFilter );
             BuildTreeMap();
+        }
+
+        void iPanel_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+        {
+            DrawTree();
+        }
+
+
+        void iPanel_SizeChanged(object sender, EventArgs e)
+        {
+            UpdateData();
+            UpdateScale();
+            iPanel.Invalidate();
         }
 
         /// <summary>
@@ -148,22 +178,15 @@ namespace GMS
         /// </summary>
         /// <param name="aPanelWidth"></param>
         /// <param name="aPanelHeight"></param>
-        public void SetData(int aPanelWidth, int aPanelHeight)
+        public void SetData(DB aDatabase, Hashtable aFilter)
         {
             iRootRectangle = new TreeRectangle(0.0f);
+            BuildStylesAreasTree(iRootRectangle, aDatabase, aFilter);
 
-            string dir = System.IO.Directory.GetCurrentDirectory();
-            string iDataPath = "\\..\\..\\..\\data\\";
-            string iDBFileName = "db.bin";
-
-            DB dataBase;
-            MusicDBLoader.LoadDB(dir + iDataPath + iDBFileName, out dataBase);
-
-            BuildStylesAreasTree(iRootRectangle, dataBase);
 
             //Calculate data size according to the sreen
             float sum = iRootRectangle.GetArea();
-            float ratio = aPanelWidth / (float)aPanelHeight;
+            float ratio = iPanel.Width / (float)iPanel.Height;
             float height = (float)Math.Sqrt(sum / ratio);
             float width = height * ratio;
 
@@ -173,13 +196,11 @@ namespace GMS
         /// <summary>
         /// Update the data according to the available screenspace
         /// </summary>
-        /// <param name="aPanelWidth"></param>
-        /// <param name="aPanelHeight"></param>
-        public void UpdateData(int aPanelWidth, int aPanelHeight)
+        public void UpdateData()
         {
             float sum = iRootRectangle.GetArea();
 
-            float ratio = aPanelWidth / (float)aPanelHeight;
+            float ratio = iPanel.Width / (float)iPanel.Height;
             float height = (float)Math.Sqrt(sum / ratio);
             float width = height * ratio;
 
@@ -222,18 +243,19 @@ namespace GMS
         /// </summary>
         /// <param name="aWidth"></param>
         /// <param name="aHeight"></param>
-        public void UpdateScale( int aWidth, int aHeight )
+        public void UpdateScale()
         {
-            iRootRectangle.SetScale(aWidth, aHeight);
+            iRootRectangle.SetScale(iPanel.Width, iPanel.Height);
         }
 
         /// <summary>
         /// Draw the whole tree
         /// </summary>
-        /// <param name="aGraphics"></param>
-        public void DrawTree( Graphics aGraphics)
+        public void DrawTree()
         {
-            iRootRectangle.Draw(aGraphics, iColorMap);
+            Graphics g = iPanel.CreateGraphics();
+            iRootRectangle.Draw(g, iColorMap);
+            g.Dispose();
         }
 
         /// <summary>
@@ -325,12 +347,12 @@ namespace GMS
 
         protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.InternalInvalidate();
         }
 
         protected override void InternalInvalidate()
         {
-            throw new Exception("The method or operation is not implemented.");
+            iPanel.Invalidate();
         }
 
         protected override void InternalMouseDown(System.Windows.Forms.MouseEventArgs e)

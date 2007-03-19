@@ -150,7 +150,15 @@ namespace MusicDataminer
                             MusicBrainzRelease release = new MusicBrainzRelease();
 
                             release.country = (Country)dataBase.countries[country];
-                            release.date = int.Parse(date.Substring(0, 4));
+
+                            if (date.Length >= 4)
+                            {
+                                release.date = int.Parse(date.Substring(0, 4));
+                            }
+                            else
+                            {
+                                return false; //release.date = int.Parse(date);
+                            }
 
                             // Add the release both to the Album and Country
                             releasesList.Add(release);
@@ -363,67 +371,79 @@ namespace MusicDataminer
 
             Style styleObj = GetStyle(style);
 
-            //Start querying
-            while ((text = sr.ReadLine()) != null )
+            try
             {
-                Thread.Sleep(2);
-                tokens = text.Split(delimiterChars);
-
-                // Lowercase all the tokens
-                string artistName = tokens[0].ToLower();
-                string title = tokens[1].ToLower();
-
-                List<MusicBrainzRelease> releases = new List<MusicBrainzRelease>();
-
-                // search for info in the MusicBrainz DB
-                bool foundSomething = GetMusicBrainzReleases(artistName, title, releases, out retrievedName, style);
-
-                if (foundSomething)
+                //Start querying
+                while ((text = sr.ReadLine()) != null)
                 {
-                    Album album = new Album();
+                    Thread.Sleep(2);
+                    tokens = text.Split(delimiterChars);
 
-                    if (tokens.Length < 3 || tokens[2].Trim().Length == 0)
+                    if(tokens.Length<2)
                     {
-                        album.style = styleObj;
+                        continue;
                     }
-                    else
-                    {
-                        album.style = GetStyle(tokens[2]);
-                    }
+                    // Lowercase all the tokens
+                    string artistName = tokens[0].ToLower();
+                    string title = tokens[1].ToLower();
 
-                    album.title     = retrievedName;
+                    List<MusicBrainzRelease> releases = new List<MusicBrainzRelease>();
 
-                    if (AddAlbum(album, artistName))
+                    // search for info in the MusicBrainz DB
+                    bool foundSomething = GetMusicBrainzReleases(artistName, title, releases, out retrievedName, style);
+
+
+                    if (foundSomething)
                     {
-                        // Add the album to all its releases
-                        foreach (MusicBrainzRelease release in releases)
+                        Album album = new Album();
+
+                        if (tokens.Length < 3 || tokens[2].Trim().Length == 0)
                         {
-                            release.freeDBAlbum = album;
-                            AddReleaseDate( release );
+                            album.style = styleObj;
+                        }
+                        else
+                        {
+                            album.style = GetStyle(tokens[2]);
                         }
 
-                        // set the Artist object
-                        album.artist = GetArtist(artistName);
+                        album.title = retrievedName;
 
-                        // add the releases to the Album
-                        album.releases = releases;
-
-                        // add the releases to their Style
-                        album.style.releases.AddRange(releases);
-
-                        // add the album to its artist
-                        album.artist.albums.Add(album);
-
-                        // Some output
-                        iForm.PrintLine("(" + style + ")\t-> ADDED: " + album.title + " Artist: " + album.artist.name);
-                        foreach (MusicBrainzRelease release in album.releases)
+                        if (AddAlbum(album, artistName))
                         {
-                            iForm.PrintLine("\tCountry: " + release.country.name + "  Date: " + release.date);
+                            // Add the album to all its releases
+                            foreach (MusicBrainzRelease release in releases)
+                            {
+                                release.freeDBAlbum = album;
+                                AddReleaseDate(release);
+                            }
+
+                            // set the Artist object
+                            album.artist = GetArtist(artistName);
+
+                            // add the releases to the Album
+                            album.releases = releases;
+
+                            // add the releases to their Style
+                            album.style.releases.AddRange(releases);
+
+                            // add the album to its artist
+                            album.artist.albums.Add(album);
+
+                            // Some output
+                            iForm.PrintLine("(" + style + ")\t-> ADDED: " + album.title + " Artist: " + album.artist.name);
+                            foreach (MusicBrainzRelease release in album.releases)
+                            {
+                                iForm.PrintLine("\tCountry: " + release.country.name + "  Date: " + release.date);
+                            }
                         }
                     }
+                    lineNumber++;
+                    iLineCount[style] = lineNumber;
                 }
-                lineNumber++;
-                iLineCount[style] = lineNumber;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Boom.");
             }
 
             iForm.PrintLine("(" + style + ")\t!!! FINISHED !!! ( " + lineNumber + " lines )");
