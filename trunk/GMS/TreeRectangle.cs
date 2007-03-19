@@ -96,9 +96,17 @@ namespace GMS
             iHeight = iFreeHeight;
         }
 
-        public void SetLabel(string aLabel)
+        public string Label
         {
-            iLabel = aLabel;
+            get
+            {
+                return iLabel;
+            }
+            set
+            {
+                iLabel = value;
+            }
+            
         }
 
         public void SetData(object aData)
@@ -208,7 +216,6 @@ namespace GMS
             if (iChildRectangles.Count == 0)
             {
                 int amount = aColorMap.GetColors().GetLength(0);
-                Console.WriteLine("colors: " + amount );
                 if (aColorMap.GetColors().GetLength(0) < id) 
                 {
                     id = 0;
@@ -254,6 +261,41 @@ namespace GMS
             fontsize = (fontsize <= 1.0F)? 1.0F : fontsize;
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
             aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X) * iScale.X + iBorder, (iLowerLeft.Y) * iScale.Y + iBorder);
+        }
+
+        /// <summary>
+        /// Returns the leaf Rectangle that contains the location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public TreeRectangle LocationInsideRectangle(Point location)
+        {
+            Vector2 lowerLeft = new Vector2(iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y);
+            Vector2 upperRight = new Vector2(iUpperRight.X * iScale.X, iUpperRight.Y * iScale.Y);
+
+            if (lowerLeft.X <= location.X && upperRight.X >= location.X
+                && lowerLeft.Y <= location.Y && upperRight.Y >= location.Y)
+            {
+                if (iChildRectangles.Count == 0)
+                {
+                    return this;
+                }
+                else
+                {
+                    foreach (TreeRectangle child in iChildRectangles)
+                    {
+                        TreeRectangle result = child.LocationInsideRectangle(location);
+                        
+                        // if found
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
