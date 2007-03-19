@@ -78,8 +78,6 @@ namespace GMS
             // 
             // mainSplitContainer.Panel2
             // 
-            this.mainSplitContainer.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
-            this.mainSplitContainer.Panel2.SizeChanged += new System.EventHandler(this.splitContainer1_Panel2_SizeChanged);
             this.mainSplitContainer.Size = new System.Drawing.Size(292, 248);
             this.mainSplitContainer.SplitterDistance = 205;
             this.mainSplitContainer.TabIndex = 2;

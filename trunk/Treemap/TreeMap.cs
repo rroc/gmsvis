@@ -11,7 +11,7 @@ using Gav.Data;
 using Gav.Graphics;
 using System.Collections;
 
-namespace GMS
+namespace Treemap
 {
     class TreeMap : VizComponent
     {

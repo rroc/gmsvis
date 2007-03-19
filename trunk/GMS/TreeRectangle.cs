@@ -167,6 +167,11 @@ namespace GMS
                 (int)(iWidth * iScale.X),
                 (int)(iHeight * iScale.Y));
 
+            if (rect.Height <= 1)
+            {
+                return;
+            }
+
             //System.Drawing.Drawing2D.LinearGradientBrush brush = new
             //           System.Drawing.Drawing2D.LinearGradientBrush(
             //           rect,
@@ -193,15 +198,28 @@ namespace GMS
                 (iWidth * iScale.X),
                 (iHeight * iScale.Y));
 
+            if (fillRectangle.Height <= 1)
+            {
+                return;
+            }
+
+
             // Last level: Draw Label and Fill Rectangle
             if (iChildRectangles.Count == 0)
             {
+                int amount = aColorMap.GetColors().GetLength(0);
+                Console.WriteLine("colors: " + amount );
+                if (aColorMap.GetColors().GetLength(0) < id) 
+                {
+                    id = 0;
+                }
                 System.Drawing.Drawing2D.LinearGradientBrush brush = new
                        System.Drawing.Drawing2D.LinearGradientBrush(
                        fillRectangle,
                        aColorMap.GetColor(id), Color.Black,
                        System.Drawing.Drawing2D.LinearGradientMode.Vertical);
                 aGraphics.FillRectangle(brush, fillRectangle);
+                
                 
                 DrawLabel(aGraphics);
             }
@@ -233,7 +251,7 @@ namespace GMS
         {
             SolidBrush brush = new SolidBrush(Color.White);
             float fontsize = (float)Math.Log(iHeight) * iScale.Y;
-            fontsize = fontsize <= 0.0F ? 1.0F : fontsize;
+            fontsize = (fontsize <= 1.0F)? 1.0F : fontsize;
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
             aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X) * iScale.X + iBorder, (iLowerLeft.Y) * iScale.Y + iBorder);
         }
