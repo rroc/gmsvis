@@ -68,7 +68,7 @@ namespace GMS
             iArea = aArea;
             iLabel = "";
             iScale = new Vector2(1, 1);
-            iBorder = 2.0f;
+            iBorder = 8.0f;
 
             iChildRectangles = new List<TreeRectangle>();
             SetSize(aX1, aY1, aX2, aY2);
@@ -144,7 +144,7 @@ namespace GMS
         {
             iScale.X = aWidth / iWidth;
             iScale.Y = aHeight / iHeight;
-            iBorder = (float)Math.Ceiling(Math.Max(iScale.X, iScale.Y) / 100.0f);
+            iBorder = (float)Math.Ceiling(Math.Max(iScale.X, iScale.Y) / 2.0f);
         }
 
         /// <summary>
@@ -179,21 +179,6 @@ namespace GMS
             {
                 return;
             }
-
-            //System.Drawing.Drawing2D.LinearGradientBrush brush = new
-            //           System.Drawing.Drawing2D.LinearGradientBrush(
-            //           rect,
-            //           Color.MidnightBlue, Color.Indigo, 
-            //           System.Drawing.Drawing2D.LinearGradientMode.Vertical);
-            
-            //aGraphics.FillRectangle( brush, rect );
-
-            SolidBrush borderPen = new SolidBrush(Color.YellowGreen);
-            Pen pen = new Pen(borderPen, iBorder);
-            aGraphics.DrawRectangle(pen, rect);
-
-            borderPen.Dispose();
-            pen.Dispose();
 
             DrawLabel(aGraphics);
         }
@@ -239,14 +224,37 @@ namespace GMS
                 }
 
                 System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(
-                    (int)(iLowerLeft.X * iScale.X),
-                    (int)(iLowerLeft.Y * iScale.Y),
-                    (int)(iWidth * iScale.X),
-                    (int)(iHeight * iScale.Y));
-                
-                SolidBrush borderPen = new SolidBrush(Color.White);
+                    (int)Math.Ceiling(iLowerLeft.X * iScale.X),
+                    (int)Math.Ceiling(iLowerLeft.Y * iScale.Y),
+                    (int)Math.Ceiling(iWidth * iScale.X),
+                    (int)Math.Ceiling(iHeight * iScale.Y));
+
+                SolidBrush borderPen = new SolidBrush(Color.Red);
                 Pen pen = new Pen(borderPen, iBorder);
+                pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
                 aGraphics.DrawRectangle(pen, borderRectangle);
+
+                /************************************************************************/
+                /*                                                                      */
+                /************************************************************************/
+                fillRectangle.Height = iScale.Y * 1.5F;
+
+                SolidBrush brush = new SolidBrush(Color.White);
+                float fontsize = fillRectangle.Height;
+                fontsize = (fontsize <= 1.0F) ? 1.0F : fontsize;
+                System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Italic);
+                
+                SizeF size = aGraphics.MeasureString(iLabel, font);
+                fillRectangle.Width = size.Width;
+                fillRectangle.Height *= 1.2F;
+
+                aGraphics.FillRectangle(borderPen, fillRectangle);
+                aGraphics.DrawString(iLabel, font, brush, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y - (fontsize / 3.0F));
+
+
+                /************************************************************************/
+                /*                                                                      */
+                /************************************************************************/
             }
         }
 
@@ -260,7 +268,8 @@ namespace GMS
             float fontsize = (float)Math.Log(iHeight) * iScale.Y;
             fontsize = (fontsize <= 1.0F)? 1.0F : fontsize;
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
-            aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X) * iScale.X + iBorder, (iLowerLeft.Y) * iScale.Y + iBorder);
+            float centerY = iHeight / 2.0F;
+            aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X + (iWidth * 0.05F)) * iScale.X, (centerY + iLowerLeft.Y) * iScale.Y - fontsize);
         }
 
         /// <summary>
