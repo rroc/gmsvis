@@ -152,7 +152,8 @@ namespace GMS
             {
                 pcPlot.ColorMap.Input = iDataCube;
                 kMeansClusteringOn = !kMeansClusteringOn;
-                pcPlot.ColorMap.Index = iDataCube.Data.GetLength(0) - 1;
+                //pcPlot.ColorMap.Index = iDataCube.Data.GetLength(0) - 1;
+                pcPlot.ColorMap.Index = 0;
             }
             else
             {
@@ -177,6 +178,7 @@ namespace GMS
             
             // Padding: so the names of the countries don't be cut
             pcPlot.PaddingLeft += 60;
+            pcPlot.PaddingTop += 20;
             pcPlot.PickSensitivity = 3;
 
             pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
@@ -214,20 +216,8 @@ namespace GMS
         {
             ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
             List<int> selectedLines = e.PickedIndexes;
-            //Font font = new Font("Verdana", 10);
-            //Color color = Color.DodgerBlue;
-            //int countriesCount = countries.Count;
 
-            //foreach (int countryId in selectedLines)
-            //{
-            //    string country = (string)countries[(uint)countryId];
-            //    float verticalPosition = (float)countryId / (float)countriesCount;
-
-            //plot.AddText("Very nice country", ParallelCoordinatesPlot.TextRelativePosition.Left,
-            //    color, new Font("Verdana", 10), 0.3f);
-            //}
-
-            // if CTRL is pressed, add the line to the selectio
+            // if CTRL is pressed, add the line to the selection
             Keys keys = Control.ModifierKeys;
             bool add = (keys == Keys.Control);
 

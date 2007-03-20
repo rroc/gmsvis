@@ -31,21 +31,24 @@ namespace GMS
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PCMapSplitContainer = new System.Windows.Forms.SplitContainer();
             this.toolStrip1.SuspendLayout();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
+            this.PCMapSplitContainer.Panel2.SuspendLayout();
             this.PCMapSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
             this.toolStripComboBox1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(292, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(497, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -61,25 +64,28 @@ namespace GMS
             "6",
             "None"});
             this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 21);
+            this.toolStripComboBox1.Size = new System.Drawing.Size(50, 21);
             this.toolStripComboBox1.Sorted = true;
             this.toolStripComboBox1.Text = "None";
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
             // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(48, 22);
+            this.toolStripLabel1.Text = "K-Means";
+            // 
             // mainSplitContainer
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 25);
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.mainSplitContainer.Name = "mainSplitContainer";
             // 
             // mainSplitContainer.Panel1
             // 
             this.mainSplitContainer.Panel1.Controls.Add(this.PCMapSplitContainer);
-            // 
-            // mainSplitContainer.Panel2
-            // 
-            this.mainSplitContainer.Size = new System.Drawing.Size(292, 248);
-            this.mainSplitContainer.SplitterDistance = 205;
+            this.mainSplitContainer.Size = new System.Drawing.Size(709, 395);
+            this.mainSplitContainer.SplitterDistance = 497;
             this.mainSplitContainer.TabIndex = 2;
             // 
             // PCMapSplitContainer
@@ -88,17 +94,20 @@ namespace GMS
             this.PCMapSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.PCMapSplitContainer.Name = "PCMapSplitContainer";
             this.PCMapSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.PCMapSplitContainer.Size = new System.Drawing.Size(205, 248);
-            this.PCMapSplitContainer.SplitterDistance = 164;
+            // 
+            // PCMapSplitContainer.Panel2
+            // 
+            this.PCMapSplitContainer.Panel2.Controls.Add(this.toolStrip1);
+            this.PCMapSplitContainer.Size = new System.Drawing.Size(497, 395);
+            this.PCMapSplitContainer.SplitterDistance = 261;
             this.PCMapSplitContainer.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 273);
+            this.ClientSize = new System.Drawing.Size(709, 395);
             this.Controls.Add(this.mainSplitContainer);
-            this.Controls.Add(this.toolStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "GeoMusic Visualization";
@@ -108,9 +117,10 @@ namespace GMS
             this.toolStrip1.PerformLayout();
             this.mainSplitContainer.Panel1.ResumeLayout(false);
             this.mainSplitContainer.ResumeLayout(false);
+            this.PCMapSplitContainer.Panel2.ResumeLayout(false);
+            this.PCMapSplitContainer.Panel2.PerformLayout();
             this.PCMapSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -120,6 +130,7 @@ namespace GMS
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
         private System.Windows.Forms.SplitContainer mainSplitContainer;
         private System.Windows.Forms.SplitContainer PCMapSplitContainer;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
     }
 }
 

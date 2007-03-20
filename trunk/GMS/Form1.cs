@@ -70,8 +70,7 @@ namespace GMS
             ToolStripComboBox combo = (ToolStripComboBox)sender;
             string clusters = (string)combo.SelectedItem;
             pcCountries.ToggleFilter(clusters);
-            iTreeMap.Invalidate();
+            mainSplitContainer.Panel2.Invalidate();
         }
-
     }
 }

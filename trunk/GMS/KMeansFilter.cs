@@ -284,7 +284,7 @@ namespace GMS
             }
             else
             {
-                for (int i = 0; i < diff; i++)
+                for (int i = 0; i > diff; i--)
                 {
                     clusters.RemoveAt(clusters.Count - 1);
                     clusterMeans.RemoveAt(clusterMeans.Count - 1);

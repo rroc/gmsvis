@@ -40,6 +40,7 @@ namespace GMS
 
         private const int TOOLTIP_FADE_DELAY = 500;
 
+        private IDataCubeProvider<float> iInput;
 
         /************************************************************************/
         /*                                                                      */
@@ -82,7 +83,7 @@ namespace GMS
             ArrayList sortedStyles = new ArrayList(db.styles.Values);
             sortedStyles.Sort(new StyleComparer());
 
-            int styleLimiter = 10;
+            int styleLimiter = 20;
             foreach (Style style in sortedStyles)
             {
                 if (styleLimiter == 0)
@@ -146,8 +147,8 @@ namespace GMS
         public TreeMap(DB aDatabase, Hashtable aFilter, System.Windows.Forms.Panel aPanel ) //int aPanelWidth, int aPanelHeight)
         {
             iPanel = aPanel;
-            iPanel.SizeChanged += new EventHandler(iPanel_SizeChanged);
-            iPanel.Paint += new System.Windows.Forms.PaintEventHandler(iPanel_Paint);
+            iPanel.SizeChanged += new EventHandler(SizeChanged);
+            iPanel.Paint += new System.Windows.Forms.PaintEventHandler(Paint);
             iToolTip = new GavToolTip(iPanel);
             SetData( aDatabase, aFilter );
             BuildTreeMap();
@@ -158,11 +159,10 @@ namespace GMS
 
             iToolTipTimer = new Timer();
             iToolTipTimer.Interval = TIMER_DELAY;
-            iToolTipTimer.Tick += new EventHandler(iToolTipTimer_Tick);
+            iToolTipTimer.Tick += new EventHandler(ToolTipTimerTick);
 
-            iPanel.MouseHover   += new EventHandler(iPanel_MouseHover);
-            iPanel.MouseMove    += new System.Windows.Forms.MouseEventHandler(iPanel_MouseMove);
-            iPanel.MouseLeave   += new EventHandler(iPanel_MouseLeave);
+            iPanel.MouseMove    += new System.Windows.Forms.MouseEventHandler(MouseMove);
+            iPanel.MouseLeave   += new EventHandler(MouseLeave);
         }
 
         /// <summary>
@@ -170,9 +170,8 @@ namespace GMS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void iPanel_MouseLeave(object sender, EventArgs e)
+        void MouseLeave(object sender, EventArgs e)
         {
-            iToolTip.Hide();
             iToolTipTimer.Stop();
         }
 
@@ -181,22 +180,21 @@ namespace GMS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void iToolTipTimer_Tick(object sender, EventArgs e)
+        void ToolTipTimerTick(object sender, EventArgs e)
         {
+            iToolTipTimer.Stop();
             iToolTip.Hide();
             object label = OnHoverRectangle(iMouseLocation);
-            //iToolTip.Text = "I'm over the (" + iMouseLocation.X + ", " + iMouseLocation.Y + ") position";
             iToolTip.Text = (string)label;
 
             /************************************************************************/
-            /* XXX: HACK :P                                                        */
+            /* XXX: HACK :P - BAR                                                   */
             /************************************************************************/
             Point mousePos = iMouseLocation;
             mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
-            mousePos.Y += 46;
+            mousePos.Y += 21;
 
             iToolTip.Show(mousePos);
-            iToolTipTimer.Stop();
         }
 
         /// <summary>
@@ -204,35 +202,39 @@ namespace GMS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void iPanel_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        void MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             iToolTipTimer.Stop();
 
             // XXX: The ToolTip Show() method is invalidating the form which
-            // causes the MouseMove event to be called repeatedly
-            if (iMouseLocation != e.Location)
+            // causes the MouseMove event to be called repeatedly.
+            // The > 1 condition avoids the tooltip being stuck
+            // when the mouse leaves the panel
+            if (iMouseLocation != e.Location && e.Location.X > 1)
             {
+                iToolTip.Hide();
                 iToolTipTimer.Start();
             }
             
             iMouseLocation = e.Location;
         }
 
-        void iPanel_MouseHover(object sender, EventArgs e)
-        {
-            //iToolTip.Hide();
-            //iToolTip.Text = "I'm over the (" + iMouseLocation.X + ", " + iMouseLocation.Y + ") position";
-            //iToolTip.Show(iMouseLocation);
-            //Console.WriteLine("I'm over the TreeMap");
-        }
-
-        void iPanel_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             DrawTree();
         }
 
-
-        void iPanel_SizeChanged(object sender, EventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void SizeChanged(object sender, EventArgs e)
         {
             UpdateData();
             UpdateScale();
@@ -253,6 +255,24 @@ namespace GMS
                 this.iColorMap = value;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IDataCubeProvider<float> Input
+        {
+            get
+            {
+                return this.iInput;
+            }
+            set
+            {
+                this.iInput = value;
+                //this._input.Changed += new EventHandler(this._input_Changed);
+            }
+        }
+ 
+
  
         private object OnHoverRectangle(Point location)
         {
