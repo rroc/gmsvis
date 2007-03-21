@@ -269,27 +269,27 @@ namespace GMS
         }
 
 
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    SortStyles
-        // FullName:  GMS.GMSDocument.SortStyles
-        // Access:    public 
-        // Returns:   void
-        //////////////////////////////////////////////////////////////////////////
-        public void SortStyles()
-        {
-            ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
-            sortedStyles.Sort(new StyleRelevanceComparer());
+        ////////////////////////////////////////////////////////////////////////////
+        //// Method:    SortStyles
+        //// FullName:  GMS.GMSDocument.SortStyles
+        //// Access:    public 
+        //// Returns:   void
+        ////////////////////////////////////////////////////////////////////////////
+        //public void SortStyles()
+        //{
+        //    ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
+        //    sortedStyles.Sort(new StyleRelevanceComparer());
 
-            int i = 0;
-            foreach (Style style in sortedStyles)
-	        {
-                Console.WriteLine(i + ": " + style.name + ": " + style.releases.Count);
-                if( ++i > 29)
-                {
-                    break;
-                }
-	        }
-        }
+        //    int i = 0;
+        //    foreach (Style style in sortedStyles)
+        //    {
+        //        Console.WriteLine(i + ": " + style.name + ": " + style.releases.Count);
+        //        if( ++i > 29)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
 
         //////////////////////////////////////////////////////////////////////////
         // Method:    SortArtists
@@ -311,6 +311,92 @@ namespace GMS
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates the TreeMap for the countries grouped per Style
+        /// </summary>
+        /// <param name="aRectangle"></param>
+        /// <param name="db"></param>
+        public object[, ,] BuildStylesAreasTree(out int aQuantitativeDataIndex,
+            out int aOrdinalDataIndex, out int aIdIndex)
+        {
+            List<List<object>> dataRows = new List<List<object>>();
+
+            ArrayList filter = new ArrayList(iFilteredCountryNames.Values);
+
+            // Sort the styles so we can have only the N most popular ones
+            ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
+            sortedStyles.Sort(new StyleComparer());
+
+            int styleLimiter = 20;
+            foreach (Style style in sortedStyles)
+            {
+                if (styleLimiter == 0)
+                {
+                    break;
+                }
+
+                Hashtable countries = new Hashtable();
+
+                // count all the occurrences in the countries
+                foreach (MusicBrainzRelease release in style.releases)
+                {
+                    //according to the filter used on pcplot
+                    if (filter.Contains(release.country.name))
+                    {
+                        if (countries.ContainsKey(release.country.name))
+                        {
+                            int oldvalue = (int)countries[release.country.name];
+                            countries[release.country.name] = oldvalue + 1;
+                        }
+                        else
+                        {
+                            countries.Add(release.country.name, 1);
+                        }
+                    }
+                }
+
+                // Sort the releases
+                ArrayList sortedReleases = new ArrayList(countries);
+                sortedReleases.Sort(new DictionaryValueComparer());
+
+                foreach (DictionaryEntry entry in sortedReleases)
+                {
+                    string country = (string)entry.Key;
+                    int releasesCount = (int)countries[country];
+                    List<object> styleRow = new List<object>();
+                   
+                    styleRow.Add(country);                  // Col 0: Box Labels
+                    styleRow.Add(style.name);               // Col 1: Group Labels
+                    styleRow.Add(releasesCount);            // Col 2: Area values
+                    styleRow.Add(filter.IndexOf(country));  // Col 3: Id
+
+                    dataRows.Add(styleRow);                 
+                }
+                styleLimiter--;
+            }
+
+            // the column order
+            aQuantitativeDataIndex  = 2; // Area values
+            aOrdinalDataIndex       = 1; // Group Labels
+            aIdIndex                = 3; // Id
+
+            // Create and Fill the DataCube
+            object[,,] dataCube = new object[dataRows.Count, 4, 1];
+
+            int i = 0;
+            foreach (List<object> row in dataRows)
+            {
+                int j = 0;
+                foreach (object attribute in row)
+                {
+                    dataCube[i, j++, 0] = attribute;
+                }
+                ++i;
+            }
+
+            return dataCube;
         }
 
         /// <summary>
@@ -340,17 +426,17 @@ namespace GMS
         }
     };
 
-    class StyleRelevanceComparer : IComparer
-    {
-        // Comparator class for music styles
-        int IComparer.Compare(object x, object y)
-        {
-            Style s1 = (Style)x;
-            Style s2 = (Style)y;
+    //class StyleRelevanceComparer : IComparer
+    //{
+    //    // Comparator class for music styles
+    //    int IComparer.Compare(object x, object y)
+    //    {
+    //        Style s1 = (Style)x;
+    //        Style s2 = (Style)y;
 
-            return s2.releases.Count - s1.releases.Count;
-        }
-    };
+    //        return s2.releases.Count - s1.releases.Count;
+    //    }
+    //};
 
     class ArtistRelevanceComparer : IComparer
     {
@@ -361,6 +447,31 @@ namespace GMS
             Artist s2 = (Artist)y;
 
             return s2.albums.Count - s1.albums.Count;
+        }
+    };
+
+    class StyleComparer : IComparer
+    {
+        // Comparator class for countries
+        int IComparer.Compare(object x, object y)
+        {
+            Style c1 = (Style)x;
+            Style c2 = (Style)y;
+
+            return c2.releases.Count.CompareTo(c1.releases.Count);
+        }
+    };
+
+    class DictionaryValueComparer : IComparer
+    {
+        // Comparator class for hashtable entries
+        // with integer as its value
+        int IComparer.Compare(object x, object y)
+        {
+            DictionaryEntry c1 = (DictionaryEntry)x;
+            DictionaryEntry c2 = (DictionaryEntry)y;
+
+            return (int)((int)c2.Value - (int)c1.Value);
         }
     };
 
