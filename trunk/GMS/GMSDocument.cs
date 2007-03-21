@@ -109,7 +109,7 @@ namespace GMS
                 //NOTE: numOfElements
                 iFilteredData[0, counter] = counter;
                 iFilteredData[1, counter] = country.medianAge;
-                iFilteredData[2, counter] = country.releases.Count;
+                iFilteredData[2, counter] = (Math.Log(country.releases.Count, 2) > 0)? Math.Log(country.releases.Count, 2):0;
                 iFilteredData[3, counter] = country.unemploymentRate;
                 iFilteredData[4, counter] = country.gdbPerCapita;
                 

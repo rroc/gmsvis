@@ -30,7 +30,8 @@ namespace GMS
         {
             string dir = Directory.GetCurrentDirectory();
             string iDataPath = "\\..\\..\\..\\data\\";
-            string iDBFileName = "dbEurope.bin";
+            //string iDBFileName = "dbEurope.bin";
+            string iDBFileName = "db.bin";
 
             renderer = new Renderer(this);
             doc = new GMSDocument();
