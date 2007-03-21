@@ -9,6 +9,8 @@ using System.Windows.Forms;
 
 using Gav.Data;
 using Gav.Graphics;
+using System.Collections;
+using MusicDataminer;
 
 namespace GMS
 {
@@ -30,8 +32,7 @@ namespace GMS
         {
             string dir = Directory.GetCurrentDirectory();
             string iDataPath = "\\..\\..\\..\\data\\";
-            //string iDBFileName = "dbEurope.bin";
-            string iDBFileName = "db.bin";
+            string iDBFileName = "dbEurope.bin";
 
             renderer = new Renderer(this);
             doc = new GMSDocument();
@@ -57,7 +58,13 @@ namespace GMS
 
 
             // Initialize Tree Map
-            iTreeMap = new TreeMap(  doc.GetDatabase(), doc.GetFilteredCountryNames(), mainSplitContainer.Panel2 );
+            iTreeMap = new TreeMap(mainSplitContainer.Panel2);
+
+            int quantitativeDataIndex, ordinalDataIndex, idIndex;
+            object[, ,] data = doc.BuildStylesAreasTree(out quantitativeDataIndex, 
+                out ordinalDataIndex, out idIndex);
+            iTreeMap.SetData(data, quantitativeDataIndex, ordinalDataIndex, idIndex);
+            
             iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
             pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
