@@ -21,8 +21,8 @@ HU	Hungary
 IE	Ireland
 IS	Iceland
 IT	Italy
-LI	Liechtenstein
 LT	Lithuania
+LI	Liechtenstein
 LV	Latvia
 LU	Luxembourg
 MD	Moldova
