@@ -60,10 +60,19 @@ namespace GMS
             // Initialize Tree Map
             iTreeMap = new TreeMap(mainSplitContainer.Panel2);
 
-            int quantitativeDataIndex, ordinalDataIndex, idIndex;
-            object[, ,] data = doc.BuildStylesAreasTree(out quantitativeDataIndex, 
-                out ordinalDataIndex, out idIndex);
-            iTreeMap.SetData(data, quantitativeDataIndex, ordinalDataIndex, idIndex);
+            int quantitativeDataIndex, ordinalDataIndex, idIndex, leafNodeIndex;
+            List<GMSToolTipComponent> toolTipComponents = new List<GMSToolTipComponent>();
+
+            // Build the TreeMap Data << Countries releases per Styles >>
+            object[, ,] data = doc.BuildStylesAreasTree(out quantitativeDataIndex,
+                out ordinalDataIndex, out idIndex, out leafNodeIndex, toolTipComponents);
+
+            //// Build the TreeMap Data << UnemploymentRates per Styles >>
+            //object[, ,] data = doc.BuildStylesUnemploymentRateAreaTree(out quantitativeDataIndex,
+            //    out ordinalDataIndex, out idIndex, out leafNodeIndex, toolTipComponents);
+
+            iTreeMap.SetData(data, quantitativeDataIndex, ordinalDataIndex, idIndex, 
+                leafNodeIndex, toolTipComponents);
             
             iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
@@ -81,6 +90,7 @@ namespace GMS
             string clusters = (string)combo.SelectedItem;
             pcCountries.ToggleFilter(clusters);
             mainSplitContainer.Panel2.Invalidate();
+            PCMapSplitContainer.Panel1.Invalidate();
         }
     }
 }
