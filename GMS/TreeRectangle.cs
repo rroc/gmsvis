@@ -267,7 +267,7 @@ namespace GMS
 
             SizeF size = aGraphics.MeasureString(iLabel, font);
             fillRectangle.Width = size.Width;
-            fillRectangle.Height *= 1.2F;
+            fillRectangle.Height *= 1.4F;
 
             aGraphics.FillRectangle(borderPen, fillRectangle);
             aGraphics.DrawString(iLabel, font, brush, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y - (fontsize / 3.0F));

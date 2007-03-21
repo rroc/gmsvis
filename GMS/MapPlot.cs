@@ -37,6 +37,7 @@ namespace GMS
         private GMSDocument iDoc;
 
         //TOOLTIP STUFF
+        private const int TIMER_DELAY = 200;
         private const int TOOLTIP_FADE_DELAY = 500;
         private GavToolTip iToolTip;
 
@@ -67,7 +68,7 @@ namespace GMS
             iToolTip.Show(new Point(0,0));
             iToolTip.Hide();
 
-            iMouseHoverControl = new MouseHoverController(iPanel, 5, 1000);
+            iMouseHoverControl = new MouseHoverController(iPanel, 5, TIMER_DELAY);
             iMouseHoverControl.Hover += new EventHandler(iMouseHoverControl_Hover);
             iMouseHoverControl.HoverEnd += new EventHandler(iMouseHoverControl_HoverEnd);
 
