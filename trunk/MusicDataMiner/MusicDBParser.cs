@@ -461,7 +461,7 @@ namespace MusicDataminer
         // Returns:   string
         // Parameter: string input
         //////////////////////////////////////////////////////////////////////////
-        private string ClearString(string input)
+        private static string ClearString(string input)
         {
             input = input.Replace(" and ", "");
             Regex regex = new Regex("[^a-z0-9€]");
@@ -593,6 +593,87 @@ namespace MusicDataminer
 
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Read a filter file of format: acronym\tcountry name\n
+        /// </summary>
+        /// <param name="filename">name of the filter file</param>
+        /// <returns>list of acronyms</returns>
+        private static List<string> ParseCountryFilter(string filename)
+        {
+            List<string> countryFilter = new List<string>();
+
+            // Open the file and read it back.
+            StreamReader sr = File.OpenText(filename);
+            string text = "";
+            countryFilter.Clear();
+
+            while ((text = sr.ReadLine()) != null)
+            {
+                char[] delimiterChars = { '\t' };
+                string[] words = text.Split(delimiterChars);
+
+                // Acronym, Country Name
+                if (2 == words.Length)
+                {
+                    countryFilter.Add(words[0].ToUpperInvariant());
+                }
+            }
+            return countryFilter;
+        }
+
+        public static bool FilterDB(string srcDBFilename,
+            string outputFilename)
+        {
+            DB destination;
+
+            string iGeoDataPath = "./geodata/";
+
+            List<string> countryFilter = ParseCountryFilter(iGeoDataPath + "countries_acronyms_europe.txt");
+
+            bool loaded = MusicDBLoader.LoadDB(srcDBFilename, out destination);
+            
+            if (loaded)
+            {
+                
+                //foreach (Album album in destination.albums.Values)
+                ArrayList albums = new ArrayList(destination.albums.Values);
+                for (int i = 0; i < albums.Count; i++ )
+                {
+                    Album album = (Album)albums[i];
+
+                    for (int j = 0; j < album.releases.Count; j++)
+                    {
+                        MusicBrainzRelease release = album.releases[j];
+
+                        if (! countryFilter.Contains(release.country.acronym))
+                        {
+                            album.releases.RemoveAt(j--);
+                        }
+                    }
+
+                    // if it became an empty album
+                    if (album.releases.Count == 0)
+                    {
+                        string key = album.artist.name + "€" + album.title;
+                        key = key.ToLowerInvariant();
+
+                        key = ClearString(key);
+                        destination.albums.Remove(key);
+
+                        if (album.artist.albums.Count == 1)
+                        {
+                            key = ClearString(album.artist.name.ToLowerInvariant());
+                            destination.artists.Remove(key);
+                        }
+                    }
+                }
+
+                return true;
             }
 
             return false;

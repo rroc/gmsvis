@@ -7,6 +7,7 @@ using Microsoft.DirectX;
 
 using System.Windows.Forms;
 using Gav.Data;
+using GMS;
 
 namespace Gav.Graphics
 {
@@ -43,6 +44,7 @@ namespace Gav.Graphics
     /// </summary>
     class TextLensSubComponent : VizSubComponent
     {
+        #region Private Attributes
         /// <summary>
         /// 
         /// </summary>
@@ -108,10 +110,10 @@ namespace Gav.Graphics
         /// </summary>
         private List<Label> labels;
 
-        private static float minTextSize        = 1.0f;
-        private static float maxTextSize        = 8.0f;
-        private static float minLensTextSize    = 12.0f;
-        private static float maxLensTextSize    = 14.0f;
+        private static float minTextSize = 1.0f;
+        private static float maxTextSize = 8.0f;
+        private static float minLensTextSize = 12.0f;
+        private static float maxLensTextSize = 14.0f;
 
         // Text Hovering variables
         private int labelBottom;
@@ -124,7 +126,7 @@ namespace Gav.Graphics
         // Bools used in InternalRender()
         bool inited = false;
         bool sizeUpdated = false;
-        
+
         /// <summary>
         /// The maximum width of all labels
         /// </summary>
@@ -134,7 +136,11 @@ namespace Gav.Graphics
         private bool mouseOverText;
         private MouseButtons lastButtonPressed;
 
-        public TextLensSubComponent(ParallelCoordinatesPlot aPlot, Panel aPanel)
+        GMSDocument iDoc;
+
+        #endregion
+
+        public TextLensSubComponent(ParallelCoordinatesPlot aPlot, Panel aPanel, GMSDocument aDoc)
         {
             plot = aPlot;
             panel = aPanel;
@@ -149,6 +155,14 @@ namespace Gav.Graphics
             visibleTextColor    = System.Drawing.Color.Black;
 
             lastButtonPressed = MouseButtons.None;
+
+            iDoc = aDoc;
+            iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+        }
+
+        void DocumentPicked(object sender, IndexesPickedEventArgs e)
+        {
+            SelectionChanged(e.PickedIndexes);
         }
 
         /// <summary>
@@ -399,18 +413,14 @@ namespace Gav.Graphics
                 OnSizeUpdate(device);
             }
 
-            // if one label has already been selected don't allow any other
-            bool labelSelected = false;
+            bool labelMagnified = false;
 
             List<int> selection = new List<int>();
             foreach (Label label in labels)
             {
                 // NOTE: just decreasing 30% of the width because of the text overlaps
-                if (mouseOverText && 
-                    //(mouseY < label.defaultPosition.Y + (int)((float)defaultTextHeight * 0.7f)) &&
-                    (mouseY < label.defaultPosition.Y + defaultTextHeight) &&
-                    (mouseY > label.defaultPosition.Y) &&
-                    ! labelSelected)
+                if (mouseOverText && (mouseY < label.defaultPosition.Y + defaultTextHeight) &&
+                            (mouseY > label.defaultPosition.Y) && ! labelMagnified)
                 {
                     System.Drawing.Point p = new System.Drawing.Point(label.defaultPosition.X, label.defaultPosition.Y);
                     p.Y -= (lensTextHeight - defaultTextHeight) / 2;
@@ -418,26 +428,12 @@ namespace Gav.Graphics
                     d3dLensFont.DrawText(null, label.text, p,
                         System.Drawing.Color.Red);
 
-                    // add the selected text to the plot list of selected lines
-                    if (this.lastButtonPressed == MouseButtons.Left)
-                    {
-                        selection.Add(label.id);
-                        label.selected = true;
-                    }
-
-                    labelSelected = true;
+                    labelMagnified = true;
                 }
                 else
                 {
                     d3dFont.DrawText(null, label.text, label.defaultPosition, label.colorARGB);
                 }
-            }
-
-            // if the label was selected/picked
-            if (selection.Count != 0)
-            {
-                plot.SetSelectedLines(selection, true, true);
-                SelectionChanged(plot.GetSelectedLineIndexes());
             }
         }
 
@@ -539,7 +535,42 @@ namespace Gav.Graphics
             {
                 mouseX = e.X;
                 mouseY = e.Y;
-                plot.Invalidate();
+
+                if (mouseOverText)
+                {
+
+                    List<int> selection = new List<int>();
+                    foreach (Label label in labels)
+                    {
+                        // NOTE: just decreasing 30% of the width because of the text overlaps
+                        if (mouseOverText &&
+                            (mouseY < label.defaultPosition.Y + defaultTextHeight) &&
+                            (mouseY > label.defaultPosition.Y))
+                        {
+                            // add the selected text to the plot list of selected lines
+                            if (this.lastButtonPressed == MouseButtons.Left)
+                            {
+                                selection.Add(label.id);
+                                label.selected = true;
+                            }
+
+                            break;
+                        }
+                    }
+
+                    // if the label was selected/picked
+                    if (selection.Count != 0)
+                    {
+                        // if CTRL is pressed, add the line to the selection
+                        Keys keys = Control.ModifierKeys;
+                        bool add = (keys == Keys.Control);
+
+                        iDoc.SetSelectedItems(selection, add, true);
+                    }
+
+                    return true;
+                }
+                
                 // NOTE: NOT returning because parent (PC plot) must handle the selection as well 
             }
             

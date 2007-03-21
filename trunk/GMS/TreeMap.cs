@@ -191,10 +191,11 @@ namespace GMS
             /* XXX: HACK :P - BAR                                                   */
             /************************************************************************/
             Point mousePos = iMouseLocation;
-            mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
-            mousePos.Y += 21;
-
-            iToolTip.Show(mousePos);
+            //mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
+            //mousePos.Y += 21;
+            
+            iToolTip.FadeEnable = false;
+            iToolTip.Show(iPanel.PointToScreen(mousePos));
         }
 
         /// <summary>

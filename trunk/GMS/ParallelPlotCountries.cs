@@ -32,10 +32,12 @@ namespace GMS
         // Lookup table to get country names
         Hashtable iCountryNames;
 
+        GMSDocument iDoc;
+
         #endregion // Private Attributes
 
         public ParallelPlotCountries(DataCube aDataCube, Hashtable aCountryNames, Panel aDestinationPanel,
-            Renderer aRenderer, ColorMap aColorMap)
+            Renderer aRenderer, ColorMap aColorMap, GMSDocument aDoc)
         {
             iDataCube = aDataCube;
             iCountryNames = aCountryNames;
@@ -45,9 +47,23 @@ namespace GMS
 //            iCountryNames = new Hashtable();
             renderer = aRenderer;
             headers = new List<string>();
+            iDoc = aDoc;
 
             InitKMeans(aDataCube);
             SetupView();
+
+            iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DocumentPicked(object sender, IndexesPickedEventArgs e)
+        {
+            pcPlot.SetSelectedLines(e.PickedIndexes, false, false);
+            pcPlot.Invalidate();
         }
 
         /// <summary>
@@ -178,13 +194,12 @@ namespace GMS
             
             // Padding: so the names of the countries don't be cut
             pcPlot.PaddingLeft += 60;
-            pcPlot.PaddingTop += 20;
             pcPlot.PickSensitivity = 3;
 
             pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
             pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
-            textLens = new TextLensSubComponent(pcPlot, panel);
+            textLens = new TextLensSubComponent(pcPlot, panel, iDoc);
             pcPlot.AddSubComponent(textLens);
 
             int countriesCount = iCountryNames.Count;
@@ -214,18 +229,20 @@ namespace GMS
         /// <param name="e"></param>
         void pcPlot_Picked(object sender, IndexesPickedEventArgs e)
         {
-            ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
+            //ParallelCoordinatesPlot plot = (ParallelCoordinatesPlot)sender;
             List<int> selectedLines = e.PickedIndexes;
 
             // if CTRL is pressed, add the line to the selection
             Keys keys = Control.ModifierKeys;
             bool add = (keys == Keys.Control);
 
-            pcPlot.SetSelectedLines(selectedLines, add, true);
+            //pcPlot.SetSelectedLines(selectedLines, add, true);
 
-            List<int> overallSelection = pcPlot.GetSelectedLineIndexes();
+            iDoc.SetSelectedItems(selectedLines, add, true);
 
-            textLens.SelectionChanged(overallSelection);
+            //List<int> overallSelection = pcPlot.GetSelectedLineIndexes();
+
+            //textLens.SelectionChanged(overallSelection);
         }
     }
 }

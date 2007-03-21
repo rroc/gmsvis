@@ -159,21 +159,22 @@ namespace MusicDataminer
 
             if (openFileDialog1.ShowDialog() != DialogResult.Cancel)
             {
-                string[] filenames = openFileDialog1.FileNames;
-                if (filenames.Length > 1 && saveFileDialog1.ShowDialog() != DialogResult.Cancel)
-                {
-                    saveFileDialog1.Filter = "Database Files|*.bin";
-                    string outputFilename = saveFileDialog1.FileName;
-                    bool done = MusicDBParser.SynchronizeDBs(filenames[0], filenames[1], outputFilename);
-                    if( done )
-                    {
-                        MessageBox.Show("Databases merged succesfully (I hope :P)");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Something went wrong :S !!!");
-                    }
-                }
+                MusicDBParser.FilterDB(openFileDialog1.FileName, "temp");
+                //string[] filenames = openFileDialog1.FileNames;
+                //if (filenames.Length > 1 && saveFileDialog1.ShowDialog() != DialogResult.Cancel)
+                //{
+                //    saveFileDialog1.Filter = "Database Files|*.bin";
+                //    string outputFilename = saveFileDialog1.FileName;
+                //    bool done = MusicDBParser.SynchronizeDBs(filenames[0], filenames[1], outputFilename);
+                //    if( done )
+                //    {
+                //        MessageBox.Show("Databases merged succesfully (I hope :P)");
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("Something went wrong :S !!!");
+                //    }
+                //}
             }
         }
     }
