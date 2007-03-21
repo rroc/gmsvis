@@ -12,6 +12,8 @@ using MusicDataminer;
 using Gav.Graphics;
 using Gav.Data;
 
+using Microsoft.DirectX;
+
 namespace GMS
 {
     class MapPlot
@@ -30,14 +32,31 @@ namespace GMS
         private ChoroplethMap choroMap;
         private ParallelCoordinatesPlot iPcPlot;
 
-        public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, ColorMap aColorMap, ParallelCoordinatesPlot aPcPlot)
+        private GMSDocument iDoc;
+
+        public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, 
+            ColorMap aColorMap, ParallelCoordinatesPlot aPcPlot, GMSDocument aDoc)
         {
             iDataCube = aDataCube;
             panel = aDestinationPanel;
             renderer = aRenderer;
             iColorMap = aColorMap;
             iPcPlot = aPcPlot;
+            iDoc = aDoc;
             SetupMapLayers();
+
+            iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DocumentPicked(object sender, IndexesPickedEventArgs e)
+        {
+            polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
+            choroMap.Invalidate();
         }
 
         private void SetupMapLayers()
@@ -66,6 +85,7 @@ namespace GMS
 
             // Glyph Layer
             glyphLayer = new CountryGlyphLayer();
+
             glyphLayer.ActiveGlyphPositioner = new CenterGlyphPositioner();
             glyphLayer.ActiveGlyphPositioner.MapData = iMapData;
             glyphLayer.Input = iDataCube;
@@ -74,6 +94,8 @@ namespace GMS
             //// Choropleth Map
             choroMap = new ChoroplethMap();
 
+            choroMap.VizComponentMouseDown += new EventHandler<VizComponentMouseEventArgs>(MouseDown);
+
             // Add layers on the proper order
             choroMap.AddLayer(polygonLayer);
             choroMap.AddLayer(borderLayer);
@@ -81,6 +103,32 @@ namespace GMS
             choroMap.Invalidate();
 
             renderer.Add(choroMap, panel);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MouseDown(object sender, VizComponentMouseEventArgs e) 
+        {
+            Vector2 v = choroMap.ConvertScreenCoordinatesToMapCoordinates(e.MouseEventArgs.Location);
+            int index = iMapData.GetRegionId(v);
+
+            List<int> selectedItems = new List<int>();
+            
+            if (index != -1)
+            {
+                selectedItems.Add(index);
+            }
+            
+            // if CTRL is pressed, add the line to the selection
+            Keys keys = Control.ModifierKeys;
+            bool add = (keys == Keys.Control);
+
+            iDoc.SetSelectedItems(selectedItems, add, true);
+            //polygonLayer.SetSelectedPolygonIndexes(iDoc.GetSelectedItems());
+            //choroMap.Invalidate();
         }
 
         void iPcPlot_FilterChanged(object sender, EventArgs e)

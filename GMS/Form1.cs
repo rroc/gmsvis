@@ -40,9 +40,10 @@ namespace GMS
 
             pcCountries = new ParallelPlotCountries(  doc.GetFilteredDataCube()
                                                     , doc.GetFilteredCountryNames()
-                                                    , PCMapSplitContainer.Panel2
+                                                    , panel1
                                                     , renderer
                                                     , doc.iFilteredColorMap
+                                                    , doc
                                                     );
 
             mapPlot = new MapPlot(doc.GetFilteredDataCube()
@@ -50,6 +51,7 @@ namespace GMS
                                       , renderer
                                       , doc.iFilteredColorMap
                                       , pcCountries.pcPlot
+                                      , doc
                                       );
 
 

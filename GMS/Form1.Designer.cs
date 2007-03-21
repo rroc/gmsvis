@@ -30,10 +30,11 @@ namespace GMS
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PCMapSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
@@ -48,9 +49,15 @@ namespace GMS
             this.toolStripComboBox1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(497, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(520, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(48, 22);
+            this.toolStripLabel1.Text = "K-Means";
             // 
             // toolStripComboBox1
             // 
@@ -69,12 +76,6 @@ namespace GMS
             this.toolStripComboBox1.Text = "None";
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
             // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(48, 22);
-            this.toolStripLabel1.Text = "K-Means";
-            // 
             // mainSplitContainer
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -84,8 +85,8 @@ namespace GMS
             // mainSplitContainer.Panel1
             // 
             this.mainSplitContainer.Panel1.Controls.Add(this.PCMapSplitContainer);
-            this.mainSplitContainer.Size = new System.Drawing.Size(709, 395);
-            this.mainSplitContainer.SplitterDistance = 497;
+            this.mainSplitContainer.Size = new System.Drawing.Size(743, 359);
+            this.mainSplitContainer.SplitterDistance = 520;
             this.mainSplitContainer.TabIndex = 2;
             // 
             // PCMapSplitContainer
@@ -97,16 +98,27 @@ namespace GMS
             // 
             // PCMapSplitContainer.Panel2
             // 
+            this.PCMapSplitContainer.Panel2.Controls.Add(this.panel1);
             this.PCMapSplitContainer.Panel2.Controls.Add(this.toolStrip1);
-            this.PCMapSplitContainer.Size = new System.Drawing.Size(497, 395);
-            this.PCMapSplitContainer.SplitterDistance = 261;
+            this.PCMapSplitContainer.Size = new System.Drawing.Size(520, 359);
+            this.PCMapSplitContainer.SplitterDistance = 201;
             this.PCMapSplitContainer.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Location = new System.Drawing.Point(3, 28);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(514, 126);
+            this.panel1.TabIndex = 2;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(709, 395);
+            this.ClientSize = new System.Drawing.Size(743, 359);
             this.Controls.Add(this.mainSplitContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
@@ -131,6 +143,7 @@ namespace GMS
         private System.Windows.Forms.SplitContainer mainSplitContainer;
         private System.Windows.Forms.SplitContainer PCMapSplitContainer;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

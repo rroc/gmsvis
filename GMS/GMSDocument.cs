@@ -11,6 +11,7 @@ using MusicDataminer;
 
 using Gav.Graphics;
 using Gav.Data;
+using System.Runtime.CompilerServices;
 
 namespace GMS
 {
@@ -37,11 +38,20 @@ namespace GMS
         private Hashtable   iSortedCountryNames;
         public  ColorMap    iSortedColorMap;
 
+        // Selection List
+        private Hashtable   iSelectedIndexes;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler<IndexesPickedEventArgs> Picked;
+
         /// <summary>
         /// Constructor
         /// </summary>
         public GMSDocument()
         {
+            iSelectedIndexes = new Hashtable();
         }
 
         //GETTERS:
@@ -172,9 +182,61 @@ namespace GMS
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selectedLinesIndexes"></param>
+        /// <param name="add"></param>
+        /// <param name="removeIfSelected"></param>
+        public void SetSelectedItems(List<int> aSelectedIndices, bool aAdd, bool aRemoveIfSelected)
+        {
+            // removing or adding an empty set
+            if ( ! aAdd || (aSelectedIndices.Count == 0))
+            {
+                iSelectedIndexes.Clear();
+            }
 
+            if (aRemoveIfSelected)
+            {
+                foreach (int index in aSelectedIndices)
+                {
+                    if (iSelectedIndexes.ContainsKey(index))
+                    {
+                    	iSelectedIndexes.Remove(index);
+                    }
+                    else
+                    {
+                        iSelectedIndexes.Add(index, index);
+                    }
+                }
+            }
+            else
+            {
+                foreach (int index in aSelectedIndices)
+                {
+                    iSelectedIndexes.Add(index, index);
+                }
+            }
 
+            // ****
+            OnPicked(GetSelectedItems());
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetSelectedItems()
+        {
+            List<int> items = new List<int>();
+
+            foreach (int index in iSelectedIndexes.Values)
+            {
+                items.Add(index);
+            }
+
+            return items;
+        }
 
         /// <summary>
         /// Read a filter file of format: acronym\tcountry name\n
@@ -249,25 +311,17 @@ namespace GMS
             }
         }
 
-      
-        //void pcPlot_LinePicked(object sender, EventArgs e)
-        //{
-        //    List<int> selectedLines =((ParallelCoordinatesPlot)sender).GetSelectedLineIndexes();
-        //    Font font = new Font("Verdana", 10);
-        //    Color color = Color.DarkKhaki;
-        //    int countriesCount = countries.Count;
-
-        //    foreach (int countryId in selectedLines)
-        //    {
-        //        string country = (string)countries[(uint)countryId];
-        //        float verticalPosition = countryId / countriesCount;
-                
-        //        pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
-        //        color, font, verticalPosition);
-        //    }
-
-        //}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="indexes"></param>
+        private void OnPicked(List<int> indexes)
+        {
+            if (this.Picked != null)
+            {
+                this.Picked(this, new IndexesPickedEventArgs(indexes));
+            }
+        }
 
     }
     //HELPER CLASSES:
