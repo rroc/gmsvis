@@ -40,118 +40,18 @@ namespace GMS
 
         private const int TOOLTIP_FADE_DELAY = 500;
 
-        private IDataCubeProvider<float> iInput;
-
-        /************************************************************************/
-        /*                                                                      */
-        /************************************************************************/
-
-        class StyleComparer : IComparer
-        {
-            // Comparator class for countries
-            int IComparer.Compare(object x, object y)
-            {
-                Style c1 = (Style)x;
-                Style c2 = (Style)y;
-
-                return c2.releases.Count.CompareTo(c1.releases.Count);
-            }
-        };
-
-        class DictionaryValueComparer : IComparer
-        {
-            // Comparator class for hashtable entries
-            // with integer as its value
-            int IComparer.Compare(object x, object y)
-            {
-                DictionaryEntry c1 = (DictionaryEntry)x;
-                DictionaryEntry c2 = (DictionaryEntry)y;
-
-                return (int)((int)c2.Value - (int)c1.Value);
-            }
-        };
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aRectangle"></param>
-        /// <param name="db"></param>
-        public void BuildStylesAreasTree(TreeRectangle aRectangle, DB db, Hashtable aFilter)
-        {
-            ArrayList filter = new ArrayList(aFilter.Values);
-            // Sort the styles so we can have only the N most popular ones
-            ArrayList sortedStyles = new ArrayList(db.styles.Values);
-            sortedStyles.Sort(new StyleComparer());
-
-            int styleLimiter = 20;
-            foreach (Style style in sortedStyles)
-            {
-                if (styleLimiter == 0)
-                {
-                    break;
-                }
-
-                Hashtable countries = new Hashtable();
-
-                // count all the occurrences in the countries
-                foreach (MusicBrainzRelease release in style.releases)
-                {
-                    //according to the filter used on pcplot
-                    if (filter.Contains(release.country.name) )
-                    {
-                        if (countries.ContainsKey(release.country.name))
-                        {
-                            int oldvalue = (int)countries[release.country.name];
-                            countries[release.country.name] = oldvalue + 1;
-                        }
-                        else
-                        {
-                            countries.Add(release.country.name, 1);
-                        }
-                    }
-                }
-
-                /************************************************************************/
-                /* QUICK FIX !!!                                                        */
-                /************************************************************************/
-                ArrayList sortedReleases = new ArrayList(countries);
-                sortedReleases.Sort(new DictionaryValueComparer());
-
-                TreeRectangle styleRectangle = new TreeRectangle(0.0F);
-                
-                //Style name
-                styleRectangle.Label = style.name;
-                
-                foreach (DictionaryEntry entry in sortedReleases)
-                {
-                    string country = (string)entry.Key;
-                    int releasesCount = (int)countries[country];
-                    TreeRectangle rect = new TreeRectangle((float)releasesCount);
-                    rect.Label = country;
-                    rect.id = filter.IndexOf(country);
-                    styleRectangle.AddRectangle(rect);
-                }
-
-                aRectangle.AddRectangle(styleRectangle);
-                styleLimiter--;
-            }
-        }
-
-        /************************************************************************/
-        /*                                                                      */
-        /************************************************************************/
+        private object[,,] iInput;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public TreeMap(DB aDatabase, Hashtable aFilter, System.Windows.Forms.Panel aPanel ) //int aPanelWidth, int aPanelHeight)
+        public TreeMap(System.Windows.Forms.Panel aPanel)
         {
             iPanel = aPanel;
             iPanel.SizeChanged += new EventHandler(SizeChanged);
             iPanel.Paint += new System.Windows.Forms.PaintEventHandler(Paint);
             iToolTip = new GavToolTip(iPanel);
-            SetData( aDatabase, aFilter );
-            BuildTreeMap();
+            
             iToolTip.FadeEnable = true;
             iToolTip.FadeTime = TOOLTIP_FADE_DELAY;
             iToolTip.Show(iMouseLocation);
@@ -260,21 +160,53 @@ namespace GMS
         /// <summary>
         /// 
         /// </summary>
-        public IDataCubeProvider<float> Input
+        /// <param name="aDataCube"></param>
+        /// <param name="aQuantitativeDataIndex"></param>
+        /// <param name="aOrdinalDataIndex"></param>
+        /// <param name="aIdIndex"></param>
+        private void InitTreeMapFromDataCube(object[, ,] aDataCube, int aQuantitativeDataIndex,
+            int aOrdinalDataIndex, int aIdIndex)
         {
-            get
+            iRootRectangle = new TreeRectangle(0.0F);
+
+            string currentGroup = (string)aDataCube[0, aOrdinalDataIndex, 0];
+            TreeRectangle currentNode = new TreeRectangle(0.0F);
+            currentNode.Label = currentGroup;
+
+            // iterate through the rows
+            for (int i = 0; i < aDataCube.GetLength(0); i++)
             {
-                return this.iInput;
+                // if changing to a different group
+                if (currentGroup != (string)aDataCube[i, aOrdinalDataIndex, 0])
+                {
+                    iRootRectangle.AddRectangle(currentNode);
+                    currentNode = new TreeRectangle(0.0F);
+                    currentGroup = (string)aDataCube[i, aOrdinalDataIndex, 0];
+                    currentNode.Label = currentGroup;
+                }
+
+                float area = Convert.ToSingle(aDataCube[i, aQuantitativeDataIndex, 0]);
+                TreeRectangle childRectangle = new TreeRectangle(area);
+                childRectangle.id = Convert.ToInt32(aDataCube[i, aIdIndex, 0]);
+                
+                /************************************************************************/
+                /* HARDCODED VALUE                                                      */
+                /************************************************************************/
+                childRectangle.Label = (string)aDataCube[i, 0, 0];
+
+                currentNode.AddRectangle(childRectangle);
             }
-            set
-            {
-                this.iInput = value;
-                //this._input.Changed += new EventHandler(this._input_Changed);
-            }
+
+            iRootRectangle.AddRectangle(currentNode);
+
+            // 
         }
  
-
- 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         private object OnHoverRectangle(Point location)
         {
             TreeRectangle rectangle = iRootRectangle.LocationInsideRectangle(location);
@@ -293,11 +225,13 @@ namespace GMS
         /// </summary>
         /// <param name="aPanelWidth"></param>
         /// <param name="aPanelHeight"></param>
-        public void SetData(DB aDatabase, Hashtable aFilter)
+        public void SetData(object[, ,] aDataCube, int aQuantitativeDataIndex,
+            int aOrdinalDataIndex, int aIdIndex)
         {
-            iRootRectangle = new TreeRectangle(0.0f);
-            BuildStylesAreasTree(iRootRectangle, aDatabase, aFilter);
-
+            //iRootRectangle = new TreeRectangle(0.0f);
+            //BuildStylesAreasTree(iRootRectangle, aDatabase, aFilter);
+            InitTreeMapFromDataCube(aDataCube, aQuantitativeDataIndex, 
+                aOrdinalDataIndex, aIdIndex);
 
             //Calculate data size according to the sreen
             float sum = iRootRectangle.GetArea();
@@ -306,6 +240,8 @@ namespace GMS
             float width = height * ratio;
 
             iRootRectangle.SetSize(0, 0, width, height);
+
+            BuildTreeMap();
         }
 
         /// <summary>
@@ -368,6 +304,11 @@ namespace GMS
         /// </summary>
         public void DrawTree()
         {
+            if (iRootRectangle == null)
+            {
+                return;
+            }
+
             Graphics g = iPanel.CreateGraphics();
             iRootRectangle.Draw(g, iColorMap);
             g.Dispose();
