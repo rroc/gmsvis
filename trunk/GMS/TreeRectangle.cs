@@ -40,7 +40,7 @@ namespace GMS
 
         //DATA:
         private float iArea;
-        private object iData;
+        private string iData;
         private string iLabel;
 
         /************************************************************************/
@@ -109,9 +109,17 @@ namespace GMS
             
         }
 
-        public void SetData(object aData)
+        public string Data
         {
-            iData = aData;
+            get
+            {
+                return iData;
+            }
+            set
+            {
+                iData = value;
+            }
+
         }
 
         /// <summary>
@@ -232,30 +240,38 @@ namespace GMS
                 SolidBrush borderPen = new SolidBrush(Color.Red);
                 Pen pen = new Pen(borderPen, iBorder);
                 pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                
+                // Draw the The Group Rectangle (as a border)
                 aGraphics.DrawRectangle(pen, borderRectangle);
 
-                /************************************************************************/
-                /*                                                                      */
-                /************************************************************************/
-                fillRectangle.Height = iScale.Y * 1.5F;
-
-                SolidBrush brush = new SolidBrush(Color.White);
-                float fontsize = fillRectangle.Height;
-                fontsize = (fontsize <= 1.0F) ? 1.0F : fontsize;
-                System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Italic);
-                
-                SizeF size = aGraphics.MeasureString(iLabel, font);
-                fillRectangle.Width = size.Width;
-                fillRectangle.Height *= 1.2F;
-
-                aGraphics.FillRectangle(borderPen, fillRectangle);
-                aGraphics.DrawString(iLabel, font, brush, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y - (fontsize / 3.0F));
-
-
-                /************************************************************************/
-                /*                                                                      */
-                /************************************************************************/
+                // Draw the Group Label
+                DrawGroupLabel(fillRectangle, aGraphics, borderPen);
             }
+        }
+
+        /// <summary>
+        /// Draws the Label as Group Label
+        /// </summary>
+        /// <param name="fillRectangle"></param>
+        /// <param name="aGraphics"></param>
+        /// <param name="borderPen"></param>
+        private void DrawGroupLabel(System.Drawing.RectangleF fillRectangle,
+            Graphics aGraphics, SolidBrush borderPen)
+        {
+            fillRectangle.Height = iScale.Y * 1.5F;
+
+            SolidBrush brush = new SolidBrush(Color.White);
+            float fontsize = fillRectangle.Height;
+            fontsize = (fontsize <= 1.0F) ? 1.0F : fontsize;
+            System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Italic);
+
+            SizeF size = aGraphics.MeasureString(iLabel, font);
+            fillRectangle.Width = size.Width;
+            fillRectangle.Height *= 1.2F;
+
+            aGraphics.FillRectangle(borderPen, fillRectangle);
+            aGraphics.DrawString(iLabel, font, brush, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y - (fontsize / 3.0F));
+
         }
 
         /// <summary>
