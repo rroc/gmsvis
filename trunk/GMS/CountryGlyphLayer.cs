@@ -26,6 +26,9 @@ namespace GMS
         private System.Drawing.Font iSystemFont;
         private Microsoft.DirectX.Direct3D.Font iD3dFont;
 
+
+        private List<AxisMap> _axisMaps;
+
         public IDataCubeProvider<float> Input
         {
             get { return _input; }
@@ -52,7 +55,7 @@ namespace GMS
             string dir = Directory.GetCurrentDirectory();
             string dataPath = "\\..\\..\\..\\data\\glyphs\\";
 
-            iTexture = TextureLoader.FromFile(_device, dir+dataPath+"money.jpg");
+            iTexture = TextureLoader.FromFile(_device, dir+dataPath+"coin.png");
 
             float scale = 10;
             iGlyphMoney = new CustomVertex.PositionTextured[6];
@@ -84,7 +87,7 @@ namespace GMS
             iGlyphMoney[5].Tv = 0;
         }
 
-        private void DrawGlyph(float aValue, string aType)
+        private void DrawGlyph(int aItem )
         {
             _device.RenderState.Lighting = false;
             _device.VertexFormat = CustomVertex.PositionTextured.Format;
@@ -96,51 +99,29 @@ namespace GMS
             _device.RenderState.AlphaBlendEnable = true;
 
             //Save states
-            Material oldMaterial = _device.Material;
             Matrix oldTransform = _device.Transform.World;
-
-            //Setup backdrop
-            Material _material = new Material();
-            Color backcolor = Color.FromArgb(0, 0, 100); //colorMap.GetColor(i * 25);
-
-            //Country Name
-            //Vector2 vec = this.ActiveGlyphPositioner.GetPosition(2);
-            //System.Console.WriteLine("VEC: " + vec.X +"," + vec.Y );
-            //Point position = new Point((int)(_device.Transform.World.M41), (int)(_device.Transform.World.M42));
-            //System.Console.WriteLine("VEC: " + position.X + "," + position.Y);
-//            System.Console.WriteLine("VEC: " + _device.Transform.World.M41 + _device.Transform.World.M42 );
-            //iD3dFont.DrawText(null, "Hello", position, Color.Black);
 
             //Money
             //-----
-            int maxValue = 7;
+            int maxValue = 9;
             int lowColor = 20; //0-255
             int colDiff = ((255 - lowColor) / maxValue);
             _device.SetTexture(0, iTexture);
 
-            for (int i = 0; i < maxValue; i++)
+            float count = _axisMaps[4].MappedValues[aItem];
+            //Console.WriteLine("V:"+count);
+
+            int maxMoney = 1+(int)(maxValue * count);
+
+            for (int i = 0; i < maxMoney; i++)
             {
                 //Translate
-                _device.Transform.World *= Matrix.Translation(0.3F, 0.8F, 0);
-
-                //1. Draw Background
-                _device.RenderState.Lighting = true;
-                _device.TextureState[0].AlphaOperation = TextureOperation.Disable;
-
-                _material.Emissive = backcolor;
-                _material.Diffuse = backcolor;
-                _device.Material = _material;
-                _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iGlyphMoney);
-
-                //2. Draw texture with blending
+                _device.Transform.World *= Matrix.Translation(0.0F, 3.0F, 0);
                 _device.RenderState.Lighting = false;
-                _device.TextureState[0].AlphaOperation = TextureOperation.Modulate;
-                _device.RenderState.TextureFactor = Color.FromArgb(colDiff * i + lowColor, 255, 255, 255).ToArgb();
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iGlyphMoney);
             }
 
             //Restore Previous values
-            _device.Material = oldMaterial;
             _device.Transform.World = oldTransform;
 
             //restore texture changes
@@ -148,6 +129,21 @@ namespace GMS
             _device.SetTexture(0, null);
             _device.RenderState.AlphaBlendEnable = false;
             _device.TextureState[0].AlphaOperation = TextureOperation.Disable;
+        }
+
+        // Creates one axismap per column in the data set. 
+        private void CreateAxisMaps()
+        {
+            _axisMaps = new List<AxisMap>();
+
+            for (int i = 0; i < _input.GetData().GetAxisLength(Axis.X); i++)
+            {
+                AxisMap axisMap = new AxisMap();
+                axisMap.Input = _input;
+                axisMap.Index = i;
+                axisMap.DoMapping();
+                _axisMaps.Add(axisMap);
+            }
         }
 
         // This method is called every time the map is rendered. 
@@ -193,7 +189,7 @@ namespace GMS
 
                 if (IndexVisibilityHandler.GetVisibility(i))
                 {
-                    DrawGlyph(0.4F, "empty");
+                    DrawGlyph(i);
                 }
             }
         }
@@ -207,7 +203,7 @@ namespace GMS
                 return;
             }
             InitMapGlyphs();
-
+            CreateAxisMaps();
             _inited = true;
         }
 
