@@ -22,7 +22,7 @@ namespace GMS
         private MapData iMapData;
         private ColorMap iColorMap;
 
-        private Panel panel;
+        private Panel iPanel;
         private Renderer renderer;
 
         // Layers
@@ -32,21 +32,71 @@ namespace GMS
         private ChoroplethMap choroMap;
         private ParallelCoordinatesPlot iPcPlot;
 
+        private List<string> iCountryNames;
+
         private GMSDocument iDoc;
+
+        //TOOLTIP STUFF
+        private const int TOOLTIP_FADE_DELAY = 500;
+        private GavToolTip iToolTip;
+
+        private MouseHoverController iMouseHoverControl;
 
         public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, 
             ColorMap aColorMap, ParallelCoordinatesPlot aPcPlot, GMSDocument aDoc)
         {
             iDataCube = aDataCube;
-            panel = aDestinationPanel;
+            iPanel = aDestinationPanel;
             renderer = aRenderer;
             iColorMap = aColorMap;
             iPcPlot = aPcPlot;
             iDoc = aDoc;
             SetupMapLayers();
 
+            //Get country names
+            iCountryNames = new List<string>();
+            ArrayList list = new ArrayList( iDoc.GetFilteredCountryNames().Values );
+            foreach( string name in list)
+            {
+                iCountryNames.Insert( 0, name );
+            }
+
+            iToolTip = new GavToolTip(iPanel);
+            iToolTip.FadeEnable = true;
+            iToolTip.FadeTime = TOOLTIP_FADE_DELAY;
+            iToolTip.Show(new Point(0,0));
+            iToolTip.Hide();
+
+            iMouseHoverControl = new MouseHoverController(iPanel, 5, 1000);
+            iMouseHoverControl.Hover += new EventHandler(iMouseHoverControl_Hover);
+            iMouseHoverControl.HoverEnd += new EventHandler(iMouseHoverControl_HoverEnd);
+
             iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
         }
+
+        void iMouseHoverControl_HoverEnd(object sender, EventArgs e)
+        {
+            iToolTip.Hide();
+        }
+
+        void iMouseHoverControl_Hover(object sender, EventArgs e)
+        {
+            Vector2 v = choroMap.ConvertScreenCoordinatesToMapCoordinates(iMouseHoverControl.HoverPosition);
+            int index = iMapData.GetRegionId(v);
+            
+            if(index != -1)
+            {
+            iToolTip.Hide();
+            iToolTip.Text = iCountryNames[ index ]
+                + "\nAge: " + iDataCube.Data[1, index, 0]
+                + "\nGNP(per capita): " + iDataCube.Data[4, index, 0] + "$"
+                + "\nUnemployment Rate: " + iDataCube.Data[3, index, 0] + "%"
+                ;
+            iToolTip.Show( iMouseHoverControl.HoverPosition );
+            }
+        }
+
+
 
         /// <summary>
         /// 
@@ -95,6 +145,8 @@ namespace GMS
             choroMap = new ChoroplethMap();
 
             choroMap.VizComponentMouseDown += new EventHandler<VizComponentMouseEventArgs>(MouseDown);
+            
+            
 
             // Add layers on the proper order
             choroMap.AddLayer(polygonLayer);
@@ -102,7 +154,7 @@ namespace GMS
             choroMap.AddLayer(glyphLayer);
             choroMap.Invalidate();
 
-            renderer.Add(choroMap, panel);
+            renderer.Add(choroMap, iPanel);
         }
 
         /// <summary>
