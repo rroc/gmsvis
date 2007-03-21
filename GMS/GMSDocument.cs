@@ -87,6 +87,8 @@ namespace GMS
 
         /// <summary>
         /// Create a Datacube accoring to the Filter provided as input (filename).
+        /// NOTE: The data will be sorted according to the way it is described
+        /// in the Europe Map
         /// </summary>
         /// <param name="aFilterFileName">filter filename</param>
         public void SetupFilteredData( string aFilterFileName )
@@ -218,7 +220,7 @@ namespace GMS
                 }
             }
 
-            // ****
+            // Generate the event
             OnPicked(GetSelectedItems());
         }
 
