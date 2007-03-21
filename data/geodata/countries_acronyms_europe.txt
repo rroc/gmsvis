@@ -23,8 +23,8 @@ IS	Iceland
 IT	Italy
 LI	Liechtenstein
 LT	Lithuania
-LU	Luxembourg
 LV	Latvia
+LU	Luxembourg
 MD	Moldova
 MK	Macedonia
 MT	Malta
