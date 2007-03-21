@@ -165,7 +165,8 @@ namespace GMS
         /// <param name="aOrdinalDataIndex"></param>
         /// <param name="aIdIndex"></param>
         private void InitTreeMapFromDataCube(object[, ,] aDataCube, int aQuantitativeDataIndex,
-            int aOrdinalDataIndex, int aIdIndex)
+            int aOrdinalDataIndex, int aIdIndex, int aLeafNodeLabelIndex, 
+            List<GMSToolTipComponent> aToolTipComponents)
         {
             iRootRectangle = new TreeRectangle(0.0F);
 
@@ -186,20 +187,43 @@ namespace GMS
                 }
 
                 float area = Convert.ToSingle(aDataCube[i, aQuantitativeDataIndex, 0]);
-                TreeRectangle childRectangle = new TreeRectangle(area);
-                childRectangle.id = Convert.ToInt32(aDataCube[i, aIdIndex, 0]);
-                
-                /************************************************************************/
-                /* HARDCODED VALUE                                                      */
-                /************************************************************************/
-                childRectangle.Label = (string)aDataCube[i, 0, 0];
 
-                currentNode.AddRectangle(childRectangle);
+                // only add the node if the area is bigger than one
+                if (area > 1.0F)
+                {
+                    TreeRectangle childRectangle = new TreeRectangle(area);
+                    childRectangle.id = Convert.ToInt32(aDataCube[i, aIdIndex, 0]);
+
+                    // Tooltip Data and Label
+                    BuildToolTipData(childRectangle, aDataCube, aToolTipComponents, i);
+                    childRectangle.Label = (string)aDataCube[i, aLeafNodeLabelIndex, 0];
+
+                    currentNode.AddRectangle(childRectangle);
+                }
             }
 
             iRootRectangle.AddRectangle(currentNode);
+        }
 
-            // 
+        /// <summary>
+        /// Creates the Tooltip Data
+        /// </summary>
+        /// <param name="aRectangle"></param>
+        /// <param name="aDataCube"></param>
+        /// <param name="aToolTipComponents"></param>
+        private void BuildToolTipData(TreeRectangle aRectangle, object[, ,] aDataCube,
+            List<GMSToolTipComponent> aToolTipComponents, int aRow)
+        {
+            string toolTip = "";
+            foreach (GMSToolTipComponent toolTipComponent in aToolTipComponents)
+            {
+                toolTip += toolTipComponent.iPrefix + ": "
+                    + aDataCube[aRow, toolTipComponent.iColumnIndex, 0]
+                    + " " + toolTipComponent.iSuffix
+                    + "\n";
+            }
+
+            aRectangle.Data = toolTip;
         }
  
         /// <summary>
@@ -213,7 +237,7 @@ namespace GMS
             
             if (rectangle != null)
             {
-                return rectangle.Label;
+                return rectangle.Data;
             }
 
             return null;
@@ -226,12 +250,11 @@ namespace GMS
         /// <param name="aPanelWidth"></param>
         /// <param name="aPanelHeight"></param>
         public void SetData(object[, ,] aDataCube, int aQuantitativeDataIndex,
-            int aOrdinalDataIndex, int aIdIndex)
+            int aOrdinalDataIndex, int aIdIndex, int aLeafNodeLabelIndex, 
+            List<GMSToolTipComponent> aToolTipComponents)
         {
-            //iRootRectangle = new TreeRectangle(0.0f);
-            //BuildStylesAreasTree(iRootRectangle, aDatabase, aFilter);
-            InitTreeMapFromDataCube(aDataCube, aQuantitativeDataIndex, 
-                aOrdinalDataIndex, aIdIndex);
+            InitTreeMapFromDataCube(aDataCube, aQuantitativeDataIndex,
+                aOrdinalDataIndex, aIdIndex, aLeafNodeLabelIndex, aToolTipComponents);
 
             //Calculate data size according to the sreen
             float sum = iRootRectangle.GetArea();
@@ -437,6 +460,28 @@ namespace GMS
             //UpdateData();
             //UpdateScale();
             //iPanel.Invalidate();
+        }
+    }
+
+
+    // HELPER CLASSES
+    public class GMSToolTipComponent
+    {
+        public string iPrefix;
+        public int iColumnIndex;
+        public string iSuffix;
+
+        public GMSToolTipComponent(string aPrefix, int aColumnIndex, string aSuffix)
+        {
+            iPrefix         = aPrefix;
+            iColumnIndex    = aColumnIndex;
+            iSuffix         = aSuffix;
+        }
+
+        public GMSToolTipComponent(string aPrefix, int aColumnIndex)
+            : this(aPrefix, aColumnIndex, "")
+        {
+
         }
     }
 }
