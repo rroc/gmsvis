@@ -663,10 +663,13 @@ namespace MusicDataminer
 
                         key = ClearString(key);
                         destination.albums.Remove(key);
+                        
+                        key = ClearString(album.artist.name.ToLowerInvariant());
+                        Artist artist = (Artist)destination.artists[key];
+                        artist.albums.Remove(album);
 
-                        if (album.artist.albums.Count == 1)
+                        if (album.artist.albums.Count == 0)
                         {
-                            key = ClearString(album.artist.name.ToLowerInvariant());
                             destination.artists.Remove(key);
                         }
                     }
