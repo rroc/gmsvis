@@ -319,7 +319,8 @@ namespace GMS
         /// <param name="aRectangle"></param>
         /// <param name="db"></param>
         public object[, ,] BuildStylesAreasTree(out int aQuantitativeDataIndex,
-            out int aOrdinalDataIndex, out int aIdIndex)
+            out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
+            List<GMSToolTipComponent> toolTipComponents)
         {
             List<List<object>> dataRows = new List<List<object>>();
 
@@ -345,14 +346,14 @@ namespace GMS
                     //according to the filter used on pcplot
                     if (filter.Contains(release.country.name))
                     {
-                        if (countries.ContainsKey(release.country.name))
+                        if (countries.ContainsKey(release.country.acronym))
                         {
-                            int oldvalue = (int)countries[release.country.name];
-                            countries[release.country.name] = oldvalue + 1;
+                            int oldvalue = (int)countries[release.country.acronym];
+                            countries[release.country.acronym] = oldvalue + 1;
                         }
                         else
                         {
-                            countries.Add(release.country.name, 1);
+                            countries.Add(release.country.acronym, 1);
                         }
                     }
                 }
@@ -363,14 +364,17 @@ namespace GMS
 
                 foreach (DictionaryEntry entry in sortedReleases)
                 {
-                    string country = (string)entry.Key;
-                    int releasesCount = (int)countries[country];
+                    Country country = (Country)iDb.countries[(string)entry.Key];
+                    string countryName = country.name;
+                    int releasesCount = (int)countries[(string)entry.Key];
+                    string governmentType = country.govType;
                     List<object> styleRow = new List<object>();
                    
-                    styleRow.Add(country);                  // Col 0: Box Labels
-                    styleRow.Add(style.name);               // Col 1: Group Labels
-                    styleRow.Add(releasesCount);            // Col 2: Area values
-                    styleRow.Add(filter.IndexOf(country));  // Col 3: Id
+                    styleRow.Add(countryName);                  // Col 0: Box Labels
+                    styleRow.Add(style.name);                   // Col 1: Group Labels
+                    styleRow.Add(releasesCount);                // Col 2: Area values
+                    styleRow.Add(filter.IndexOf(countryName));  // Col 3: Id
+                    styleRow.Add(governmentType);               // Col 4: Government Type
 
                     dataRows.Add(styleRow);                 
                 }
@@ -381,9 +385,99 @@ namespace GMS
             aQuantitativeDataIndex  = 2; // Area values
             aOrdinalDataIndex       = 1; // Group Labels
             aIdIndex                = 3; // Id
+            aLeafNodeLabelIndex     = 0; // Leaf Label
+
+            // ToolTip Components
+            toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
+            toolTipComponents.Add(new GMSToolTipComponent("# Releases", aQuantitativeDataIndex, "Albums"));
+            toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
 
             // Create and Fill the DataCube
-            object[,,] dataCube = new object[dataRows.Count, 4, 1];
+            object[,,] dataCube = new object[dataRows.Count, 5, 1];
+
+            int i = 0;
+            foreach (List<object> row in dataRows)
+            {
+                int j = 0;
+                foreach (object attribute in row)
+                {
+                    dataCube[i, j++, 0] = attribute;
+                }
+                ++i;
+            }
+
+            return dataCube;
+        }
+
+        /// <summary>
+        /// Creates the TreeMap for the countries grouped per Style
+        /// </summary>
+        /// <param name="aRectangle"></param>
+        /// <param name="db"></param>
+        public object[, ,] BuildStylesUnemploymentRateAreaTree(out int aQuantitativeDataIndex,
+            out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
+            List<GMSToolTipComponent> toolTipComponents)
+        {
+            // Temporary structure to hold the rows of the datacube
+            List<List<object>> dataRows = new List<List<object>>();
+
+            ArrayList filter = new ArrayList(iFilteredCountryNames.Values);
+
+            // Sort the styles so we can have only the N most popular ones
+            ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
+            sortedStyles.Sort(new StyleComparer());
+
+            int styleLimiter = 20;
+            foreach (Style style in sortedStyles)
+            {
+                if (styleLimiter == 0)
+                {
+                    break;
+                }
+
+                Hashtable countries = new Hashtable();
+
+                // count all the occurrences in the countries
+                foreach (MusicBrainzRelease release in style.releases)
+                {
+                    if (! countries.ContainsKey(release.country.name) )
+                    {
+                        countries.Add(release.country.name, release.country);
+                    }
+                }
+
+                // Sort the releases
+                ArrayList sortedReleases = new ArrayList(countries.Values);
+                sortedReleases.Sort(new CountryUnemploymentComparer());
+
+                foreach (Country country in sortedReleases)
+                {
+                    List<object> styleRow = new List<object>();
+
+                    styleRow.Add(country.name);                 // Col 0: Box Labels
+                    styleRow.Add(style.name);                   // Col 1: Group Labels
+                    styleRow.Add(country.unemploymentRate);     // Col 2: Area values
+                    styleRow.Add(filter.IndexOf(country.name)); // Col 3: Id
+                    styleRow.Add(country.govType);              // Col 4: Government Type
+
+                    dataRows.Add(styleRow);
+                }
+                styleLimiter--;
+            }
+
+            // the column order
+            aQuantitativeDataIndex  = 2; // Area values
+            aOrdinalDataIndex       = 1; // Group Labels
+            aIdIndex                = 3; // Id
+            aLeafNodeLabelIndex     = 0; // Leaf Label
+
+            // ToolTip Components
+            toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
+            toolTipComponents.Add(new GMSToolTipComponent("Unemployment Rate", aQuantitativeDataIndex, "%"));
+            toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
+
+            // Create and Fill the DataCube
+            object[, ,] dataCube = new object[dataRows.Count, 5, 1];
 
             int i = 0;
             foreach (List<object> row in dataRows)
@@ -426,6 +520,19 @@ namespace GMS
         }
     };
 
+    class CountryUnemploymentComparer : IComparer
+    {
+        // Comparator class for countries
+        int IComparer.Compare(object x, object y)
+        {
+            Country c1 = (Country)x;
+            Country c2 = (Country)y;
+
+            // descendent order
+            return c2.unemploymentRate.CompareTo(c1.unemploymentRate);
+        }
+    };
+
     //class StyleRelevanceComparer : IComparer
     //{
     //    // Comparator class for music styles
@@ -458,6 +565,7 @@ namespace GMS
             Style c1 = (Style)x;
             Style c2 = (Style)y;
 
+            // descendent order
             return c2.releases.Count.CompareTo(c1.releases.Count);
         }
     };
@@ -471,7 +579,7 @@ namespace GMS
             DictionaryEntry c1 = (DictionaryEntry)x;
             DictionaryEntry c2 = (DictionaryEntry)y;
 
-            return (int)((int)c2.Value - (int)c1.Value);
+            return Convert.ToInt32(Convert.ToSingle(c2.Value) - Convert.ToSingle(c1.Value));
         }
     };
 
