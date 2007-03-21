@@ -640,7 +640,6 @@ namespace MusicDataminer
             if (loaded)
             {
                 
-                //foreach (Album album in destination.albums.Values)
                 ArrayList albums = new ArrayList(destination.albums.Values);
                 for (int i = 0; i < albums.Count; i++ )
                 {
@@ -672,6 +671,43 @@ namespace MusicDataminer
                         }
                     }
                 }
+
+                // filter releases in styles
+                foreach (Style style in destination.styles.Values)
+                {
+                    for (int k = 0; k < style.releases.Count; k++)
+                    {
+                        if (!countryFilter.Contains(style.releases[k].country.acronym))
+                        {
+                            style.releases.RemoveAt(k--);
+                        }
+                    }
+                }
+
+                // filter countries
+                ArrayList countries = new ArrayList(destination.countries.Values);
+                foreach (Country country in countries)
+                {
+                    if (!countryFilter.Contains(country.acronym))
+                    {
+                        destination.countries.Remove(country.acronym);
+                    }
+                }
+
+                // filter styles
+                ArrayList styles = new ArrayList(destination.styles.Keys);
+                for (int k = 0; k < styles.Count; k++ )
+                {
+                    object key = styles[k];
+                    Style style = (Style)destination.styles[key];
+                    
+                    if (style.releases.Count == 0)
+                    {
+                        destination.styles.Remove(key);
+                    }
+                }
+
+                MusicDBLoader.SaveDB(outputFilename, destination);
 
                 return true;
             }
