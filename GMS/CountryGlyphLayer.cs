@@ -15,7 +15,7 @@ namespace GMS
     public class CountryGlyphLayer : MapGlyphLayer
     {
         // Glyphs
-        private Texture iTexture;
+        private Texture[] iTexture;
         private Material iMaterial;
         private CustomVertex.PositionTextured[] iGlyphMoney;
 
@@ -55,7 +55,9 @@ namespace GMS
             string dir = Directory.GetCurrentDirectory();
             string dataPath = "\\..\\..\\..\\data\\glyphs\\";
 
-            iTexture = TextureLoader.FromFile(_device, dir+dataPath+"coin.png");
+            iTexture = new Texture[2];
+            iTexture[0] = TextureLoader.FromFile(_device, dir+dataPath+"coin.png");
+            iTexture[1] = TextureLoader.FromFile(_device, dir + dataPath + "cd.png");
 
             float scale = 10;
             iGlyphMoney = new CustomVertex.PositionTextured[6];
@@ -100,26 +102,53 @@ namespace GMS
 
             //Save states
             Matrix oldTransform = _device.Transform.World;
+            _device.RenderState.Lighting = false;
+            int maxValue;
+            float count;
+            int maxAmount;
 
-            //Money
+            //MUSIC RELEASES
             //-----
-            int maxValue = 9;
-            int lowColor = 20; //0-255
-            int colDiff = ((255 - lowColor) / maxValue);
-            _device.SetTexture(0, iTexture);
+            //Translate
+            _device.Transform.World = oldTransform;
+            _device.Transform.World *= Matrix.Translation(9.0F, 2.0F, 0);
 
-            float count = _axisMaps[4].MappedValues[aItem];
-            //Console.WriteLine("V:"+count);
+            maxValue = 9;
+            _device.SetTexture(0, iTexture[1]);
 
-            int maxMoney = 1+(int)(maxValue * count);
+            count = _axisMaps[2].MappedValues[aItem];
+            maxAmount = 1 + (int)(maxValue * count);
 
-            for (int i = 0; i < maxMoney; i++)
+            for (int i = 0; i < maxAmount; i++)
             {
                 //Translate
                 _device.Transform.World *= Matrix.Translation(0.0F, 3.0F, 0);
-                _device.RenderState.Lighting = false;
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iGlyphMoney);
             }
+
+            //Restore Previous values
+            _device.Transform.World = oldTransform;
+
+
+            //MONEY (GDP)
+            //-----
+            //Translate
+            _device.Transform.World = oldTransform;
+            _device.Transform.World *= Matrix.Translation(-9.0F, -2.0F, 0);
+
+            maxValue = 9;
+            _device.SetTexture(0, iTexture[0]);
+
+            count = _axisMaps[4].MappedValues[aItem];
+            maxAmount = 1+(int)(maxValue * count);
+
+            for (int i = 0; i < maxAmount; i++)
+            {
+                //Translate
+                _device.Transform.World *= Matrix.Translation(0.0F, 3.0F, 0);
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iGlyphMoney);
+            }
+
 
             //Restore Previous values
             _device.Transform.World = oldTransform;
