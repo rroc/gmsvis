@@ -25,6 +25,10 @@ namespace GMS
         public Form1()
         {
             InitializeComponent();
+
+            this.glyphCheckBoxes.SetItemChecked(0, true);
+            this.glyphCheckBoxes.SetItemChecked(1, true);
+            this.glyphPanel.Hide();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -38,7 +42,7 @@ namespace GMS
             doc.ReadDB(dir + iDataPath + iDBFileName);
             doc.SetupFilteredData("countries_acronyms_europe.txt");
             doc.SetupSortedData();
-
+            
             pcCountries = new ParallelPlotCountries(  doc.GetFilteredDataCube()
                                                     , doc.GetFilteredCountryNames()
                                                     , panel1
@@ -76,6 +80,8 @@ namespace GMS
             iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
             pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
+
+            this.glyphPanel.Show();
         }
 
         void pcPlot_FilterChanged(object sender, EventArgs e)
@@ -92,9 +98,9 @@ namespace GMS
             mapPlot.Invalidate();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void glyphCheckBoxes_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            mapPlot.Invalidate(); //PCMapSplitContainer.Panel1.Invalidate();
         }
     }
 }
