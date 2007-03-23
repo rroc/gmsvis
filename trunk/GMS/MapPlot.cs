@@ -73,8 +73,24 @@ namespace GMS
             iMouseHoverControl.HoverEnd += new EventHandler(iMouseHoverControl_HoverEnd);
 
             iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+            iDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DocumentColorMapChanged(object sender, EventArgs e)
+        {
+            choroMap.Invalidate();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void iMouseHoverControl_HoverEnd(object sender, EventArgs e)
         {
             iToolTip.Hide();
