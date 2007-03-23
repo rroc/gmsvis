@@ -12,6 +12,9 @@ namespace GMS
     {
         #region Private Attributes
 
+        private static float MAX_GROUP_LABEL_SIZE = 12.0F;
+        private static float MIN_GROUP_LABEL_SIZE = 1.0F;
+
         /// <summary>
         /// The remaining space when squarifying the current
         /// rectangle
@@ -51,6 +54,7 @@ namespace GMS
 
         // Drawing properties
         SolidBrush iBorderPen;
+        SolidBrush iGroupLabelPen;
         Pen iPen;
         System.Drawing.Drawing2D.LinearGradientBrush iBrush;
         System.Drawing.RectangleF iFillRectangle;
@@ -81,6 +85,7 @@ namespace GMS
             SetSize(aX1, aY1, aX2, aY2);
 
             iBorderPen      = new SolidBrush(Color.Red);
+            iGroupLabelPen  = new SolidBrush(Color.White);
             iPen            = new Pen(iBorderPen, iBorder);
             iPen.Alignment  = System.Drawing.Drawing2D.PenAlignment.Center;
         }
@@ -240,26 +245,25 @@ namespace GMS
             iChildRectangles.Add(aRectangle);
         }
 
-
         /// <summary>
         /// Draws the rectangle and its children
         /// </summary>
         /// <param name="aGraphics">the graphics container</param>
-        public void Draw(Graphics aGraphics, IColorMap aColorMap)
+        public void Draw(Graphics aGraphics, IColorMap aColorMap, List<int> aSelectedIds)
         {
             if (iHeight * iScale.Y <= 1)
             {
                 return;
             }
 
-            //this.DrawChild(aGraphics, aColorMap);
+            this.DrawChild(aGraphics, aColorMap, aSelectedIds);
 
-            foreach (TreeRectangle rectangle in iChildRectangles)
-            {
-                rectangle.DrawChild(aGraphics, aColorMap);
-            }
+            //foreach (TreeRectangle rectangle in iChildRectangles)
+            //{
+            //    rectangle.DrawChild(aGraphics, aColorMap);
+            //}
 
-            DrawLabel(aGraphics);
+            //DrawLabel(aGraphics);
         }
 
         /// <summary>
@@ -267,16 +271,16 @@ namespace GMS
         /// </summary>
         /// <param name="aGraphics"></param>
         /// <param name="aColorMap"></param>
-        private void DrawChild(Graphics aGraphics, IColorMap aColorMap)
+        private void DrawChild(Graphics aGraphics, IColorMap aColorMap, List<int> aSelectedIds)
         {
-            UpdateRectangle(aColorMap);
-
             float height = iHeight * iScale.Y;
 
             if (height <= 1)
             {
                 return;
             }
+
+            UpdateRectangle(aColorMap);
 
             //System.Drawing.RectangleF fillRectangle = new System.Drawing.RectangleF(
             //    (iLowerLeft.X * iScale.X),
@@ -293,14 +297,27 @@ namespace GMS
                 {
                     iId = 0;
                 }
-                
+
                 //System.Drawing.Drawing2D.LinearGradientBrush brush = new
                 //       System.Drawing.Drawing2D.LinearGradientBrush(
                 //       fillRectangle,
                 //       aColorMap.GetColor(id), Color.Black,
                 //       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
 
-                aGraphics.FillRectangle(iBrush, iFillRectangle);
+                if (aSelectedIds != null && aSelectedIds.Contains(iId))
+                {
+                    System.Drawing.Drawing2D.LinearGradientBrush brush = new
+                           System.Drawing.Drawing2D.LinearGradientBrush(
+                           iFillRectangle,
+                           aColorMap.GetColor(iId), Color.White,
+                           System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+
+                    aGraphics.FillRectangle(brush, iFillRectangle);
+                }
+                else
+                {
+                    aGraphics.FillRectangle(iBrush, iFillRectangle);
+                }
                 
                 DrawLabel(aGraphics);
             }
@@ -309,7 +326,7 @@ namespace GMS
                 // Call children recursively
                 foreach (TreeRectangle rectangle in iChildRectangles)
                 {
-                    rectangle.DrawChild(aGraphics, aColorMap);
+                    rectangle.DrawChild(aGraphics, aColorMap, aSelectedIds);
                 }
 
                 //System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(
@@ -336,18 +353,24 @@ namespace GMS
             Graphics aGraphics, SolidBrush borderPen)
         {
             fillRectangle.Height = iScale.Y * 1.5F;
-
-            SolidBrush brush = new SolidBrush(Color.White);
             float fontsize = fillRectangle.Height;
-            fontsize = (fontsize <= 1.0F) ? 1.0F : fontsize;
+
+            // Limit the size of the text and bounding rectangle
+            fontsize = (fontsize <= MIN_GROUP_LABEL_SIZE) ? MIN_GROUP_LABEL_SIZE : fontsize;
+            if (fillRectangle.Height > MAX_GROUP_LABEL_SIZE)
+            {
+                fontsize = MAX_GROUP_LABEL_SIZE;
+                fillRectangle.Height = MAX_GROUP_LABEL_SIZE;
+            }
+
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Italic);
 
             SizeF size = aGraphics.MeasureString(iLabel, font);
-            fillRectangle.Width = size.Width;
-            fillRectangle.Height *= 1.4F;
+            fillRectangle.Width     = size.Width;
+            fillRectangle.Height    = size.Height;
 
             aGraphics.FillRectangle(borderPen, fillRectangle);
-            aGraphics.DrawString(iLabel, font, brush, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y - (fontsize / 3.0F));
+            aGraphics.DrawString(iLabel, font, iGroupLabelPen, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y);
 
         }
 
@@ -357,12 +380,12 @@ namespace GMS
         /// <param name="aGraphics"></param>
         private void DrawLabel(Graphics aGraphics)
         {
-            SolidBrush brush = new SolidBrush(Color.White);
-            float fontsize = (float)Math.Log(iHeight) * iScale.Y;
+            float fontsize = (float)Math.Log(iHeight * iScale.Y * 0.5F, 2.0F) * 2.0F;
             fontsize = (fontsize <= 1.0F)? 1.0F : fontsize;
-            System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
             float centerY = iHeight / 2.0F;
-            aGraphics.DrawString(iLabel, font, brush, (iLowerLeft.X + (iWidth * 0.05F)) * iScale.X, (centerY + iLowerLeft.Y) * iScale.Y - fontsize);
+            
+            System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
+            aGraphics.DrawString(iLabel, font, iGroupLabelPen, (iLowerLeft.X + (iWidth * 0.05F)) * iScale.X, (centerY + iLowerLeft.Y) * iScale.Y - fontsize);
         }
 
         /// <summary>
@@ -370,7 +393,7 @@ namespace GMS
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public TreeRectangle LocationInsideRectangle(Point location)
+        public TreeRectangle LocationInsideLeafRectangle(Point location)
         {
             Vector2 lowerLeft = new Vector2(iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y);
             Vector2 upperRight = new Vector2(iUpperRight.X * iScale.X, iUpperRight.Y * iScale.Y);
@@ -386,7 +409,7 @@ namespace GMS
                 {
                     foreach (TreeRectangle child in iChildRectangles)
                     {
-                        TreeRectangle result = child.LocationInsideRectangle(location);
+                        TreeRectangle result = child.LocationInsideLeafRectangle(location);
                         
                         // if found
                         if (result != null)
@@ -395,6 +418,25 @@ namespace GMS
                         }
                     }
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the leaf Rectangle that contains the location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public TreeRectangle LocationInsideRectangle(Point location)
+        {
+            Vector2 lowerLeft = new Vector2(iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y);
+            Vector2 upperRight = new Vector2(iUpperRight.X * iScale.X, iUpperRight.Y * iScale.Y);
+
+            if (lowerLeft.X <= location.X && upperRight.X >= location.X
+                && lowerLeft.Y <= location.Y && upperRight.Y >= location.Y)
+            {
+                return this;
             }
 
             return null;
