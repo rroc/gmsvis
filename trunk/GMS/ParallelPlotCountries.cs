@@ -30,13 +30,13 @@ namespace GMS
         ColorMap iColorMap;
 
         // Lookup table to get country names
-        Hashtable iCountryNames;
+        List<string> iCountryNames;
 
         GMSDocument iDoc;
 
         #endregion // Private Attributes
 
-        public ParallelPlotCountries(DataCube aDataCube, Hashtable aCountryNames, Panel aDestinationPanel,
+        public ParallelPlotCountries(DataCube aDataCube, List<string> aCountryNames, Panel aDestinationPanel,
             Renderer aRenderer, ColorMap aColorMap, GMSDocument aDoc)
         {
             iDataCube = aDataCube;
@@ -44,7 +44,6 @@ namespace GMS
             iColorMap = aColorMap;
 
             panel = aDestinationPanel;
-//            iCountryNames = new Hashtable();
             renderer = aRenderer;
             headers = new List<string>();
             iDoc = aDoc;
@@ -232,10 +231,10 @@ namespace GMS
             int countriesCount = iCountryNames.Count;
 
             // iterate through all the countries and 
-            for (uint i = 0; i < countriesCount; i++)
+            for (int i = 0; i < countriesCount; i++)
             {
                 float verticalPosition = 1.0f - (float)i / (float)(countriesCount - 1);
-                string country = (string)iCountryNames[i];
+                string country = iCountryNames[i];
 
                 textLens.AddLabel(country, verticalPosition, (int)i);
             }
