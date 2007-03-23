@@ -10,6 +10,8 @@ namespace GMS
 {
     class TreeRectangle
     {
+        #region Private Attributes
+
         /// <summary>
         /// The remaining space when squarifying the current
         /// rectangle
@@ -43,13 +45,18 @@ namespace GMS
         private string iData;
         private string iLabel;
 
-        /************************************************************************/
-        /* TODO: REMOVE AND FIND A BETTER WAY OF DOING IT!!!!!                  */
-        /************************************************************************/
-        public int id;
+        private int iId;
 
         List<TreeRectangle> iChildRectangles;
 
+        // Drawing properties
+        SolidBrush iBorderPen;
+        Pen iPen;
+        System.Drawing.Drawing2D.LinearGradientBrush iBrush;
+        System.Drawing.RectangleF iFillRectangle;
+        System.Drawing.Rectangle iBorderRectangle; 
+
+        #endregion // Private Attributes
 
         public TreeRectangle(float aArea)
             : this( aArea, 0.0F, 0.0F, 0.0F, 0.0F)
@@ -68,23 +75,41 @@ namespace GMS
             iArea = aArea;
             iLabel = "";
             iScale = new Vector2(1, 1);
-            iBorder = 8.0f;
+            iBorder = 4.0f;
 
             iChildRectangles = new List<TreeRectangle>();
             SetSize(aX1, aY1, aX2, aY2);
+
+            iBorderPen      = new SolidBrush(Color.Red);
+            iPen            = new Pen(iBorderPen, iBorder);
+            iPen.Alignment  = System.Drawing.Drawing2D.PenAlignment.Center;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<TreeRectangle> GetChildren()
         {
             return iChildRectangles;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public float GetArea()
         {
             return iArea;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aX1"></param>
+        /// <param name="aY1"></param>
+        /// <param name="aX2"></param>
+        /// <param name="aY2"></param>
         public void SetSize(float aX1, float aY1, float aX2, float aY2)
         {
             iLowerLeft = new Vector2(aX1, aY1);
@@ -96,6 +121,9 @@ namespace GMS
             iHeight = iFreeHeight;
         }
 
+        /// <summary>
+        /// Returns the Rectangle's Label
+        /// </summary>
         public string Label
         {
             get
@@ -109,6 +137,25 @@ namespace GMS
             
         }
 
+        /// <summary>
+        /// Returns the Rectangle's id
+        /// </summary>
+        public int Id
+        {
+            get
+            {
+                return iId;
+            }
+            set
+            {
+                iId = value;
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Data
         {
             get
@@ -132,6 +179,34 @@ namespace GMS
             iFreeWidth = iUpperRight.X - iCurrentLowerLeft.X;
             iFreeHeight = iUpperRight.Y - iCurrentLowerLeft.Y;
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateRectangle(IColorMap aColorMap)
+        {
+            iFillRectangle = new System.Drawing.RectangleF(
+                (iLowerLeft.X * iScale.X),
+                (iLowerLeft.Y * iScale.Y),
+                (iWidth * iScale.X),
+                 iHeight * iScale.Y);
+
+            if (aColorMap.GetColors().GetLength(0) < iId)
+            {
+                iId = 0;
+            }
+
+            iBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                       iFillRectangle,
+                       aColorMap.GetColor(iId), Color.Black,
+                       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+
+            iBorderRectangle = new System.Drawing.Rectangle(
+                (int)Math.Ceiling(iLowerLeft.X * iScale.X),
+                (int)Math.Ceiling(iLowerLeft.Y * iScale.Y),
+                (int)Math.Ceiling(iWidth * iScale.X),
+                (int)Math.Ceiling(iHeight * iScale.Y));
         }
 
         /// <summary>
@@ -172,54 +247,60 @@ namespace GMS
         /// <param name="aGraphics">the graphics container</param>
         public void Draw(Graphics aGraphics, IColorMap aColorMap)
         {
+            if (iHeight * iScale.Y <= 1)
+            {
+                return;
+            }
+
+            //this.DrawChild(aGraphics, aColorMap);
+
             foreach (TreeRectangle rectangle in iChildRectangles)
             {
                 rectangle.DrawChild(aGraphics, aColorMap);
             }
 
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
-                (int)(iLowerLeft.X * iScale.X),
-                (int)(iLowerLeft.Y * iScale.Y),
-                (int)(iWidth * iScale.X),
-                (int)(iHeight * iScale.Y));
-
-            if (rect.Height <= 1)
-            {
-                return;
-            }
-
             DrawLabel(aGraphics);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aGraphics"></param>
+        /// <param name="aColorMap"></param>
         private void DrawChild(Graphics aGraphics, IColorMap aColorMap)
         {
-            System.Drawing.RectangleF fillRectangle = new System.Drawing.RectangleF(
-                (iLowerLeft.X * iScale.X),
-                (iLowerLeft.Y * iScale.Y),
-                (iWidth * iScale.X),
-                (iHeight * iScale.Y));
+            UpdateRectangle(aColorMap);
 
-            if (fillRectangle.Height <= 1)
+            float height = iHeight * iScale.Y;
+
+            if (height <= 1)
             {
                 return;
             }
+
+            //System.Drawing.RectangleF fillRectangle = new System.Drawing.RectangleF(
+            //    (iLowerLeft.X * iScale.X),
+            //    (iLowerLeft.Y * iScale.Y),
+            //    (iWidth * iScale.X),
+            //     height);
 
 
             // Last level: Draw Label and Fill Rectangle
             if (iChildRectangles.Count == 0)
             {
                 int amount = aColorMap.GetColors().GetLength(0);
-                if (aColorMap.GetColors().GetLength(0) < id) 
+                if (amount < iId) 
                 {
-                    id = 0;
+                    iId = 0;
                 }
-                System.Drawing.Drawing2D.LinearGradientBrush brush = new
-                       System.Drawing.Drawing2D.LinearGradientBrush(
-                       fillRectangle,
-                       aColorMap.GetColor(id), Color.Black,
-                       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
-                aGraphics.FillRectangle(brush, fillRectangle);
                 
+                //System.Drawing.Drawing2D.LinearGradientBrush brush = new
+                //       System.Drawing.Drawing2D.LinearGradientBrush(
+                //       fillRectangle,
+                //       aColorMap.GetColor(id), Color.Black,
+                //       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+
+                aGraphics.FillRectangle(iBrush, iFillRectangle);
                 
                 DrawLabel(aGraphics);
             }
@@ -231,21 +312,17 @@ namespace GMS
                     rectangle.DrawChild(aGraphics, aColorMap);
                 }
 
-                System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(
-                    (int)Math.Ceiling(iLowerLeft.X * iScale.X),
-                    (int)Math.Ceiling(iLowerLeft.Y * iScale.Y),
-                    (int)Math.Ceiling(iWidth * iScale.X),
-                    (int)Math.Ceiling(iHeight * iScale.Y));
+                //System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(
+                //    (int)Math.Ceiling(iLowerLeft.X * iScale.X),
+                //    (int)Math.Ceiling(iLowerLeft.Y * iScale.Y),
+                //    (int)Math.Ceiling(iWidth * iScale.X),
+                //    (int)Math.Ceiling(iHeight * iScale.Y));
 
-                SolidBrush borderPen = new SolidBrush(Color.Red);
-                Pen pen = new Pen(borderPen, iBorder);
-                pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-                
                 // Draw the The Group Rectangle (as a border)
-                aGraphics.DrawRectangle(pen, borderRectangle);
+                aGraphics.DrawRectangle(iPen, iBorderRectangle);
 
                 // Draw the Group Label
-                DrawGroupLabel(fillRectangle, aGraphics, borderPen);
+                DrawGroupLabel(iFillRectangle, aGraphics, iBorderPen);
             }
         }
 
