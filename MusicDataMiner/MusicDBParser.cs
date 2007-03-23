@@ -13,7 +13,7 @@ using musicbrainz;
 
 namespace MusicDataminer
 {
-    class MusicDBParser
+    public class MusicDBParser
     {
         private Form1 iForm;
         private const string iDataPath              = "../../../data/";
@@ -461,7 +461,7 @@ namespace MusicDataminer
         // Returns:   string
         // Parameter: string input
         //////////////////////////////////////////////////////////////////////////
-        private static string ClearString(string input)
+        public static string ClearString(string input)
         {
             input = input.Replace(" and ", "");
             Regex regex = new Regex("[^a-z0-9€]");
@@ -652,6 +652,7 @@ namespace MusicDataminer
                         if (! countryFilter.Contains(release.country.acronym))
                         {
                             album.releases.RemoveAt(j--);
+                            release.freeDBAlbum = null;
                         }
                     }
 
@@ -680,7 +681,10 @@ namespace MusicDataminer
                 {
                     for (int k = 0; k < style.releases.Count; k++)
                     {
-                        if (!countryFilter.Contains(style.releases[k].country.acronym))
+                        MusicBrainzRelease release = style.releases[k]; 
+                        
+                        if (release.freeDBAlbum == null ||
+                            !countryFilter.Contains(release.country.acronym))
                         {
                             style.releases.RemoveAt(k--);
                         }
@@ -694,6 +698,18 @@ namespace MusicDataminer
                     if (!countryFilter.Contains(country.acronym))
                     {
                         destination.countries.Remove(country.acronym);
+                    }
+                    else
+                    {
+                        for (int k = 0; k < country.releases.Count; k++)
+                        {
+                            MusicBrainzRelease release = country.releases[k];
+
+                            if (release.freeDBAlbum == null)
+                            {
+                                country.releases.RemoveAt(k--);
+                            }
+                        }
                     }
                 }
 
