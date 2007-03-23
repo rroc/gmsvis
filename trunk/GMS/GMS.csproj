@@ -93,6 +93,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -109,6 +110,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="iTunes.ico" />
+    <None Include="Resources\work.png" />
+    <None Include="Resources\age.png" />
+    <None Include="Resources\cd.png" />
+    <None Include="Resources\coin.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

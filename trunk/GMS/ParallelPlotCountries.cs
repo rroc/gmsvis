@@ -169,7 +169,7 @@ namespace GMS
                 pcPlot.ColorMap.Input = iDataCube;
                 kMeansClusteringOn = !kMeansClusteringOn;
                 //pcPlot.ColorMap.Index = iDataCube.Data.GetLength(0) - 1;
-                pcPlot.ColorMap.Index = 0;
+                pcPlot.ColorMap.Index = 1;
             }
             else
             {
@@ -198,6 +198,13 @@ namespace GMS
 
             pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
             pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
+
+            pcPlot.LineTransparency =200;
+            pcPlot.LineTransparencySelected = 200;
+            pcPlot.SelectedLineColor = Color.Black;
+            pcPlot.SelectedLineThickness = 3;
+            pcPlot.OutfilteredLineColor = Color.LightGray;
+            pcPlot.ShowOutFilteredLines = true;
 
             textLens = new TextLensSubComponent(pcPlot, panel, iDoc);
             pcPlot.AddSubComponent(textLens);

@@ -78,9 +78,12 @@ namespace GMS
         private ColorMap CreateColorMap()
         {
             ColorMap map = new ColorMap();
-            LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 270.0f);
-            map.AddColorMapPart(hsvMap);
-            hsvMap.Invalidate();
+            //LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 270.0f);
+            //map.AddColorMapPart(hsvMap);
+            //hsvMap.Invalidate();
+            LinearColorMapPart linearMap = new LinearColorMapPart( Color.FromArgb(0x00ffb200), Color.FromArgb( 0x001919b3) );
+            map.AddColorMapPart(linearMap);
+            linearMap.Invalidate();
             map.Invalidate();
             return map;
         }
@@ -124,7 +127,7 @@ namespace GMS
             iFilteredDataCube.SetData( iFilteredData );
 
             iFilteredColorMap.Input = iFilteredDataCube;
-            iFilteredColorMap.Index = 0;
+            iFilteredColorMap.Index = 1;
             //kMeansFilter.Input = dataCube;
         }
 
@@ -179,7 +182,7 @@ namespace GMS
             iSortedDataCube = new DataCube();
             iSortedDataCube.SetData(iSortedData);
             iSortedColorMap.Input = iSortedDataCube;
-            iSortedColorMap.Index = 0;
+            iSortedColorMap.Index = 1;
             //kMeansFilter.Input = dataCube;
         }
 

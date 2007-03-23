@@ -92,5 +92,10 @@ namespace GMS
             mainSplitContainer.Panel2.Invalidate();
             PCMapSplitContainer.Panel1.Invalidate();
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
