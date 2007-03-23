@@ -60,12 +60,7 @@ namespace GMS
             SetupMapLayers();
 
             //Get country names
-            iCountryNames = new List<string>();
-            ArrayList list = new ArrayList( iDoc.GetFilteredCountryNames().Values );
-            foreach( string name in list)
-            {
-                iCountryNames.Insert( 0, name );
-            }
+            iCountryNames = iDoc.GetFilteredCountryNames();
 
             iToolTip = new GavToolTip(iPanel);
             iToolTip.FadeEnable = true;
