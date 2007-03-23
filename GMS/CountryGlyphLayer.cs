@@ -98,7 +98,7 @@ namespace GMS
             //Save states
             Matrix oldTransform = _device.Transform.World;
 
-            CheckedListBox a = (CheckedListBox)(iPanel.Controls[0].Controls[0]);
+            CheckedListBox checkedGlyphs = (CheckedListBox)(iPanel.Controls[0].Controls[0]);
 
             int j = 0;
             for (int i = 1, iEnd = iTexture.Count + 1; i < iEnd; i++) 
@@ -107,7 +107,7 @@ namespace GMS
                 _device.Transform.World = oldTransform;
 
                 //if glypf is selected
-                if (a.CheckedIndices.Contains(i - 1))
+                if (checkedGlyphs.CheckedIndices.Contains(i - 1))
                 {
                     //Translate nicely
                     if (0 == j)
@@ -138,7 +138,7 @@ namespace GMS
 
         private void DrawGlyph(int aIndex, int aItem )
         {
-            int maxValue = 9; //(max-1)
+            int maxValue = 7; //(max-1)
             _device.SetTexture(0, iTexture[aIndex -1]);
 
             float count = _axisMaps[aIndex].MappedValues[aItem];
@@ -154,7 +154,7 @@ namespace GMS
             for (int i = 0; i < maxAmount; i++)
             {
                 //Translate
-                _device.Transform.World *= Matrix.Translation(0.0F, 3.5F, 0);
+                _device.Transform.World *= Matrix.Translation(0.0F, 4.0F, 0);
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iBasicGlyph);
             }
         }

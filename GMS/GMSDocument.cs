@@ -31,6 +31,7 @@ namespace GMS
         private object[,]       iFilteredData;
         private DataCube        iFilteredDataCube;
         private List<string>    iFilteredCountryNames;
+        List<string>            iFilteredAcronyms;
         public  ColorMap        iFilteredColorMap;
 
         private object[,]   iSortedData;
@@ -60,7 +61,10 @@ namespace GMS
         public DB GetDatabase() { return this.iDb; }
         public DataCube GetFilteredDataCube() { return this.iFilteredDataCube; }
         public DataCube GetSortedDataCube() { return this.iSortedDataCube; }
+        
         public List<string> GetFilteredCountryNames() { return this.iFilteredCountryNames; }
+        public List<string> GetFilteredAcronyms() { return this.iFilteredAcronyms; }
+
         public Hashtable GetSortedCountryNames() { return this.iSortedCountryNames; }
 
         public void ReadDB(string filename)
@@ -103,14 +107,14 @@ namespace GMS
         {
             iFilteredColorMap = CreateColorMap();
             iFilteredCountryNames = new List<string>();
-            List<string> countryFilter = ParseCountryFilter(iGeoDataPath + aFilterFileName );
+            iFilteredAcronyms = ParseCountryFilter(iGeoDataPath + aFilterFileName);
 
             int numOfElements = 5;
-            iFilteredData = new object[numOfElements, countryFilter.Count];
+            iFilteredData = new object[numOfElements, iFilteredAcronyms.Count];
 
             //Filter the countries
             uint counter = 0;
-            foreach (string filteredCountry in countryFilter)
+            foreach (string filteredCountry in iFilteredAcronyms)
             {
                 Country country = (Country)iDb.countries[filteredCountry];
 
