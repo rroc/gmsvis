@@ -25,7 +25,6 @@ namespace GMS
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -58,7 +57,7 @@ namespace GMS
 
 
             // Initialize Tree Map
-            iTreeMap = new TreeMap(mainSplitContainer.Panel2);
+            iTreeMap = new TreeMap(mainSplitContainer.Panel2, doc);
 
             int quantitativeDataIndex, ordinalDataIndex, idIndex, leafNodeIndex;
             List<GMSToolTipComponent> toolTipComponents = new List<GMSToolTipComponent>();
