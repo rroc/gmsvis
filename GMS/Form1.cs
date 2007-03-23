@@ -88,8 +88,8 @@ namespace GMS
             ToolStripComboBox combo = (ToolStripComboBox)sender;
             string clusters = (string)combo.SelectedItem;
             pcCountries.ToggleFilter(clusters);
-            mainSplitContainer.Panel2.Invalidate();
-            PCMapSplitContainer.Panel1.Invalidate();
+            iTreeMap.Invalidate();
+            mapPlot.Invalidate();
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
