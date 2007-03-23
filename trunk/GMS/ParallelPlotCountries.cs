@@ -53,6 +53,17 @@ namespace GMS
             SetupView();
 
             iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+            iDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DocumentColorMapChanged(object sender, EventArgs e)
+        {
+            pcPlot.Invalidate();
         }
 
         /// <summary>
@@ -209,6 +220,10 @@ namespace GMS
             textLens = new TextLensSubComponent(pcPlot, panel, iDoc);
             pcPlot.AddSubComponent(textLens);
 
+            pcPlot.HeaderClicked += new EventHandler(PCPlotHeaderClicked);
+
+            pcPlot.SelectedHeaderTextColor = Color.Red;
+
             int countriesCount = iCountryNames.Count;
 
             // iterate through all the countries and 
@@ -217,10 +232,18 @@ namespace GMS
                 float verticalPosition = 1.0f - (float)i / (float)(countriesCount - 1);
                 string country = (string)iCountryNames[i];
 
-                //pcPlot.AddText(country, ParallelCoordinatesPlot.TextRelativePosition.Left,
-                //color, font, verticalPosition);
                 textLens.AddLabel(country, verticalPosition, (int)i);
             }
+        }
+
+        void PCPlotHeaderClicked(object sender, EventArgs e)
+        {
+            pcPlot.SetSelectedHeader(pcPlot.ClickedHeader);
+            iColorMap.Index = pcPlot.ClickedHeader;
+            iDoc.OnColorMapChanged();
+            //iColorMap.Invalidate();
+
+            //pcPlot.Invalidate();
         }
 
         void pcPlot_FilterChanged(object sender, EventArgs e)
