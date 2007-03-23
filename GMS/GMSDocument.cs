@@ -46,6 +46,8 @@ namespace GMS
         /// </summary>
         public event EventHandler<IndexesPickedEventArgs> Picked;
 
+        public event EventHandler<EventArgs> ColorMapChanged;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -225,6 +227,20 @@ namespace GMS
 
             // Generate the event
             OnPicked(GetSelectedItems());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnColorMapChanged()
+        {
+            iSortedColorMap.Invalidate();
+            iFilteredColorMap.Invalidate();
+
+            if (this.ColorMapChanged != null)
+            {
+                this.ColorMapChanged(this, new EventArgs());
+            }
         }
 
         /// <summary>
