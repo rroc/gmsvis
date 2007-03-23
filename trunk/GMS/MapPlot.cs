@@ -151,7 +151,7 @@ namespace GMS
 
 
             // Glyph Layer
-            glyphLayer = new CountryGlyphLayer();
+            glyphLayer = new CountryGlyphLayer( iPanel );
 
             glyphLayer.ActiveGlyphPositioner = new CenterGlyphPositioner();
             glyphLayer.ActiveGlyphPositioner.MapData = iMapData;

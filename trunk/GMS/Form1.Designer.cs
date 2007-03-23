@@ -34,27 +34,24 @@ namespace GMS
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PCMapSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.glyph0 = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.glyph1picture = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.glyphPanel = new System.Windows.Forms.Panel();
+            this.glyphCheckBoxes = new System.Windows.Forms.CheckedListBox();
             this.toolStrip1.SuspendLayout();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
             this.PCMapSplitContainer.Panel1.SuspendLayout();
             this.PCMapSplitContainer.Panel2.SuspendLayout();
             this.PCMapSplitContainer.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.glyph1picture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.glyphPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -71,11 +68,9 @@ namespace GMS
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(72, 22);
-            this.toolStripLabel1.Text = "Nr. of Groups";
-            this.toolStripLabel1.ToolTipText = "Group into clusters (using K-Means Algorithm)";
             this.toolStripLabel1.Size = new System.Drawing.Size(65, 22);
             this.toolStripLabel1.Text = "K-Means";
+            this.toolStripLabel1.ToolTipText = "Group into clusters (using K-Means Algorithm)";
             // 
             // toolStripComboBox1
             // 
@@ -120,7 +115,7 @@ namespace GMS
             // 
             // PCMapSplitContainer.Panel1
             // 
-            this.PCMapSplitContainer.Panel1.Controls.Add(this.panel2);
+            this.PCMapSplitContainer.Panel1.Controls.Add(this.glyphPanel);
             // 
             // PCMapSplitContainer.Panel2
             // 
@@ -130,64 +125,6 @@ namespace GMS
             this.PCMapSplitContainer.SplitterDistance = 247;
             this.PCMapSplitContainer.SplitterWidth = 5;
             this.PCMapSplitContainer.TabIndex = 0;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(189)))), ((int)(((byte)(183)))), ((int)(((byte)(107)))));
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.pictureBox3);
-            this.panel2.Controls.Add(this.checkBox3);
-            this.panel2.Controls.Add(this.pictureBox2);
-            this.panel2.Controls.Add(this.checkBox2);
-            this.panel2.Controls.Add(this.pictureBox1);
-            this.panel2.Controls.Add(this.checkBox1);
-            this.panel2.Controls.Add(this.glyph1picture);
-            this.panel2.Controls.Add(this.glyph0);
-            this.panel2.Location = new System.Drawing.Point(12, 12);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(140, 120);
-            this.panel2.TabIndex = 0;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(4, 85);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(106, 21);
-            this.checkBox3.TabIndex = 6;
-            this.checkBox3.Text = "employment";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(4, 58);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(104, 21);
-            this.checkBox2.TabIndex = 4;
-            this.checkBox2.Text = "median age";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(4, 31);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(84, 21);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "releases";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // glyph0
-            // 
-            this.glyph0.AutoSize = true;
-            this.glyph0.Location = new System.Drawing.Point(4, 4);
-            this.glyph0.Name = "glyph0";
-            this.glyph0.Size = new System.Drawing.Size(60, 21);
-            this.glyph0.TabIndex = 0;
-            this.glyph0.Text = "GDP";
-            this.glyph0.UseVisualStyleBackColor = true;
-            this.glyph0.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // panel1
             // 
@@ -200,49 +137,80 @@ namespace GMS
             this.panel1.Size = new System.Drawing.Size(685, 155);
             this.panel1.TabIndex = 2;
             // 
-            // pictureBox3
+            // glyph1picture
             // 
-            this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.pictureBox3.Image = global::GMS.Properties.Resources.work;
-            this.pictureBox3.Location = new System.Drawing.Point(109, 85);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(26, 25);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 7;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.pictureBox2.Image = global::GMS.Properties.Resources.age;
-            this.pictureBox2.Location = new System.Drawing.Point(109, 58);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(26, 25);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 5;
-            this.pictureBox2.TabStop = false;
+            this.glyph1picture.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.glyph1picture.Image = global::GMS.Properties.Resources.coin;
+            this.glyph1picture.Location = new System.Drawing.Point(125, 67);
+            this.glyph1picture.Name = "glyph1picture";
+            this.glyph1picture.Size = new System.Drawing.Size(20, 20);
+            this.glyph1picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.glyph1picture.TabIndex = 1;
+            this.glyph1picture.TabStop = false;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.pictureBox1.Image = global::GMS.Properties.Resources.cd;
-            this.pictureBox1.Location = new System.Drawing.Point(109, 31);
+            this.pictureBox1.Location = new System.Drawing.Point(125, 24);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(26, 25);
+            this.pictureBox1.Size = new System.Drawing.Size(20, 20);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
-            // glyph1picture
+            // pictureBox2
             // 
-            this.glyph1picture.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.glyph1picture.Image = global::GMS.Properties.Resources.coin;
-            this.glyph1picture.Location = new System.Drawing.Point(109, 4);
-            this.glyph1picture.Name = "glyph1picture";
-            this.glyph1picture.Size = new System.Drawing.Size(26, 25);
-            this.glyph1picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.glyph1picture.TabIndex = 1;
-            this.glyph1picture.TabStop = false;
+            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.pictureBox2.Image = global::GMS.Properties.Resources.age;
+            this.pictureBox2.Location = new System.Drawing.Point(125, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 5;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.pictureBox3.Image = global::GMS.Properties.Resources.work;
+            this.pictureBox3.Location = new System.Drawing.Point(125, 45);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 7;
+            this.pictureBox3.TabStop = false;
+            // 
+            // glyphPanel
+            // 
+            this.glyphPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(189)))), ((int)(((byte)(183)))), ((int)(((byte)(107)))));
+            this.glyphPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.glyphPanel.Controls.Add(this.glyphCheckBoxes);
+            this.glyphPanel.Controls.Add(this.glyph1picture);
+            this.glyphPanel.Controls.Add(this.pictureBox3);
+            this.glyphPanel.Controls.Add(this.pictureBox2);
+            this.glyphPanel.Controls.Add(this.pictureBox1);
+            this.glyphPanel.Location = new System.Drawing.Point(12, 12);
+            this.glyphPanel.Name = "glyphPanel";
+            this.glyphPanel.Size = new System.Drawing.Size(150, 100);
+            this.glyphPanel.TabIndex = 0;
+            // 
+            // glyphCheckBoxes
+            // 
+            this.glyphCheckBoxes.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.glyphCheckBoxes.CheckOnClick = true;
+            this.glyphCheckBoxes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.glyphCheckBoxes.FormattingEnabled = true;
+            this.glyphCheckBoxes.Items.AddRange(new object[] {
+            "Median Age",
+            "Albums",
+            "Employment",
+            "GDP"});
+            this.glyphCheckBoxes.Location = new System.Drawing.Point(3, 3);
+            this.glyphCheckBoxes.Name = "glyphCheckBoxes";
+            this.glyphCheckBoxes.Size = new System.Drawing.Size(119, 84);
+            this.glyphCheckBoxes.TabIndex = 8;
+            this.glyphCheckBoxes.SelectedIndexChanged += new System.EventHandler(this.glyphCheckBoxes_SelectedIndexChanged);
             // 
             // Form1
             // 
@@ -264,12 +232,11 @@ namespace GMS
             this.PCMapSplitContainer.Panel2.ResumeLayout(false);
             this.PCMapSplitContainer.Panel2.PerformLayout();
             this.PCMapSplitContainer.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.glyph1picture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.glyphPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -282,15 +249,12 @@ namespace GMS
         private System.Windows.Forms.SplitContainer PCMapSplitContainer;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.CheckBox glyph0;
-        private System.Windows.Forms.PictureBox glyph1picture;
+        private System.Windows.Forms.Panel glyphPanel;
         private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.PictureBox glyph1picture;
+        private System.Windows.Forms.CheckedListBox glyphCheckBoxes;
     }
 }
 
