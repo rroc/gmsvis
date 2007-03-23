@@ -28,10 +28,10 @@ namespace GMS
         /// Contains Country names, that can be accessed with an index (key=int, value=string)
         /// </summary>
 
-        private object[,]   iFilteredData;
-        private DataCube    iFilteredDataCube;
-        private Hashtable   iFilteredCountryNames;
-        public  ColorMap    iFilteredColorMap;
+        private object[,]       iFilteredData;
+        private DataCube        iFilteredDataCube;
+        private List<string>    iFilteredCountryNames;
+        public  ColorMap        iFilteredColorMap;
 
         private object[,]   iSortedData;
         private DataCube    iSortedDataCube;
@@ -60,7 +60,7 @@ namespace GMS
         public DB GetDatabase() { return this.iDb; }
         public DataCube GetFilteredDataCube() { return this.iFilteredDataCube; }
         public DataCube GetSortedDataCube() { return this.iSortedDataCube; }
-        public Hashtable GetFilteredCountryNames() { return this.iFilteredCountryNames; }
+        public List<string> GetFilteredCountryNames() { return this.iFilteredCountryNames; }
         public Hashtable GetSortedCountryNames() { return this.iSortedCountryNames; }
 
         public void ReadDB(string filename)
@@ -102,7 +102,7 @@ namespace GMS
         public void SetupFilteredData( string aFilterFileName )
         {
             iFilteredColorMap = CreateColorMap();
-            iFilteredCountryNames = new Hashtable();
+            iFilteredCountryNames = new List<string>();
             List<string> countryFilter = ParseCountryFilter(iGeoDataPath + aFilterFileName );
 
             int numOfElements = 5;
@@ -126,7 +126,8 @@ namespace GMS
                 {
                     countryTitleCase = countryTitleCase.Substring(0, 14);
                 }
-                iFilteredCountryNames.Add(counter++, countryTitleCase);
+                iFilteredCountryNames.Add(countryTitleCase);
+                counter++;
             }
             iFilteredDataCube = new DataCube();
             iFilteredDataCube.SetData( iFilteredData );
@@ -290,49 +291,108 @@ namespace GMS
             return countryFilter;
         }
 
-
-        ////////////////////////////////////////////////////////////////////////////
-        //// Method:    SortStyles
-        //// FullName:  GMS.GMSDocument.SortStyles
-        //// Access:    public 
-        //// Returns:   void
-        ////////////////////////////////////////////////////////////////////////////
-        //public void SortStyles()
-        //{
-        //    ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
-        //    sortedStyles.Sort(new StyleRelevanceComparer());
-
-        //    int i = 0;
-        //    foreach (Style style in sortedStyles)
-        //    {
-        //        Console.WriteLine(i + ": " + style.name + ": " + style.releases.Count);
-        //        if( ++i > 29)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //}
-
-        //////////////////////////////////////////////////////////////////////////
-        // Method:    SortArtists
-        // FullName:  GMS.GMSDocument.SortArtists
-        // Access:    public 
-        // Returns:   void
-        //////////////////////////////////////////////////////////////////////////
-        public void SortArtists()
+        /// <summary>
+        /// Creates the TreeMap for the countries grouped per Style
+        /// </summary>
+        /// <param name="aRectangle"></param>
+        /// <param name="db"></param>
+        public object[, ,] BuildCountriesAreasTree(out int aQuantitativeDataIndex,
+            out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
+            List<GMSToolTipComponent> toolTipComponents)
         {
-            ArrayList sortedArtists = new ArrayList(iDb.artists.Values);
-            sortedArtists.Sort(new ArtistRelevanceComparer());
+            List<List<object>> dataRows = new List<List<object>>();
+            
+            // Sort the countries so we can have only the N most popular ones
+            ArrayList sortedCountries = new ArrayList(iDb.countries.Values);
+            sortedCountries.Sort(new CountryComparer(CountryComparer.CRITERION.RELEASES));
+
+            Hashtable styles = new Hashtable();
+
+            int countryLimiter = 20;
+            int idCounter = 0;
+            foreach (Country country in sortedCountries)
+            {
+                foreach (StyleTreeMapInfo styleInfo in styles.Values)
+                {
+                    styleInfo.iReleaseCount = 0;
+                }
+
+                // iterate the releases and increment the counter for each style
+                foreach (MusicBrainzRelease release in country.releases)
+                {
+                    string styleName = release.freeDBAlbum.style.name;
+                    if (styles.ContainsKey(styleName))
+                    {
+                        StyleTreeMapInfo info = (StyleTreeMapInfo)styles[styleName];
+                        info.iReleaseCount++;
+                    }
+                    else
+                    {
+                        StyleTreeMapInfo info = new StyleTreeMapInfo();
+                        info.iReleaseCount = 1;
+                        info.id = idCounter++;
+                        styles.Add(styleName, info);
+                    }
+                }
+
+                // Sort the styles in a decreasing way
+                ArrayList sortedStyles = new ArrayList(styles);
+                sortedStyles.Sort(new StyleTreeMapInfoComparer());
+
+                /************************************************************************/
+                /* STYLE LIMITER: TEMPORARY !!!!!!                                      */
+                /************************************************************************/
+                int styleLimiter = 30;
+                foreach (DictionaryEntry entry in sortedStyles)
+                {
+                    if (styleLimiter == 0)
+                    {
+                        break;
+                    }
+                    StyleTreeMapInfo styleInfo = (StyleTreeMapInfo)entry.Value;
+                    string styleName = (string)entry.Key;
+                    //Style style = (Style)iDb.styles[key];
+                    int releasesCount = styleInfo.iReleaseCount;
+                    string countryName = country.name;
+                    
+                    List<object> countryRow = new List<object>();
+
+                    countryRow.Add(styleName);      // Col 0: Leaf Labels
+                    countryRow.Add(countryName);    // Col 1: Group Labels
+                    countryRow.Add(releasesCount);  // Col 2: Area values
+                    countryRow.Add(styleInfo.id);   // Col 3: Id
+
+                    dataRows.Add(countryRow);
+                    styleLimiter--;
+                }
+                countryLimiter--;
+            }
+
+            // the column order
+            aQuantitativeDataIndex = 2; // Area values
+            aOrdinalDataIndex = 1;      // Group Labels
+            aIdIndex = 3;               // Id
+            aLeafNodeLabelIndex = 0;    // Leaf Label
+
+            // ToolTip Components
+            toolTipComponents.Add(new GMSToolTipComponent("Music Style", aLeafNodeLabelIndex));
+            toolTipComponents.Add(new GMSToolTipComponent("# Releases", aQuantitativeDataIndex, "albums"));
+
+            // Create and Fill the DataCube
+            object[, ,] dataCube = new object[4, dataRows.Count, 1];
 
             int i = 0;
-            foreach (Artist artist in sortedArtists)
+            foreach (List<object> row in dataRows)
             {
-                Console.WriteLine(i + ": " + artist.name + ": " + artist.albums.Count);
-                if (++i > 29)
+                int j = 0;
+                foreach (object attribute in row)
                 {
-                    break;
+                    dataCube[j++, i, 0] = attribute;
                 }
+                ++i;
             }
+
+            return dataCube;
         }
 
         /// <summary>
@@ -345,8 +405,6 @@ namespace GMS
             List<GMSToolTipComponent> toolTipComponents)
         {
             List<List<object>> dataRows = new List<List<object>>();
-
-            ArrayList filter = new ArrayList(iFilteredCountryNames.Values);
 
             // Sort the styles so we can have only the N most popular ones
             ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
@@ -366,7 +424,7 @@ namespace GMS
                 foreach (MusicBrainzRelease release in style.releases)
                 {
                     //according to the filter used on pcplot
-                    if (filter.Contains(release.country.name))
+                    if (iFilteredCountryNames.Contains(release.country.name))
                     {
                         if (countries.ContainsKey(release.country.acronym))
                         {
@@ -395,7 +453,7 @@ namespace GMS
                     styleRow.Add(countryName);                  // Col 0: Box Labels
                     styleRow.Add(style.name);                   // Col 1: Group Labels
                     styleRow.Add(releasesCount);                // Col 2: Area values
-                    styleRow.Add(filter.IndexOf(countryName));  // Col 3: Id
+                    styleRow.Add(iFilteredCountryNames.IndexOf(countryName));  // Col 3: Id
                     styleRow.Add(governmentType);               // Col 4: Government Type
 
                     dataRows.Add(styleRow);                 
@@ -411,7 +469,7 @@ namespace GMS
 
             // ToolTip Components
             toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
-            toolTipComponents.Add(new GMSToolTipComponent("# Releases", aQuantitativeDataIndex, "Albums"));
+            toolTipComponents.Add(new GMSToolTipComponent("# Releases", aQuantitativeDataIndex, "albums"));
             toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
 
             // Create and Fill the DataCube
@@ -442,8 +500,6 @@ namespace GMS
         {
             // Temporary structure to hold the rows of the datacube
             List<List<object>> dataRows = new List<List<object>>();
-
-            ArrayList filter = new ArrayList(iFilteredCountryNames.Values);
 
             // Sort the styles so we can have only the N most popular ones
             ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
@@ -479,7 +535,7 @@ namespace GMS
                     styleRow.Add(country.name);                 // Col 0: Box Labels
                     styleRow.Add(style.name);                   // Col 1: Group Labels
                     styleRow.Add(country.unemploymentRate);     // Col 2: Area values
-                    styleRow.Add(filter.IndexOf(country.name)); // Col 3: Id
+                    styleRow.Add(iFilteredCountryNames.IndexOf(country.name)); // Col 3: Id
                     styleRow.Add(country.govType);              // Col 4: Government Type
 
                     dataRows.Add(styleRow);
@@ -532,13 +588,44 @@ namespace GMS
 
     class CountryComparer : IComparer
     {
+        public enum CRITERION{NAME, RELEASES};
+
+        private CRITERION iCompareCriterion;
+
+        public CountryComparer()
+            :this(CRITERION.NAME)
+        {
+        }
+
+        public CountryComparer(CRITERION criterion)
+        {
+            iCompareCriterion = criterion;
+        }
+
+        private int CompareName(Country c1, Country c2)
+        {
+            return c1.name.CompareTo(c2.name);
+        }
+
+        private int CompareReleases(Country c1, Country c2)
+        {
+            return c2.releases.Count.CompareTo(c1.releases.Count);
+        }
+
         // Comparator class for countries
         int IComparer.Compare(object x, object y)
         {
             Country c1 = (Country)x;
             Country c2 = (Country)y;
 
-            return c1.name.CompareTo(c2.name);
+            if (iCompareCriterion == CRITERION.NAME)
+            {
+                return CompareName(c1, c2);
+            }
+            else
+            {
+                return CompareReleases(c1, c2);
+            }
         }
     };
 
@@ -555,18 +642,6 @@ namespace GMS
         }
     };
 
-    //class StyleRelevanceComparer : IComparer
-    //{
-    //    // Comparator class for music styles
-    //    int IComparer.Compare(object x, object y)
-    //    {
-    //        Style s1 = (Style)x;
-    //        Style s2 = (Style)y;
-
-    //        return s2.releases.Count - s1.releases.Count;
-    //    }
-    //};
-
     class ArtistRelevanceComparer : IComparer
     {
         // Comparator class for music styles
@@ -579,6 +654,9 @@ namespace GMS
         }
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
     class StyleComparer : IComparer
     {
         // Comparator class for countries
@@ -589,6 +667,34 @@ namespace GMS
 
             // descendent order
             return c2.releases.Count.CompareTo(c1.releases.Count);
+        }
+    };
+
+    /// <summary>
+    /// 
+    /// </summary>
+    class StyleTreeMapInfo
+    {
+        public int iReleaseCount;
+        public int id;
+    };
+
+    /// <summary>
+    /// 
+    /// </summary>
+    class StyleTreeMapInfoComparer : IComparer
+    {
+        // Comparator class for countries
+        int IComparer.Compare(object x, object y)
+        {
+            DictionaryEntry e1 = (DictionaryEntry)x;
+            DictionaryEntry e2 = (DictionaryEntry)y;
+
+            StyleTreeMapInfo st1 = (StyleTreeMapInfo)e1.Value;
+            StyleTreeMapInfo st2 = (StyleTreeMapInfo)e2.Value;
+
+            // descendent order
+            return st2.iReleaseCount.CompareTo(st1.iReleaseCount);
         }
     };
 
