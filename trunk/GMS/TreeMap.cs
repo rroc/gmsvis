@@ -34,17 +34,17 @@ namespace GMS
 
         private Point iMouseLocation;
 
-        private Timer iToolTipTimer;
+        private const int TIMER_DELAY = 100;
 
-        private const int TIMER_DELAY = 200;
-
-        private const int TOOLTIP_FADE_DELAY = 500;
+        private const int TOOLTIP_FADE_DELAY = 200;
 
         private Bitmap iBackBuffer;
 
         private Graphics iDrawingArea;
 
         private List<int> iSelectedIds;
+
+        private MouseHoverController iMouseHoverControl;
 
         #endregion
 
@@ -63,12 +63,9 @@ namespace GMS
             iToolTip.Show(iMouseLocation);
             iToolTip.Hide();
 
-            iToolTipTimer = new Timer();
-            iToolTipTimer.Interval = TIMER_DELAY;
-            iToolTipTimer.Tick += new EventHandler(ToolTipTimerTick);
-
-            iPanel.MouseMove    += new System.Windows.Forms.MouseEventHandler(MouseMove);
-            iPanel.MouseLeave   += new EventHandler(MouseLeave);
+            iMouseHoverControl          = new MouseHoverController(iPanel, 5, TIMER_DELAY);
+            iMouseHoverControl.Hover    += new EventHandler(MouseHoverControlHover);
+            iMouseHoverControl.HoverEnd += new EventHandler(MouseHoverControlHoverEnd);
 
             aDoc.ColorMapChanged    += new EventHandler<EventArgs>(DocumentColorMapChanged);
             aDoc.Picked             += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
@@ -76,6 +73,30 @@ namespace GMS
             iSelectedIds = new List<int>();
 
             UpdateDrawingArea();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MouseHoverControlHoverEnd(object sender, EventArgs e)
+        {
+            iToolTip.Hide();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MouseHoverControlHover(object sender, EventArgs e)
+        {
+            object label = OnHoverRectangle(iMouseHoverControl.HoverPosition);
+            iToolTip.Text = (string)label;
+
+            iToolTip.Hide();
+            iToolTip.Show(iPanel.PointToScreen(iMouseHoverControl.HoverPosition));
         }
 
         /// <summary>
@@ -110,38 +131,38 @@ namespace GMS
             this.Invalidate();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void MouseLeave(object sender, EventArgs e)
-        {
-            iToolTipTimer.Stop();
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //void MouseLeave(object sender, EventArgs e)
+        //{
+        //    iToolTipTimer.Stop();
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void ToolTipTimerTick(object sender, EventArgs e)
-        {
-            iToolTipTimer.Stop();
-            iToolTip.Hide();
-            object label = OnHoverRectangle(iMouseLocation);
-            iToolTip.Text = (string)label;
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //void ToolTipTimerTick(object sender, EventArgs e)
+        //{
+        //    iToolTipTimer.Stop();
+        //    iToolTip.Hide();
+        //    object label = OnHoverRectangle(iMouseLocation);
+        //    iToolTip.Text = (string)label;
 
-            /************************************************************************/
-            /* XXX: HACK :P - BAR                                                   */
-            /************************************************************************/
-            Point mousePos = iMouseLocation;
-            //mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
-            //mousePos.Y += 21;
+        //    /************************************************************************/
+        //    /* XXX: HACK :P - BAR                                                   */
+        //    /************************************************************************/
+        //    Point mousePos = iMouseLocation;
+        //    //mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
+        //    //mousePos.Y += 21;
             
-            iToolTip.FadeEnable = false;
-            iToolTip.Show(iPanel.PointToScreen(mousePos));
-        }
+        //    iToolTip.FadeEnable = false;
+        //    iToolTip.Show(iPanel.PointToScreen(mousePos));
+        //}
 
         /// <summary>
         /// 
@@ -150,17 +171,17 @@ namespace GMS
         /// <param name="e"></param>
         void MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            iToolTipTimer.Stop();
+            //iToolTipTimer.Stop();
 
-            // XXX: The ToolTip Show() method is invalidating the form which
-            // causes the MouseMove event to be called repeatedly.
-            // The > 1 condition avoids the tooltip being stuck
-            // when the mouse leaves the panel
-            if (iMouseLocation != e.Location && e.Location.X > 1)
-            {
-                iToolTip.Hide();
-                iToolTipTimer.Start();
-            }
+            //// XXX: The ToolTip Show() method is invalidating the form which
+            //// causes the MouseMove event to be called repeatedly.
+            //// The > 1 condition avoids the tooltip being stuck
+            //// when the mouse leaves the panel
+            //if (iMouseLocation != e.Location && e.Location.X > 1)
+            //{
+            //    iToolTip.Hide();
+            //    iToolTipTimer.Start();
+            //}
             
             iMouseLocation = e.Location;
         }
@@ -379,8 +400,8 @@ namespace GMS
                 return;
             }
 
-            iRootRectangle.GetChildren()[0].Draw(iDrawingArea, iColorMap);
-            //iRootRectangle.Draw(iDrawingArea, iColorMap);
+            //iRootRectangle.GetChildren()[0].Draw(iDrawingArea, iColorMap);
+            iRootRectangle.Draw(iDrawingArea, iColorMap);
             g.DrawImageUnscaled(iBackBuffer, 0, 0);
         }
 
