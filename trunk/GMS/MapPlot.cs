@@ -38,7 +38,7 @@ namespace GMS
 
         //TOOLTIP STUFF
         private const int TIMER_DELAY = 200;
-        private const int TOOLTIP_FADE_DELAY = 500;
+        private const int TOOLTIP_FADE_DELAY = 200;
         private GavToolTip iToolTip;
 
         private MouseHoverController iMouseHoverControl;
@@ -83,7 +83,7 @@ namespace GMS
         /// <param name="e"></param>
         void DocumentColorMapChanged(object sender, EventArgs e)
         {
-            choroMap.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace GMS
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
         {
             polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
-            choroMap.Invalidate();
+            Invalidate();
         }
 
         private void SetupMapLayers()
@@ -169,7 +169,7 @@ namespace GMS
             choroMap.AddLayer(polygonLayer);
             choroMap.AddLayer(borderLayer);
             choroMap.AddLayer(glyphLayer);
-            choroMap.Invalidate();
+            Invalidate();
 
             renderer.Add(choroMap, iPanel);
         }
@@ -202,8 +202,15 @@ namespace GMS
 
         void iPcPlot_FilterChanged(object sender, EventArgs e)
         {
-            choroMap.Invalidate();
+            Invalidate();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Invalidate()
+        {
+            choroMap.Invalidate();
+        }
     }
 }
