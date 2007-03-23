@@ -27,14 +27,18 @@ namespace GMS
 
         // Layers
         private MapPolygonLayer polygonLayer;
+        private MapPolygonLayer polygonSelectionLayer;
         private MapPolygonBorderLayer borderLayer;
         private CountryGlyphLayer glyphLayer;
         private ChoroplethMap choroMap;
         private ParallelCoordinatesPlot iPcPlot;
+        private IndexVisibilityHandler iSelectedVisibility;
 
         private List<string> iCountryNames;
 
         private GMSDocument iDoc;
+
+        private InteractiveColorLegend iColorLegend;
 
         //TOOLTIP STUFF
         private const int TIMER_DELAY = 200;
@@ -52,6 +56,7 @@ namespace GMS
             iColorMap = aColorMap;
             iPcPlot = aPcPlot;
             iDoc = aDoc;
+
             SetupMapLayers();
 
             //Get country names
@@ -74,6 +79,7 @@ namespace GMS
 
             iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
             iDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
+
         }
 
         /// <summary>
@@ -123,6 +129,8 @@ namespace GMS
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
         {
             polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
+            //polygonSelectionLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
+            //iSelectedVisibility.
             Invalidate();
         }
 
@@ -149,29 +157,54 @@ namespace GMS
             polygonLayer.IndexVisibilityHandler = iPcPlot.IndexVisibilityHandler;
             iPcPlot.FilterChanged += new EventHandler(iPcPlot_FilterChanged);
 
+            polygonSelectionLayer = new MapPolygonLayer();
+            polygonSelectionLayer.MapData = iMapData;
+            polygonSelectionLayer.PolygonColor = Color.FromArgb(220,220,220);
+            polygonSelectionLayer.Alpha = 150;
+
+            IndexVisibilityHandler iSelectedVisibility = new IndexVisibilityHandler(iMapData.RegionList.Count);
+            iSelectedVisibility.Clear();
+            polygonSelectionLayer.IndexVisibilityHandler = iSelectedVisibility;
+//            polygonSelectionLayer.SelectedPolygonColor = Color.Transparent;
 
             // Glyph Layer
             glyphLayer = new CountryGlyphLayer( iPanel );
-
             glyphLayer.ActiveGlyphPositioner = new CenterGlyphPositioner();
             glyphLayer.ActiveGlyphPositioner.MapData = iMapData;
             glyphLayer.Input = iDataCube;
             glyphLayer.IndexVisibilityHandler = iPcPlot.IndexVisibilityHandler;
 
-            //// Choropleth Map
+            // Choropleth Map
             choroMap = new ChoroplethMap();
-
             choroMap.VizComponentMouseDown += new EventHandler<VizComponentMouseEventArgs>(MouseDown);
             
-            
-
             // Add layers on the proper order
             choroMap.AddLayer(polygonLayer);
+            //choroMap.AddLayer(polygonSelectionLayer);
             choroMap.AddLayer(borderLayer);
             choroMap.AddLayer(glyphLayer);
             Invalidate();
 
+            iColorLegend = new InteractiveColorLegend();
+            iColorLegend.ColorMap = iColorMap;
+            iColorLegend.BorderColor = Color.Black;
+            iColorLegend.SliderTextColor = Color.Black;
+            iColorLegend.ShowMinMaxValues = true;
+            
+            iColorLegend.SetPosition(0.03F, 0.01F);
+            iColorLegend.SetLegendSize(0.01f, 0.2f);
+
+            iColorLegend.ShowColorEdgeSliders = true;
+            iColorLegend.ShowColorEdgeSliderValue = true;
+            iColorLegend.ColorEdgeValuesChanged += new EventHandler(ColorLegendChanged);
+
+            choroMap.AddSubComponent( iColorLegend );
             renderer.Add(choroMap, iPanel);
+        }
+
+        void ColorLegendChanged(object sender, EventArgs e)
+        {
+            iDoc.OnColorMapChanged();
         }
 
         /// <summary>

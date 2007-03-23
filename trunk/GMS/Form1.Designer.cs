@@ -34,24 +34,24 @@ namespace GMS
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PCMapSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.glyph1picture = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.glyphPanel = new System.Windows.Forms.Panel();
             this.glyphCheckBoxes = new System.Windows.Forms.CheckedListBox();
+            this.glyph1picture = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
             this.PCMapSplitContainer.Panel1.SuspendLayout();
             this.PCMapSplitContainer.Panel2.SuspendLayout();
             this.PCMapSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.glyph1picture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.glyphPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.glyph1picture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -126,63 +126,9 @@ namespace GMS
             this.PCMapSplitContainer.SplitterWidth = 5;
             this.PCMapSplitContainer.TabIndex = 0;
             // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Location = new System.Drawing.Point(4, 34);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(685, 155);
-            this.panel1.TabIndex = 2;
-            // 
-            // glyph1picture
-            // 
-            this.glyph1picture.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.glyph1picture.Image = global::GMS.Properties.Resources.coin;
-            this.glyph1picture.Location = new System.Drawing.Point(125, 67);
-            this.glyph1picture.Name = "glyph1picture";
-            this.glyph1picture.Size = new System.Drawing.Size(20, 20);
-            this.glyph1picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.glyph1picture.TabIndex = 1;
-            this.glyph1picture.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.pictureBox1.Image = global::GMS.Properties.Resources.cd;
-            this.pictureBox1.Location = new System.Drawing.Point(125, 24);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.pictureBox2.Image = global::GMS.Properties.Resources.age;
-            this.pictureBox2.Location = new System.Drawing.Point(125, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 5;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.pictureBox3.Image = global::GMS.Properties.Resources.work;
-            this.pictureBox3.Location = new System.Drawing.Point(125, 45);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 7;
-            this.pictureBox3.TabStop = false;
-            // 
             // glyphPanel
             // 
+            this.glyphPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.glyphPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(189)))), ((int)(((byte)(183)))), ((int)(((byte)(107)))));
             this.glyphPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.glyphPanel.Controls.Add(this.glyphCheckBoxes);
@@ -190,7 +136,7 @@ namespace GMS
             this.glyphPanel.Controls.Add(this.pictureBox3);
             this.glyphPanel.Controls.Add(this.pictureBox2);
             this.glyphPanel.Controls.Add(this.pictureBox1);
-            this.glyphPanel.Location = new System.Drawing.Point(12, 12);
+            this.glyphPanel.Location = new System.Drawing.Point(10, 137);
             this.glyphPanel.Name = "glyphPanel";
             this.glyphPanel.Size = new System.Drawing.Size(150, 100);
             this.glyphPanel.TabIndex = 0;
@@ -212,6 +158,61 @@ namespace GMS
             this.glyphCheckBoxes.TabIndex = 8;
             this.glyphCheckBoxes.SelectedIndexChanged += new System.EventHandler(this.glyphCheckBoxes_SelectedIndexChanged);
             // 
+            // glyph1picture
+            // 
+            this.glyph1picture.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.glyph1picture.Image = global::GMS.Properties.Resources.coin;
+            this.glyph1picture.Location = new System.Drawing.Point(125, 67);
+            this.glyph1picture.Name = "glyph1picture";
+            this.glyph1picture.Size = new System.Drawing.Size(20, 20);
+            this.glyph1picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.glyph1picture.TabIndex = 1;
+            this.glyph1picture.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.pictureBox3.Image = global::GMS.Properties.Resources.work;
+            this.pictureBox3.Location = new System.Drawing.Point(125, 45);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 7;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.pictureBox2.Image = global::GMS.Properties.Resources.age;
+            this.pictureBox2.Location = new System.Drawing.Point(125, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 5;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.pictureBox1.Image = global::GMS.Properties.Resources.cd;
+            this.pictureBox1.Location = new System.Drawing.Point(125, 24);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Location = new System.Drawing.Point(4, 34);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(685, 155);
+            this.panel1.TabIndex = 2;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -232,11 +233,11 @@ namespace GMS
             this.PCMapSplitContainer.Panel2.ResumeLayout(false);
             this.PCMapSplitContainer.Panel2.PerformLayout();
             this.PCMapSplitContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.glyph1picture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.glyphPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.glyph1picture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
