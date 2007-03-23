@@ -83,8 +83,11 @@ namespace GMS
             //LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 270.0f);
             //map.AddColorMapPart(hsvMap);
             //hsvMap.Invalidate();
-            LinearColorMapPart linearMap = new LinearColorMapPart( Color.FromArgb(0x00ffb200), Color.FromArgb( 0x001919b3) );
+            LinearColorMapPart linearMap = new LinearColorMapPart(Color.FromArgb(0x0051a87b), Color.FromArgb(0x00bad97a));
             map.AddColorMapPart(linearMap);
+            LinearColorMapPart linearMap2 = new LinearColorMapPart(Color.FromArgb(0x00f0e978), Color.FromArgb(0x00d07c59));
+            map.AddColorMapPart(linearMap2);
+
             linearMap.Invalidate();
             map.Invalidate();
             return map;

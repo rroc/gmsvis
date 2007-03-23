@@ -26,8 +26,8 @@ namespace GMS
         {
             InitializeComponent();
 
-            this.glyphCheckBoxes.SetItemChecked(0, true);
             this.glyphCheckBoxes.SetItemChecked(1, true);
+            this.glyphCheckBoxes.SetItemChecked(3, true);
             this.glyphPanel.Hide();
         }
 
