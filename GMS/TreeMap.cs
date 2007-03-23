@@ -16,7 +16,7 @@ namespace GMS
 {
     class TreeMap : VizComponent
     {
-        //VARIABLES
+        #region Private Variables
 
         /// <summary>
         /// 
@@ -40,11 +40,13 @@ namespace GMS
 
         private const int TOOLTIP_FADE_DELAY = 500;
 
-        private object[,,] iInput;
-
         private Bitmap iBackBuffer;
 
         private Graphics iDrawingArea;
+
+        private List<int> iSelectedIds;
+
+        #endregion
 
         /// <summary>
         /// Constructor
@@ -68,9 +70,24 @@ namespace GMS
             iPanel.MouseMove    += new System.Windows.Forms.MouseEventHandler(MouseMove);
             iPanel.MouseLeave   += new EventHandler(MouseLeave);
 
-            aDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
+            aDoc.ColorMapChanged    += new EventHandler<EventArgs>(DocumentColorMapChanged);
+            aDoc.Picked             += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+
+            iSelectedIds = new List<int>();
 
             UpdateDrawingArea();
+        }
+
+        /// <summary>
+        /// Handles the event of Picking an object 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DocumentPicked(object sender, IndexesPickedEventArgs e)
+        {
+            iSelectedIds = e.PickedIndexes;
+            //Graphics g = iPanel.CreateGraphics();
+            //DrawTree(g);
         }
 
         /// <summary>
@@ -90,7 +107,7 @@ namespace GMS
 
         void DocumentColorMapChanged(object sender, EventArgs e)
         {
-            iPanel.Invalidate();
+            this.Invalidate();
         }
 
         /// <summary>
@@ -155,7 +172,7 @@ namespace GMS
         /// <param name="e"></param>
         void Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            DrawTree(e);
+            DrawTree(e.Graphics);
         }
 
         /// <summary>
@@ -168,7 +185,8 @@ namespace GMS
             UpdateData();
             UpdateScale();
             UpdateDrawingArea();
-            iPanel.Invalidate();
+            
+            this.Invalidate();
         }
 
         /// <summary>
@@ -221,7 +239,7 @@ namespace GMS
                 if (area > 1.0F)
                 {
                     TreeRectangle childRectangle = new TreeRectangle(area);
-                    childRectangle.id = Convert.ToInt32(aDataCube[i, aIdIndex, 0]);
+                    childRectangle.Id = Convert.ToInt32(aDataCube[i, aIdIndex, 0]);
 
                     // Tooltip Data and Label
                     BuildToolTipData(childRectangle, aDataCube, aToolTipComponents, i);
@@ -354,18 +372,16 @@ namespace GMS
         /// <summary>
         /// Draw the whole tree
         /// </summary>
-        public void DrawTree(System.Windows.Forms.PaintEventArgs e)
+        public void DrawTree(Graphics g)
         {
             if (iRootRectangle == null)
             {
                 return;
             }
 
-            //Graphics g = iPanel.CreateGraphics();
-            iRootRectangle.Draw(iDrawingArea, iColorMap);
-            //Graphics g = iPanel.CreateGraphics();
-            e.Graphics.DrawImageUnscaled(iBackBuffer, 0, 0);
-            //g.Dispose();
+            iRootRectangle.GetChildren()[0].Draw(iDrawingArea, iColorMap);
+            //iRootRectangle.Draw(iDrawingArea, iColorMap);
+            g.DrawImageUnscaled(iBackBuffer, 0, 0);
         }
 
         /// <summary>
@@ -453,6 +469,16 @@ namespace GMS
                 sum += rectangle.GetArea();
             }
             return sum;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public new void Invalidate()
+        {
+            Graphics g = iPanel.CreateGraphics();
+            DrawTree(g);
+            g.Dispose();
         }
 
         protected override void InternalMouseMove(System.Windows.Forms.MouseEventArgs e)
