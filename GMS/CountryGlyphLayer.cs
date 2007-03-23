@@ -15,9 +15,10 @@ namespace GMS
     public class CountryGlyphLayer : MapGlyphLayer
     {
         // Glyphs
-        private Texture[] iTexture;
+        private List<Texture> iTexture;
         private Material iMaterial;
-        private CustomVertex.PositionTextured[] iGlyphMoney;
+        private CustomVertex.PositionTextured[] iBasicGlyph;
+        private CustomVertex.PositionTextured[] iAgeGlyph;
 
         private bool _inited;
 
@@ -55,38 +56,69 @@ namespace GMS
             string dir = Directory.GetCurrentDirectory();
             string dataPath = "\\..\\..\\..\\data\\glyphs\\";
 
-            iTexture = new Texture[2];
-            iTexture[0] = TextureLoader.FromFile(_device, dir+dataPath+"coin.png");
-            iTexture[1] = TextureLoader.FromFile(_device, dir + dataPath + "cd.png");
+            iTexture = new List<Texture>();
+            iTexture.Add( TextureLoader.FromFile(_device, dir+dataPath+"coin.png") );
+            iTexture.Add( TextureLoader.FromFile(_device, dir + dataPath + "cd.png") );
+            iTexture.Add(TextureLoader.FromFile(_device, dir + dataPath + "age.png"));
+            iTexture.Add(TextureLoader.FromFile(_device, dir + dataPath + "work.png"));
 
             float scale = 10;
-            iGlyphMoney = new CustomVertex.PositionTextured[6];
-            iGlyphMoney[0].Position = new Vector3(scale * -1.5F, scale * -0.64F, 0);
-            iGlyphMoney[1].Position = new Vector3(scale * 1.5F, scale * -0.64F, 0);
-            iGlyphMoney[2].Position = new Vector3(scale * -1.5F, scale * 0.64F, 0);
+            iBasicGlyph = new CustomVertex.PositionTextured[6];
+            iBasicGlyph[0].Position = new Vector3(scale * -1.5F, scale * -0.64F, 0);
+            iBasicGlyph[1].Position = new Vector3(scale * 1.5F, scale * -0.64F, 0);
+            iBasicGlyph[2].Position = new Vector3(scale * -1.5F, scale * 0.64F, 0);
 
-            iGlyphMoney[3].Position = new Vector3(scale * -1.5F, scale * 0.64F, 0);
-            iGlyphMoney[4].Position = new Vector3(scale * 1.5F, scale * -0.64F, 0);
-            iGlyphMoney[5].Position = new Vector3(scale * 1.5F, scale * 0.64F, 0);
+            iBasicGlyph[3].Position = new Vector3(scale * -1.5F, scale * 0.64F, 0);
+            iBasicGlyph[4].Position = new Vector3(scale * 1.5F, scale * -0.64F, 0);
+            iBasicGlyph[5].Position = new Vector3(scale * 1.5F, scale * 0.64F, 0);
 
             //Texture coordinates
-            iGlyphMoney[0].Tu = 0;
-            iGlyphMoney[0].Tv = 1;
+            iBasicGlyph[0].Tu = 0;
+            iBasicGlyph[0].Tv = 1;
 
-            iGlyphMoney[1].Tu = 1;
-            iGlyphMoney[1].Tv = 1;
+            iBasicGlyph[1].Tu = 1;
+            iBasicGlyph[1].Tv = 1;
 
-            iGlyphMoney[2].Tu = 0;
-            iGlyphMoney[2].Tv = 0;
+            iBasicGlyph[2].Tu = 0;
+            iBasicGlyph[2].Tv = 0;
 
-            iGlyphMoney[3].Tu = 0;
-            iGlyphMoney[3].Tv = 0;
+            iBasicGlyph[3].Tu = 0;
+            iBasicGlyph[3].Tv = 0;
 
-            iGlyphMoney[4].Tu = 1;
-            iGlyphMoney[4].Tv = 1;
+            iBasicGlyph[4].Tu = 1;
+            iBasicGlyph[4].Tv = 1;
 
-            iGlyphMoney[5].Tu = 1;
-            iGlyphMoney[5].Tv = 0;
+            iBasicGlyph[5].Tu = 1;
+            iBasicGlyph[5].Tv = 0;
+
+
+            iAgeGlyph = new CustomVertex.PositionTextured[6];
+            iAgeGlyph[0].Position = new Vector3(scale * -1.5F, scale * -1.0F, 0);
+            iAgeGlyph[1].Position = new Vector3(scale * 1.5F, scale * -1.0F, 0);
+            iAgeGlyph[2].Position = new Vector3(scale * -1.5F, scale * 1.0F, 0);
+
+            iAgeGlyph[3].Position = new Vector3(scale * -1.5F, scale * 1.0F, 0);
+            iAgeGlyph[4].Position = new Vector3(scale * 1.5F, scale * -1.0F, 0);
+            iAgeGlyph[5].Position = new Vector3(scale * 1.5F, scale * 1.0F, 0);
+
+            //Texture coordinates
+            iAgeGlyph[0].Tu = 0;
+            iAgeGlyph[0].Tv = 1;
+
+            iAgeGlyph[1].Tu = 1;
+            iAgeGlyph[1].Tv = 1;
+
+            iAgeGlyph[2].Tu = 0;
+            iAgeGlyph[2].Tv = 0;
+
+            iAgeGlyph[3].Tu = 0;
+            iAgeGlyph[3].Tv = 0;
+
+            iAgeGlyph[4].Tu = 1;
+            iAgeGlyph[4].Tv = 1;
+
+            iAgeGlyph[5].Tu = 1;
+            iAgeGlyph[5].Tv = 0;
         }
 
         private void DrawGlyph(int aItem )
@@ -114,7 +146,7 @@ namespace GMS
             _device.Transform.World *= Matrix.Translation(9.0F, 2.0F, 0);
 
             maxValue = 9;
-            _device.SetTexture(0, iTexture[1]);
+            _device.SetTexture(0, iTexture[2]);
 
             count = _axisMaps[2].MappedValues[aItem];
             maxAmount = 1 + (int)(maxValue * count);
@@ -123,7 +155,7 @@ namespace GMS
             {
                 //Translate
                 _device.Transform.World *= Matrix.Translation(0.0F, 3.0F, 0);
-                _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iGlyphMoney);
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iAgeGlyph);
             }
 
             //Restore Previous values
@@ -137,7 +169,7 @@ namespace GMS
             _device.Transform.World *= Matrix.Translation(-9.0F, -2.0F, 0);
 
             maxValue = 9;
-            _device.SetTexture(0, iTexture[0]);
+            _device.SetTexture(0, iTexture[3]);
 
             count = _axisMaps[4].MappedValues[aItem];
             maxAmount = 1+(int)(maxValue * count);
@@ -146,7 +178,7 @@ namespace GMS
             {
                 //Translate
                 _device.Transform.World *= Matrix.Translation(0.0F, 3.0F, 0);
-                _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iGlyphMoney);
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, iBasicGlyph);
             }
 
 
@@ -159,6 +191,8 @@ namespace GMS
             _device.RenderState.AlphaBlendEnable = false;
             _device.TextureState[0].AlphaOperation = TextureOperation.Disable;
         }
+
+
 
         // Creates one axismap per column in the data set. 
         private void CreateAxisMaps()
