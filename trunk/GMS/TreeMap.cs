@@ -42,10 +42,14 @@ namespace GMS
 
         private object[,,] iInput;
 
+        private Bitmap iBackBuffer;
+
+        private Graphics iDrawingArea;
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public TreeMap(System.Windows.Forms.Panel aPanel)
+        public TreeMap(System.Windows.Forms.Panel aPanel, GMSDocument aDoc)
         {
             iPanel = aPanel;
             iPanel.SizeChanged += new EventHandler(SizeChanged);
@@ -63,6 +67,30 @@ namespace GMS
 
             iPanel.MouseMove    += new System.Windows.Forms.MouseEventHandler(MouseMove);
             iPanel.MouseLeave   += new EventHandler(MouseLeave);
+
+            aDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
+
+            UpdateDrawingArea();
+        }
+
+        /// <summary>
+        /// Updates the Backbuffer drawing area variables
+        /// </summary>
+        private void UpdateDrawingArea()
+        {
+            if (iBackBuffer != null && iDrawingArea != null)
+            {
+                iBackBuffer.Dispose();
+                iDrawingArea.Dispose();
+            }
+
+            iBackBuffer = new Bitmap(iPanel.ClientSize.Width, iPanel.ClientSize.Height);
+            iDrawingArea = Graphics.FromImage(iBackBuffer);
+        }
+
+        void DocumentColorMapChanged(object sender, EventArgs e)
+        {
+            iPanel.Invalidate();
         }
 
         /// <summary>
@@ -127,7 +155,7 @@ namespace GMS
         /// <param name="e"></param>
         void Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            DrawTree();
+            DrawTree(e);
         }
 
         /// <summary>
@@ -139,6 +167,7 @@ namespace GMS
         {
             UpdateData();
             UpdateScale();
+            UpdateDrawingArea();
             iPanel.Invalidate();
         }
 
@@ -325,16 +354,18 @@ namespace GMS
         /// <summary>
         /// Draw the whole tree
         /// </summary>
-        public void DrawTree()
+        public void DrawTree(System.Windows.Forms.PaintEventArgs e)
         {
             if (iRootRectangle == null)
             {
                 return;
             }
 
-            Graphics g = iPanel.CreateGraphics();
-            iRootRectangle.Draw(g, iColorMap);
-            g.Dispose();
+            //Graphics g = iPanel.CreateGraphics();
+            iRootRectangle.Draw(iDrawingArea, iColorMap);
+            //Graphics g = iPanel.CreateGraphics();
+            e.Graphics.DrawImageUnscaled(iBackBuffer, 0, 0);
+            //g.Dispose();
         }
 
         /// <summary>
