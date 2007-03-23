@@ -33,6 +33,8 @@ namespace GMS
         private ChoroplethMap choroMap;
         private ParallelCoordinatesPlot iPcPlot;
         private IndexVisibilityHandler iSelectedVisibility;
+        private IndexVisibilityList iVisibilityList;
+
 
         private List<string> iCountryNames;
 
@@ -46,6 +48,7 @@ namespace GMS
         private GavToolTip iToolTip;
 
         private MouseHoverController iMouseHoverControl;
+        private Point iMouseClickPoint;
 
         public MapPlot(DataCube aDataCube, Panel aDestinationPanel, Renderer aRenderer, 
             ColorMap aColorMap, ParallelCoordinatesPlot aPcPlot, GMSDocument aDoc)
@@ -105,10 +108,12 @@ namespace GMS
             if(index != -1)
             {
             iToolTip.Hide();
-            iToolTip.Text = iCountryNames[ index ]
-                + "\nAge: " + iDataCube.Data[1, index, 0]
-                + "\nGNP(per capita): " + iDataCube.Data[4, index, 0] + "$"
-                + "\nUnemployment Rate: " + iDataCube.Data[3, index, 0] + "%"
+            Country country = (Country)iDoc.GetDatabase().countries[ iDoc.GetFilteredAcronyms()[index] ];
+            iToolTip.Text = iCountryNames[index]
+                + "\nMedian Age: " + country.medianAge
+                + "\nAlbum Releases: " + country.releases.Count
+                + "\nGDP(per capita): " + country.gdbPerCapita + "$"
+                + "\nUnemployment Rate: " + country.unemploymentRate + "%"
                 ;
             iToolTip.Show( iMouseHoverControl.HoverPosition );
             }
@@ -123,9 +128,17 @@ namespace GMS
         /// <param name="e"></param>
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
         {
-            polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
+            for (int i = 0, endI = iMapData.RegionList.Count; i < endI; i++)
+            {
+                iVisibilityList.SetVisibility(i, 0, true);
+            }
+            //polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
             //polygonSelectionLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
-            //iSelectedVisibility.
+            foreach (int index in e.PickedIndexes)
+            {
+                iVisibilityList.SetVisibility(index, 0, false ); //!iVisibilityList.GetVisibility(index));
+            }
+            iVisibilityList.CommitChanges();
             Invalidate();
         }
 
@@ -157,9 +170,12 @@ namespace GMS
             polygonSelectionLayer.PolygonColor = Color.FromArgb(220,220,220);
             polygonSelectionLayer.Alpha = 150;
 
-            IndexVisibilityHandler iSelectedVisibility = new IndexVisibilityHandler(iMapData.RegionList.Count);
+            iSelectedVisibility = new IndexVisibilityHandler(iMapData.RegionList.Count);
             iSelectedVisibility.Clear();
+            iVisibilityList = iSelectedVisibility.CreateVisibilityList();
+
             polygonSelectionLayer.IndexVisibilityHandler = iSelectedVisibility;
+
 //            polygonSelectionLayer.SelectedPolygonColor = Color.Transparent;
 
             // Glyph Layer
@@ -172,10 +188,11 @@ namespace GMS
             // Choropleth Map
             choroMap = new ChoroplethMap();
             choroMap.VizComponentMouseDown += new EventHandler<VizComponentMouseEventArgs>(MouseDown);
+            choroMap.VizComponentMouseUp += new EventHandler<VizComponentMouseEventArgs>(MouseUp);
             
             // Add layers on the proper order
             choroMap.AddLayer(polygonLayer);
-            //choroMap.AddLayer(polygonSelectionLayer);
+            choroMap.AddLayer(polygonSelectionLayer);
             choroMap.AddLayer(borderLayer);
             choroMap.AddLayer(glyphLayer);
             Invalidate();
@@ -197,6 +214,7 @@ namespace GMS
             renderer.Add(choroMap, iPanel);
         }
 
+
         void ColorLegendChanged(object sender, EventArgs e)
         {
             iDoc.OnColorMapChanged();
@@ -209,24 +227,43 @@ namespace GMS
         /// <param name="e"></param>
         void MouseDown(object sender, VizComponentMouseEventArgs e) 
         {
-            Vector2 v = choroMap.ConvertScreenCoordinatesToMapCoordinates(e.MouseEventArgs.Location);
-            int index = iMapData.GetRegionId(v);
-
-            List<int> selectedItems = new List<int>();
-            
-            if (index != -1)
+            //Store the clik start position
+            if (e.MouseEventArgs.Button == MouseButtons.Left)
             {
-                selectedItems.Add(index);
-            }
-            
-            // if CTRL is pressed, add the line to the selection
-            Keys keys = Control.ModifierKeys;
-            bool add = (keys == Keys.Control);
+                iMouseClickPoint = e.MouseEventArgs.Location;
 
-            iDoc.SetSelectedItems(selectedItems, add, true);
-            //polygonLayer.SetSelectedPolygonIndexes(iDoc.GetSelectedItems());
-            //choroMap.Invalidate();
+            }
         }
+
+        void MouseUp(object sender, VizComponentMouseEventArgs e)
+        {
+            const int treshold = 10;
+
+            //Trying to see if mouse was dragged or was it clicked
+            if (e.MouseEventArgs.Button == MouseButtons.Left
+                && (iMouseClickPoint.X - treshold < e.MouseEventArgs.Location.X && iMouseClickPoint.X + treshold > e.MouseEventArgs.Location.X)
+                && (iMouseClickPoint.Y - treshold < e.MouseEventArgs.Location.Y && iMouseClickPoint.Y + treshold > e.MouseEventArgs.Location.Y)                
+                )
+            {
+                Vector2 v = choroMap.ConvertScreenCoordinatesToMapCoordinates(e.MouseEventArgs.Location);
+                int index = iMapData.GetRegionId(v);
+
+                List<int> selectedItems = new List<int>();
+
+                if (index != -1)
+                {
+                    selectedItems.Add(index);
+                }
+
+                // if CTRL is pressed, add the line to the selection
+                Keys keys = Control.ModifierKeys;
+                bool add = (keys == Keys.Control);
+
+                iDoc.SetSelectedItems(selectedItems, add, true);
+            }
+        }
+
+
 
         void iPcPlot_FilterChanged(object sender, EventArgs e)
         {
