@@ -19,9 +19,14 @@ namespace GMS
         #region Private Variables
 
         /// <summary>
-        /// 
+        /// The original root of the TreeMap
         /// </summary>
         private TreeRectangle iRootRectangle;
+
+        /// <summary>
+        /// The current node rectangle
+        /// </summary>
+        private TreeRectangle iCurrentRootRectangle;
 
         /// <summary>
         /// 
@@ -32,9 +37,7 @@ namespace GMS
 
         private GavToolTip iToolTip;
 
-        private Point iMouseLocation;
-
-        private const int TIMER_DELAY = 100;
+        private const int TIMER_DELAY = 200;
 
         private const int TOOLTIP_FADE_DELAY = 200;
 
@@ -45,6 +48,8 @@ namespace GMS
         private List<int> iSelectedIds;
 
         private MouseHoverController iMouseHoverControl;
+
+        private bool iZoomIn;
 
         #endregion
 
@@ -60,7 +65,7 @@ namespace GMS
             
             iToolTip.FadeEnable = true;
             iToolTip.FadeTime = TOOLTIP_FADE_DELAY;
-            iToolTip.Show(iMouseLocation);
+            iToolTip.Show(new Point(0,0));
             iToolTip.Hide();
 
             iMouseHoverControl          = new MouseHoverController(iPanel, 5, TIMER_DELAY);
@@ -70,9 +75,25 @@ namespace GMS
             aDoc.ColorMapChanged    += new EventHandler<EventArgs>(DocumentColorMapChanged);
             aDoc.Picked             += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
 
+            iPanel.MouseDown        += new MouseEventHandler(MouseDown);
+
             iSelectedIds = new List<int>();
 
+            iZoomIn = false;
+
             UpdateDrawingArea();
+        }
+
+        void MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                IncreaseLevel(e.Location);
+            }
+            else
+            {
+                DecreaseLevel();
+            }
         }
 
         /// <summary>
@@ -107,8 +128,8 @@ namespace GMS
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
         {
             iSelectedIds = e.PickedIndexes;
-            //Graphics g = iPanel.CreateGraphics();
-            //DrawTree(g);
+            Graphics g = iPanel.CreateGraphics();
+            DrawTree(g);
         }
 
         /// <summary>
@@ -129,61 +150,6 @@ namespace GMS
         void DocumentColorMapChanged(object sender, EventArgs e)
         {
             this.Invalidate();
-        }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //void MouseLeave(object sender, EventArgs e)
-        //{
-        //    iToolTipTimer.Stop();
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //void ToolTipTimerTick(object sender, EventArgs e)
-        //{
-        //    iToolTipTimer.Stop();
-        //    iToolTip.Hide();
-        //    object label = OnHoverRectangle(iMouseLocation);
-        //    iToolTip.Text = (string)label;
-
-        //    /************************************************************************/
-        //    /* XXX: HACK :P - BAR                                                   */
-        //    /************************************************************************/
-        //    Point mousePos = iMouseLocation;
-        //    //mousePos.X += iPanel.Location.X + iToolTip.Size.Width;
-        //    //mousePos.Y += 21;
-            
-        //    iToolTip.FadeEnable = false;
-        //    iToolTip.Show(iPanel.PointToScreen(mousePos));
-        //}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            //iToolTipTimer.Stop();
-
-            //// XXX: The ToolTip Show() method is invalidating the form which
-            //// causes the MouseMove event to be called repeatedly.
-            //// The > 1 condition avoids the tooltip being stuck
-            //// when the mouse leaves the panel
-            //if (iMouseLocation != e.Location && e.Location.X > 1)
-            //{
-            //    iToolTip.Hide();
-            //    iToolTipTimer.Start();
-            //}
-            
-            iMouseLocation = e.Location;
         }
 
         /// <summary>
@@ -236,7 +202,8 @@ namespace GMS
             int aOrdinalDataIndex, int aIdIndex, int aLeafNodeLabelIndex, 
             List<GMSToolTipComponent> aToolTipComponents)
         {
-            iRootRectangle = new TreeRectangle(0.0F);
+            iRootRectangle  = new TreeRectangle(0.0F);
+            iCurrentRootRectangle    = iRootRectangle;
 
             string currentGroup = (string)aDataCube[0, aOrdinalDataIndex, 0];
             TreeRectangle currentNode = new TreeRectangle(0.0F);
@@ -301,7 +268,7 @@ namespace GMS
         /// <returns></returns>
         private object OnHoverRectangle(Point location)
         {
-            TreeRectangle rectangle = iRootRectangle.LocationInsideRectangle(location);
+            TreeRectangle rectangle = iCurrentRootRectangle.LocationInsideLeafRectangle(location);
             
             if (rectangle != null)
             {
@@ -311,6 +278,65 @@ namespace GMS
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        public void IncreaseLevel(Point location)
+        {
+            // If already zoomed, quit
+            if (iZoomIn)
+            {
+                return;
+            }
+
+            TreeRectangle selectedRectangle = null;
+
+            foreach (TreeRectangle rectangle in iCurrentRootRectangle.GetChildren())
+            {
+                selectedRectangle = rectangle.LocationInsideRectangle(location);
+                if (selectedRectangle != null)
+                {
+                    break;
+                }
+            }
+
+            if (selectedRectangle != null)
+            {
+                this.iCurrentRootRectangle = selectedRectangle;
+            }
+
+            /************************************************************************/
+            /* THE SAME AS IN SIZECHANGED!!! CREATE INVALIDATEDATA / INVALIDATEVIEW */
+            /************************************************************************/
+            UpdateData();
+            UpdateScale();
+            UpdateDrawingArea();
+
+            this.Invalidate();
+
+            iZoomIn = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DecreaseLevel()
+        {
+            if (iZoomIn)
+            {
+                iZoomIn = false;
+
+                // switch to the original root
+                iCurrentRootRectangle = iRootRectangle;
+                
+                UpdateData();
+                UpdateScale();
+                UpdateDrawingArea();
+
+                this.Invalidate();
+            }
+        }
 
         /// <summary>
         /// 
@@ -324,15 +350,8 @@ namespace GMS
             InitTreeMapFromDataCube(aDataCube, aQuantitativeDataIndex,
                 aOrdinalDataIndex, aIdIndex, aLeafNodeLabelIndex, aToolTipComponents);
 
-            //Calculate data size according to the sreen
-            float sum = iRootRectangle.GetArea();
-            float ratio = iPanel.Width / (float)iPanel.Height;
-            float height = (float)Math.Sqrt(sum / ratio);
-            float width = height * ratio;
-
-            iRootRectangle.SetSize(0, 0, width, height);
-
-            BuildTreeMap();
+            // Calculates the TreeMap Visual Appearance
+            UpdateData();
         }
 
         /// <summary>
@@ -340,13 +359,13 @@ namespace GMS
         /// </summary>
         public void UpdateData()
         {
-            float sum = iRootRectangle.GetArea();
+            float sum = iCurrentRootRectangle.GetArea();
 
             float ratio = iPanel.Width / (float)iPanel.Height;
             float height = (float)Math.Sqrt(sum / ratio);
             float width = height * ratio;
 
-            iRootRectangle.SetSize(0, 0, width, height);
+            iCurrentRootRectangle.SetSize(0, 0, width, height);
             BuildTreeMap();
         }
 
@@ -356,7 +375,7 @@ namespace GMS
         /// </summary>
         public void BuildTreeMap()
         {
-            SquarifyTree(iRootRectangle);
+            SquarifyTree(iCurrentRootRectangle);
         }
 
         /// <summary>
@@ -387,7 +406,7 @@ namespace GMS
         /// <param name="aHeight"></param>
         public void UpdateScale()
         {
-            iRootRectangle.SetScale(iPanel.Width, iPanel.Height);
+            iCurrentRootRectangle.SetScale(iPanel.Width, iPanel.Height);
         }
 
         /// <summary>
@@ -395,13 +414,13 @@ namespace GMS
         /// </summary>
         public void DrawTree(Graphics g)
         {
-            if (iRootRectangle == null)
+            if (iCurrentRootRectangle == null)
             {
                 return;
             }
 
-            //iRootRectangle.GetChildren()[0].Draw(iDrawingArea, iColorMap);
-            iRootRectangle.Draw(iDrawingArea, iColorMap);
+            //iCurrentRootRectangle.GetChildren()[0].Draw(iDrawingArea, iColorMap);
+            iCurrentRootRectangle.Draw(iDrawingArea, iColorMap, iSelectedIds);
             g.DrawImageUnscaled(iBackBuffer, 0, 0);
         }
 
