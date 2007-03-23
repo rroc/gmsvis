@@ -222,6 +222,11 @@ namespace GMS
 
             pcPlot.HeaderClicked += new EventHandler(PCPlotHeaderClicked);
 
+            /************************************************************************/
+            /* XXX: FONTS NOT WORKING                                               */
+            /************************************************************************/
+            pcPlot.FontSelectedHeaders = new Font("Verdana", 14, FontStyle.Bold);
+            
             pcPlot.SelectedHeaderTextColor = Color.Red;
 
             int countriesCount = iCountryNames.Count;
@@ -241,9 +246,6 @@ namespace GMS
             pcPlot.SetSelectedHeader(pcPlot.ClickedHeader);
             iColorMap.Index = pcPlot.ClickedHeader;
             iDoc.OnColorMapChanged();
-            //iColorMap.Invalidate();
-
-            //pcPlot.Invalidate();
         }
 
         void pcPlot_FilterChanged(object sender, EventArgs e)
