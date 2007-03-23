@@ -210,7 +210,7 @@ namespace GMS
             pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
             pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
-            pcPlot.LineTransparency =200;
+            pcPlot.LineTransparency = 200;
             pcPlot.LineTransparencySelected = 200;
             pcPlot.SelectedLineColor = Color.Black;
             pcPlot.SelectedLineThickness = 3;
