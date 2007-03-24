@@ -32,6 +32,7 @@ namespace GMS
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.helpButton = new System.Windows.Forms.ToolStripButton();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PCMapSplitContainer = new System.Windows.Forms.SplitContainer();
             this.glyphPanel = new System.Windows.Forms.Panel();
@@ -41,6 +42,7 @@ namespace GMS
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
@@ -58,7 +60,9 @@ namespace GMS
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
-            this.toolStripComboBox1});
+            this.toolStripComboBox1,
+            this.toolStripSeparator1,
+            this.helpButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(693, 25);
@@ -89,6 +93,16 @@ namespace GMS
             this.toolStripComboBox1.Text = "None";
             this.toolStripComboBox1.ToolTipText = "Find similar groups (using K-Means Algorithm)";
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            // 
+            // helpButton
+            // 
+            this.helpButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.helpButton.Image = global::GMS.Properties.Resources.help1;
+            this.helpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.helpButton.Name = "helpButton";
+            this.helpButton.Size = new System.Drawing.Size(23, 22);
+            this.helpButton.Text = "Help";
+            this.helpButton.Click += new System.EventHandler(this.helpButtonClicked);
             // 
             // mainSplitContainer
             // 
@@ -213,6 +227,11 @@ namespace GMS
             this.panel1.Size = new System.Drawing.Size(685, 155);
             this.panel1.TabIndex = 2;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -256,6 +275,8 @@ namespace GMS
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox glyph1picture;
         private System.Windows.Forms.CheckedListBox glyphCheckBoxes;
+        private System.Windows.Forms.ToolStripButton helpButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

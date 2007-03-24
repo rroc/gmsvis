@@ -32,7 +32,7 @@ namespace GMS
         private object[,]       iFilteredData;
         private DataCube        iFilteredDataCube;
         private List<string>    iFilteredCountryNames;
-        private List<string>    iFilteredFlagFiles;
+        //private List<string>    iFilteredFlagFiles;
         List<string>            iFilteredAcronyms;
         public  ColorMap        iFilteredColorMap;
 
@@ -66,7 +66,7 @@ namespace GMS
         
         public List<string> GetFilteredCountryNames() { return this.iFilteredCountryNames; }
         public List<string> GetFilteredAcronyms() { return this.iFilteredAcronyms; }
-        public List<string> GetFilteredFlagNames() { return this.iFilteredFlagFiles; }
+        //public List<string> GetFilteredFlagNames() { return this.iFilteredFlagFiles; }
 
         public Hashtable GetSortedCountryNames() { return this.iSortedCountryNames; }
 

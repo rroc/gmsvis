@@ -81,6 +81,20 @@ namespace GMS.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap help {
+            get {
+                object obj = ResourceManager.GetObject("help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap help1 {
+            get {
+                object obj = ResourceManager.GetObject("help1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap transparency {
             get {
                 object obj = ResourceManager.GetObject("transparency", resourceCulture);
