@@ -21,11 +21,13 @@ namespace GMS
         ParallelPlotCountries pcCountries;
         MapPlot mapPlot;
         TreeMap iTreeMap;
+        AboutBox iAboutBox;
 
         public Form1()
         {
             InitializeComponent();
 
+            iAboutBox = new AboutBox();
             this.glyphCheckBoxes.SetItemChecked(1, true);
             this.glyphCheckBoxes.SetItemChecked(3, true);
             this.glyphPanel.Hide();
@@ -112,34 +114,7 @@ namespace GMS
 
         void ShowInformationBox()
         {
-            MessageBox.Show(
-                  "This program visualizes data gathered from three different sources: \n"
-                + "- freedb.org:\tAlbum name, Artist, Style\n"
-                + "- musicbrainz.org:\tAlbum release year, Release country\n"
-                + "- CIA World book:\tGovernment type, Median age, GDP per capita, Unemployment\n"
-                + "\n"
-                + "The same data is presented in three views:\n"
-                + "- MapPlot: 4 types of selectable glyphs\n"
-                + "- TreeMap: Select which items you want to compare from drop down menu.\n"
-                + "- Parallel Coordinates: Filter and select items.\n"
-                + "\n"
-                + "+ Coloring and Selection are synchronized with all the views when possible.\n"
-                + "\n"
-                + "Mouse Control:\n"
-                + "- GeoMap:\n"
-                + "\tLeft:\tSelect / Pan\n"
-                + "\tRight:\tZoom\n"
-                + "- TreeMap:\n"
-                + "\tLeft:\tZoom in\n"
-                + "\tRight:\tZoom out\n"
-                + "- Parallel Coordinates:\n"
-                + "\tLeft:\tSelect line\n"
-                + "\tRight:\tMove Axis Locations\n"
-
-                , "Welcome to the GMS Visualizer"
-                , MessageBoxButtons.OK
-                , MessageBoxIcon.Information
-                );
+            iAboutBox.ShowDialog( this );
         }
 
         void pcPlot_FilterChanged(object sender, EventArgs e)
