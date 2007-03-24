@@ -98,7 +98,7 @@ namespace Gav.Graphics
         /// <summary>
         /// 
         /// </summary>
-        private Panel panel;
+        private Panel iPanel;
 
         /// <summary>
         /// 
@@ -124,13 +124,13 @@ namespace Gav.Graphics
         private int mouseY;
 
         // Bools used in InternalRender()
-        bool inited = false;
-        bool sizeUpdated = false;
+        bool iInited = false;
+        bool iSizeUpdated = false;
 
         /// <summary>
         /// The maximum width of all labels
         /// </summary>
-        private float maxLabelWidth;
+        private float iMaxLabelWidth;
 
         // Mouse state variables
         private bool mouseOverText;
@@ -145,12 +145,12 @@ namespace Gav.Graphics
         public TextLensSubComponent(ParallelCoordinatesPlot aPlot, Panel aPanel, GMSDocument aDoc)
         {
             plot = aPlot;
-            panel = aPanel;
-            graphicsObj = panel.CreateGraphics();
+            iPanel = aPanel;
+            graphicsObj = iPanel.CreateGraphics();
             iLabelZoomed = false;
             
             labels = new List<Label>();
-            maxLabelWidth = 0.0f;
+            iMaxLabelWidth = 0.0f;
             mouseOverText = false;
 
             notVisibleTextColor = System.Drawing.Color.LightGray;
@@ -161,6 +161,7 @@ namespace Gav.Graphics
 
             iDoc = aDoc;
             iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+            
         }
 
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
@@ -216,6 +217,7 @@ namespace Gav.Graphics
         /// <param name="device"></param>
         private void InitFonts(Microsoft.DirectX.Direct3D.Device device)
         {
+
             ComputeLensVerticalBounds();
 
             // Add 10% to provide some some space between them
@@ -263,15 +265,21 @@ namespace Gav.Graphics
         /// <param name="device"></param>
         protected override void InternalInit(Microsoft.DirectX.Direct3D.Device device)
         {
-            //d3dDevice = device;
-
-            //// Compute the new bounds
-            //ComputeLensHorizontalBounds();
-            //ComputeLensVerticalBounds();
-
-            //InitFonts(d3dDevice);
-
             //ComputeMaxLabelWidth();
+            InitFonts(device);
+
+            // NOTE: invalidate maxLabelWidth because we might be shrinking the text
+            // and also, it must be done before the new LensBounds are computed
+            ComputeMaxLabelWidth();
+
+            // Compute the new bounds: given the new text sizes
+            ComputeLensHorizontalBounds();
+
+            // initialize every label's default position
+            foreach (Label label in labels)
+            {
+                InitLabelDefaultPosition(label);
+            }
         }
 
         /// <summary>
@@ -307,7 +315,7 @@ namespace Gav.Graphics
         /// </summary>
         protected override void UpdateSize()
         {
-            sizeUpdated = true;
+            iSizeUpdated = true;
         }
 
         /// <summary>
@@ -331,7 +339,7 @@ namespace Gav.Graphics
             int yPos = plot.YPositionToScreen(plot.PadPositionY(label.verticalPosition)) - textHalfHeight;
             int axisPos = 0;
 
-            if (inited)
+            if (iInited)
             {
                 List<float> axesPositions = plot.GetAxisXPositions();
                 axisPos = plot.XPositionToScreen(axesPositions[0]);
@@ -341,7 +349,7 @@ namespace Gav.Graphics
                 axisPos = plot.XPositionToScreen(plot.PadPositionX(0));
             }
 
-            int xPos = axisPos - (int)maxLabelWidth;
+            int xPos = axisPos - (int)iMaxLabelWidth;
 
             label.defaultPosition = new System.Drawing.Point(xPos, yPos);
         }
@@ -354,7 +362,7 @@ namespace Gav.Graphics
         private void ComputeLensHorizontalBounds()
         {
             const int offset = 5;
-            if (inited)
+            if (iInited)
             {
                 List<float> axesPositions = plot.GetAxisXPositions();
                 labelRight = plot.XPositionToScreen(axesPositions[0]) + offset;
@@ -364,7 +372,7 @@ namespace Gav.Graphics
                 labelRight = plot.XPositionToScreen(plot.PadPositionX(0)) + offset;
             }
 
-            labelLeft = labelRight - (int)maxLabelWidth;
+            labelLeft = labelRight - (int)iMaxLabelWidth;
         }
 
         /// <summary>
@@ -381,18 +389,19 @@ namespace Gav.Graphics
         /// </summary>
         private void ComputeMaxLabelWidth()
         {
-            maxLabelWidth = 0;
+            iMaxLabelWidth = 0;
 
             // Compute Label
             foreach (Label label in labels)
             {
                 float width = graphicsObj.MeasureString(label.text, systemFont).Width;
 
-                if (width > maxLabelWidth)
+                if (width > iMaxLabelWidth)
                 {
-                    maxLabelWidth = width;
+                    iMaxLabelWidth = width;
                 }
             }
+            plot.PaddingLeft = (int)iMaxLabelWidth + 10;
         }
         
         /// <summary>
@@ -409,11 +418,11 @@ namespace Gav.Graphics
             //}
             
             // If the panel has been resized
-            if (!inited || sizeUpdated)
+            if (!iInited || iSizeUpdated)
             {
                 ComputeLensHorizontalBounds();
-                sizeUpdated = false;
-                inited = true;
+                iSizeUpdated = false;
+                iInited = true;
                 OnSizeUpdate(device);
             }
 
@@ -602,7 +611,7 @@ namespace Gav.Graphics
             if (lastButtonPressed== MouseButtons.Right)
             {
                 // Recompute the new bounds due to the axis displacement
-                sizeUpdated = true;
+                iSizeUpdated = true;
             }
 
             lastButtonPressed = MouseButtons.None;
