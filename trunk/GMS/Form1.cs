@@ -59,7 +59,7 @@ namespace GMS
                                       , PCMapSplitContainer.Panel1
                                       , renderer
                                       , doc.iFilteredColorMap
-                                      , pcCountries.pcPlot
+                                      , pcCountries.iPcPlot
                                       , doc
                                       );
 
@@ -79,7 +79,7 @@ namespace GMS
             
             iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
-            pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
+            pcCountries.iPcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
             this.glyphPanel.Show();
             this.ShowInformationBox();
