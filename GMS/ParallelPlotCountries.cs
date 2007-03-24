@@ -24,9 +24,9 @@ namespace GMS
 
         private Renderer renderer;
 
-        public ParallelCoordinatesPlot pcPlot;
+        public ParallelCoordinatesPlot iPcPlot;
         TextLensSubComponent textLens;
-        Panel panel;
+        Panel iPanel;
 
         ColorMap iColorMap;
 
@@ -45,7 +45,7 @@ namespace GMS
             iColorMap = aColorMap;
             iGroupBox = aGroupBox;
 
-            panel = aDestinationPanel;
+            iPanel = aDestinationPanel;
             renderer = aRenderer;
             headers = new List<string>();
             iDoc = aDoc;
@@ -64,7 +64,7 @@ namespace GMS
         /// <param name="e"></param>
         void DocumentColorMapChanged(object sender, EventArgs e)
         {
-            pcPlot.Invalidate();
+            iPcPlot.Invalidate();
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace GMS
         /// <param name="e"></param>
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
         {
-            pcPlot.SetSelectedLines(e.PickedIndexes, false, false);
-            pcPlot.Invalidate();
+            iPcPlot.SetSelectedLines(e.PickedIndexes, false, false);
+            iPcPlot.Invalidate();
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace GMS
                 ChangePC(kMeansFilter.GetData().Data.GetLength(0) - 1);
             }
 
-            pcPlot.Invalidate();
+            iPcPlot.Invalidate();
             GC.Collect();
         }
 
@@ -166,30 +166,30 @@ namespace GMS
             //COLOR according to clusters
             if (columnIndex != -1)
             {
-                pcPlot.SetSelectedHeaderIndexes(new List<int>());
+                iPcPlot.SetSelectedHeaderIndexes(new List<int>());
 
                 //if previously using normal datacube
                 if( ! kMeansClusteringOn )
                 {
-                    pcPlot.ColorMap.Input = kMeansFilter;
+                    iPcPlot.ColorMap.Input = kMeansFilter;
                     kMeansClusteringOn = ! kMeansClusteringOn;
                 }
-                pcPlot.ColorMap.Index = columnIndex;
+                iPcPlot.ColorMap.Index = columnIndex;
                 kMeansFilter.CommitChanges();
             }
             //CLUSTERING WAS PREVIOUSLY ON
             else if (kMeansClusteringOn)
             {
-                pcPlot.ColorMap.Input = iDataCube;
+                iPcPlot.ColorMap.Input = iDataCube;
                 kMeansClusteringOn = !kMeansClusteringOn;
                 //pcPlot.ColorMap.Index = iDataCube.Data.GetLength(0) - 1;
-                pcPlot.ColorMap.Index = 1;
+                iPcPlot.ColorMap.Index = 1;
             }
             else
             {
                 //None to None
             }
-            pcPlot.GuideLineEnabled = true;
+            iPcPlot.GuideLineEnabled = true;
         }
 
         /// <summary>
@@ -204,37 +204,37 @@ namespace GMS
             this.headers.Add("Unemployment Rate\n(%)");
             this.headers.Add("GDB Per Capita\n($)");
 
-            pcPlot = InitializeParallelCoordinatesPlot(panel, iDataCube, -1, headers);
+            iPcPlot = InitializeParallelCoordinatesPlot(iPanel, iDataCube, -1, headers);
             
             // Padding: so the names of the countries don't be cut
-            pcPlot.PaddingLeft += 60;
-            pcPlot.PaddingTop += 15;
-            pcPlot.PickSensitivity = 3;
+            iPcPlot.PaddingLeft += 60;
+            iPcPlot.PaddingTop += 15;
+            iPcPlot.PickSensitivity = 3;
 
-            pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
-            pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
+            iPcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
+            iPcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
-            pcPlot.LineTransparency = 235;
-            pcPlot.LineTransparencySelected = 200;
-            pcPlot.SelectedLineColor = Color.Black;
-            pcPlot.SelectedLineThickness = 3;
-            pcPlot.OutfilteredLineColor = Color.LightGray;
-            pcPlot.ShowOutFilteredLines = true;
+            iPcPlot.LineTransparency = 235;
+            iPcPlot.LineTransparencySelected = 200;
+            iPcPlot.SelectedLineColor = Color.Black;
+            iPcPlot.SelectedLineThickness = 3;
+            iPcPlot.OutfilteredLineColor = Color.LightGray;
+            iPcPlot.ShowOutFilteredLines = true;
 
-            textLens = new TextLensSubComponent(pcPlot, panel, iDoc);
-            pcPlot.AddSubComponent(textLens);
+            textLens = new TextLensSubComponent(iPcPlot, iPanel, iDoc);
+            iPcPlot.AddSubComponent(textLens);
 
-            pcPlot.HeaderClicked += new EventHandler(PCPlotHeaderClicked);
+            iPcPlot.HeaderClicked += new EventHandler(PCPlotHeaderClicked);
 
             /************************************************************************/
             /* XXX: FONTS NOT WORKING                                               */
             /************************************************************************/
-            pcPlot.FontSelectedHeaders = new Font("Verdana", 14, FontStyle.Bold);
+            iPcPlot.FontSelectedHeaders = new Font("Verdana", 14, FontStyle.Bold);
             
-            pcPlot.SelectedHeaderTextColor = Color.Red;
+            iPcPlot.SelectedHeaderTextColor = Color.Red;
             List<int> list = new List<int>();
             list.Add(1);
-            pcPlot.SetSelectedHeaderIndexes(list);
+            iPcPlot.SetSelectedHeaderIndexes(list);
 
 
             int countriesCount = iCountryNames.Count;
@@ -247,6 +247,7 @@ namespace GMS
 
                 textLens.AddLabel(country, verticalPosition, (int)i);
             }
+
         }
 
         void PCPlotHeaderClicked(object sender, EventArgs e)
@@ -256,8 +257,8 @@ namespace GMS
                 iGroupBox.SelectedIndex = 5;
                 iGroupBox.Invalidate();
             }
-            pcPlot.SetSelectedHeader(pcPlot.ClickedHeader);
-            iColorMap.Index = pcPlot.ClickedHeader;
+            iPcPlot.SetSelectedHeader(iPcPlot.ClickedHeader);
+            iColorMap.Index = iPcPlot.ClickedHeader;
             iDoc.OnColorMapChanged();
         }
 
@@ -280,14 +281,7 @@ namespace GMS
             // if CTRL is pressed, add the line to the selection
             Keys keys = Control.ModifierKeys;
             bool add = (keys == Keys.Control);
-
-            //pcPlot.SetSelectedLines(selectedLines, add, true);
-
             iDoc.SetSelectedItems(selectedLines, add, true);
-
-            //List<int> overallSelection = pcPlot.GetSelectedLineIndexes();
-
-            //textLens.SelectionChanged(overallSelection);
         }
     }
 }
