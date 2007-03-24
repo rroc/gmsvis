@@ -20,6 +20,7 @@ namespace GMS
         private DataCube iDataCube;
         private KMeansFilter kMeansFilter;
         private bool kMeansClusteringOn = false;
+        private ToolStripComboBox iGroupBox;
 
         private Renderer renderer;
 
@@ -37,11 +38,12 @@ namespace GMS
         #endregion // Private Attributes
 
         public ParallelPlotCountries(DataCube aDataCube, List<string> aCountryNames, Panel aDestinationPanel,
-            Renderer aRenderer, ColorMap aColorMap, GMSDocument aDoc)
+            Renderer aRenderer, ColorMap aColorMap, GMSDocument aDoc, ToolStripComboBox aGroupBox )
         {
             iDataCube = aDataCube;
             iCountryNames = aCountryNames;
             iColorMap = aColorMap;
+            iGroupBox = aGroupBox;
 
             panel = aDestinationPanel;
             renderer = aRenderer;
@@ -164,6 +166,8 @@ namespace GMS
             //COLOR according to clusters
             if (columnIndex != -1)
             {
+                pcPlot.SetSelectedHeaderIndexes(new List<int>());
+
                 //if previously using normal datacube
                 if( ! kMeansClusteringOn )
                 {
@@ -228,6 +232,10 @@ namespace GMS
             pcPlot.FontSelectedHeaders = new Font("Verdana", 14, FontStyle.Bold);
             
             pcPlot.SelectedHeaderTextColor = Color.Red;
+            List<int> list = new List<int>();
+            list.Add(1);
+            pcPlot.SetSelectedHeaderIndexes(list);
+
 
             int countriesCount = iCountryNames.Count;
 
@@ -243,6 +251,11 @@ namespace GMS
 
         void PCPlotHeaderClicked(object sender, EventArgs e)
         {
+            if (kMeansClusteringOn)
+            {
+                iGroupBox.SelectedIndex = 5;
+                iGroupBox.Invalidate();
+            }
             pcPlot.SetSelectedHeader(pcPlot.ClickedHeader);
             iColorMap.Index = pcPlot.ClickedHeader;
             iDoc.OnColorMapChanged();
