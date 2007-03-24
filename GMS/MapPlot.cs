@@ -19,8 +19,6 @@ namespace GMS
 {
     class MapPlot
     {
-        private List<Bitmap> iTexture;
-
         private DataCube iDataCube;
         private MapData iMapData;
         private ColorMap iColorMap;

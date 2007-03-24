@@ -82,6 +82,27 @@ namespace GMS
             pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
             this.glyphPanel.Show();
+            this.ShowInformationBox();
+        }
+
+        void ShowInformationBox()
+        {
+            MessageBox.Show(
+                  "This program visualizes data gathered from three different sources: \n"
+                + "- freedb.org:\tAlbum name, Artist, Style\n"
+                + "- musicbrainz.org:\tAlbum release year, Release country\n"
+                + "- CIA World book:\tGovernment type, Median age, GDP per capita, Unemployment\n"
+                + "\n"
+                + "The same data is presented in three views:\n"
+                + "- MapPlot: 4 types of selectable glyphs\n"
+                + "- TreeMap: Select which items you want to compare from drop down menu.\n"
+                + "- Parallel Coordinates: Filter and select items.\n"
+                + "\n"
+                + "Coloring and selection are synchronized with all the views when possible."
+                , "Welcome to the GMS Visualizer"
+                , MessageBoxButtons.OK
+                , MessageBoxIcon.Information
+                );
         }
 
         void pcPlot_FilterChanged(object sender, EventArgs e)
@@ -101,6 +122,11 @@ namespace GMS
         private void glyphCheckBoxes_SelectedIndexChanged(object sender, EventArgs e)
         {
             mapPlot.Invalidate(); //PCMapSplitContainer.Panel1.Invalidate();
+        }
+
+        private void helpButtonClicked(object sender, EventArgs e)
+        {
+            ShowInformationBox();
         }
     }
 }

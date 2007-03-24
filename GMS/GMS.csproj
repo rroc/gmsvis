@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="iTunes.ico" />
+    <None Include="Resources\help.png" />
     <None Include="Resources\work.png" />
     <None Include="Resources\age.png" />
     <None Include="Resources\cd.png" />
