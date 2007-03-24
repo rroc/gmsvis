@@ -30,9 +30,13 @@ namespace GMS
         private MapPolygonLayer polygonLayer;
         private MapPolygonLayer polygonSelectionLayer;
         private MapPolygonBorderLayer borderLayer;
+        private MapPolygonBorderLayer borderSelectionLayer;
         private CountryGlyphLayer glyphLayer;
+
         private ChoroplethMap choroMap;
         private ParallelCoordinatesPlot iPcPlot;
+        private IndexVisibilityHandler iSelectedInVisibility;
+        private IndexVisibilityList iInVisibilityList;
         private IndexVisibilityHandler iSelectedVisibility;
         private IndexVisibilityList iVisibilityList;
 
@@ -133,14 +137,18 @@ namespace GMS
         {
             for (int i = 0, endI = iMapData.RegionList.Count; i < endI; i++)
             {
-                iVisibilityList.SetVisibility(i, 0, true);
+                iInVisibilityList.SetVisibility(i, 0, true);
+                iVisibilityList.SetVisibility(i, 0, false);
             }
+            
             //polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
             //polygonSelectionLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
             foreach (int index in e.PickedIndexes)
             {
-                iVisibilityList.SetVisibility(index, 0, false ); //!iVisibilityList.GetVisibility(index));
+                iInVisibilityList.SetVisibility(index, 0, false ); //!iVisibilityList.GetVisibility(index));
+                iVisibilityList.SetVisibility(index, 0, true);
             }
+            iInVisibilityList.CommitChanges();
             iVisibilityList.CommitChanges();
             Invalidate();
         }
@@ -173,11 +181,26 @@ namespace GMS
             polygonSelectionLayer.PolygonColor = Color.FromArgb(220,220,220);
             polygonSelectionLayer.Alpha = 150;
 
-            iSelectedVisibility = new IndexVisibilityHandler(iMapData.RegionList.Count);
-            iSelectedVisibility.Clear();
-            iVisibilityList = iSelectedVisibility.CreateVisibilityList();
+            borderSelectionLayer = new MapPolygonBorderLayer();
+            borderSelectionLayer.MapData = iMapData;
+            borderSelectionLayer.BorderColor = Color.Black;
+            borderSelectionLayer.Translation = new Vector3(0.6f, 0.6f, 0); // borderSelectionLayer.Translation.X;
 
-            polygonSelectionLayer.IndexVisibilityHandler = iSelectedVisibility;
+            iSelectedInVisibility = new IndexVisibilityHandler(iMapData.RegionList.Count);
+            iSelectedVisibility = new IndexVisibilityHandler(iMapData.RegionList.Count);
+            iSelectedInVisibility.Clear();
+           
+            iInVisibilityList = iSelectedInVisibility.CreateVisibilityList();
+            iVisibilityList =   iSelectedVisibility.CreateVisibilityList();
+
+            for (int i = 0, endI = iMapData.RegionList.Count; i < endI; i++)
+            {
+                iVisibilityList.SetVisibility(i, 0, false);
+            }
+
+
+            polygonSelectionLayer.IndexVisibilityHandler = iSelectedInVisibility;
+            borderSelectionLayer.IndexVisibilityHandler = iSelectedVisibility;
 
 //            polygonSelectionLayer.SelectedPolygonColor = Color.Transparent;
 
@@ -195,8 +218,9 @@ namespace GMS
             
             // Add layers on the proper order
             choroMap.AddLayer(polygonLayer);
-            choroMap.AddLayer(polygonSelectionLayer);
             choroMap.AddLayer(borderLayer);
+            choroMap.AddLayer(polygonSelectionLayer);
+            choroMap.AddLayer(borderSelectionLayer);
             choroMap.AddLayer(glyphLayer);
             Invalidate();
 
