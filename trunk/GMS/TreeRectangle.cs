@@ -53,8 +53,9 @@ namespace GMS
         List<TreeRectangle> iChildRectangles;
 
         // Drawing properties
-        SolidBrush iBorderPen;
-        SolidBrush iGroupLabelPen;
+        private static SolidBrush iBorderPen;
+        private static SolidBrush iGroupLabelPen;
+        private static SolidBrush iSelectedGroupLabelPen;
         SolidBrush iSelectedGroupLabelPen;
         Pen iPen;
         System.Drawing.Drawing2D.LinearGradientBrush iBrush;
@@ -85,6 +86,11 @@ namespace GMS
             iChildRectangles = new List<TreeRectangle>();
             SetSize(aX1, aY1, aX2, aY2);
 
+            iBorderPen              = new SolidBrush(Color.Red);
+            iGroupLabelPen          = new SolidBrush(Color.White);
+            iSelectedGroupLabelPen  = new SolidBrush(Color.Black);
+            iPen                    = new Pen(iBorderPen, iBorder);
+            iPen.Alignment          = System.Drawing.Drawing2D.PenAlignment.Center;
             iBorderPen      = new SolidBrush(Color.Red);
             iGroupLabelPen  = new SolidBrush(Color.White);
             iSelectedGroupLabelPen = new SolidBrush(Color.Black);
@@ -265,7 +271,8 @@ namespace GMS
             //    rectangle.DrawChild(aGraphics, aColorMap);
             //}
 
-            //DrawLabel(aGraphics);
+            //
+            (aGraphics);
         }
 
         /// <summary>
@@ -284,13 +291,6 @@ namespace GMS
 
             UpdateRectangle(aColorMap);
 
-            //System.Drawing.RectangleF fillRectangle = new System.Drawing.RectangleF(
-            //    (iLowerLeft.X * iScale.X),
-            //    (iLowerLeft.Y * iScale.Y),
-            //    (iWidth * iScale.X),
-            //     height);
-
-
             // Last level: Draw Label and Fill Rectangle
             if (iChildRectangles.Count == 0)
             {
@@ -300,12 +300,7 @@ namespace GMS
                     iId = 0;
                 }
 
-                //System.Drawing.Drawing2D.LinearGradientBrush brush = new
-                //       System.Drawing.Drawing2D.LinearGradientBrush(
-                //       fillRectangle,
-                //       aColorMap.GetColor(id), Color.Black,
-                //       System.Drawing.Drawing2D.LinearGradientMode.Vertical);
-
+                // *** If selected ***
                 if (aSelectedIds != null && aSelectedIds.Contains(iId))
                 {
                     System.Drawing.Drawing2D.LinearGradientBrush brush = new
@@ -331,12 +326,6 @@ namespace GMS
                     rectangle.DrawChild(aGraphics, aColorMap, aSelectedIds);
                 }
 
-                //System.Drawing.Rectangle borderRectangle = new System.Drawing.Rectangle(
-                //    (int)Math.Ceiling(iLowerLeft.X * iScale.X),
-                //    (int)Math.Ceiling(iLowerLeft.Y * iScale.Y),
-                //    (int)Math.Ceiling(iWidth * iScale.X),
-                //    (int)Math.Ceiling(iHeight * iScale.Y));
-
                 // Draw the The Group Rectangle (as a border)
                 aGraphics.DrawRectangle(iPen, iBorderRectangle);
 
@@ -354,33 +343,42 @@ namespace GMS
         private void DrawGroupLabel(System.Drawing.RectangleF fillRectangle,
             Graphics aGraphics, SolidBrush borderPen)
         {
-            fillRectangle.Height = iScale.Y * 1.5F;
-            float fontsize = fillRectangle.Height;
+            System.Drawing.RectangleF labelRectangle = new RectangleF(fillRectangle.Location, fillRectangle.Size);
+
+            labelRectangle.Height = iScale.Y * 1.5F;
+            float fontsize = labelRectangle.Height;
 
             // Limit the size of the text and bounding rectangle
             fontsize = (fontsize <= MIN_GROUP_LABEL_SIZE) ? MIN_GROUP_LABEL_SIZE : fontsize;
-            if (fillRectangle.Height > MAX_GROUP_LABEL_SIZE)
+            if (labelRectangle.Height > MAX_GROUP_LABEL_SIZE)
             {
                 fontsize = MAX_GROUP_LABEL_SIZE;
-                fillRectangle.Height = MAX_GROUP_LABEL_SIZE;
+                labelRectangle.Height = MAX_GROUP_LABEL_SIZE;
             }
 
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Italic);
 
             SizeF size = aGraphics.MeasureString(iLabel, font);
-            fillRectangle.Width     = size.Width;
-            fillRectangle.Height    = size.Height;
+            labelRectangle.Width = size.Width;
+            labelRectangle.Height = size.Height;
 
-            aGraphics.FillRectangle(borderPen, fillRectangle);
-            aGraphics.DrawString(iLabel, font, iGroupLabelPen, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y);
+            float labelArea = labelRectangle.Width * labelRectangle.Height * iScale.Y;
+            float nodeArea  = fillRectangle.Width * fillRectangle.Height * iScale.X;
 
+            // if the label occupies less than 50% of the area of the
+            // node rectangle, then draw it
+            if (labelArea / nodeArea < 0.5F)
+            {
+                aGraphics.FillRectangle(borderPen, labelRectangle);
+                aGraphics.DrawString(iLabel, font, iGroupLabelPen, iLowerLeft.X * iScale.X, iLowerLeft.Y * iScale.Y);
+            }
         }
 
         /// <summary>
         /// Draw the label of the rectangle
         /// </summary>
         /// <param name="aGraphics"></param>
-        private void DrawLabel(Graphics aGraphics)
+        private void DrawLabel(Graphics aGraphics, SolidBrush aPen)
         {
             DrawLabel(aGraphics, iGroupLabelPen);
        }
@@ -391,7 +389,7 @@ namespace GMS
             float fontsize = (float)Math.Log(iHeight * iScale.Y * 0.5F, 2.0F) * 2.0F;
             fontsize = (fontsize <= 1.0F)? 1.0F : fontsize;
             float centerY = iHeight / 2.0F;
-            
+
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
             aGraphics.DrawString(iLabel, font, aBrush, (iLowerLeft.X + (iWidth * 0.05F)) * iScale.X, (centerY + iLowerLeft.Y) * iScale.Y - fontsize);
 
