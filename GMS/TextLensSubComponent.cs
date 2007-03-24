@@ -136,6 +136,8 @@ namespace Gav.Graphics
         private bool mouseOverText;
         private MouseButtons lastButtonPressed;
 
+        private bool iLabelZoomed;
+
         GMSDocument iDoc;
 
         #endregion
@@ -145,6 +147,7 @@ namespace Gav.Graphics
             plot = aPlot;
             panel = aPanel;
             graphicsObj = panel.CreateGraphics();
+            iLabelZoomed = false;
             
             labels = new List<Label>();
             maxLabelWidth = 0.0f;
@@ -426,10 +429,10 @@ namespace Gav.Graphics
                     System.Drawing.Point p = new System.Drawing.Point(label.defaultPosition.X, label.defaultPosition.Y);
                     p.Y -= (lensTextHeight - defaultTextHeight) / 2;
 
-                    d3dLensFont.DrawText(null, label.text, p,
-                        System.Drawing.Color.Red);
+                    d3dLensFont.DrawText(null, label.text, p, label.colorARGB ); //System.Drawing.Color.Red);
 
                     labelMagnified = true;
+                    iLabelZoomed = true;
                 }
                 else
                 {
@@ -519,6 +522,11 @@ namespace Gav.Graphics
             else
             {
                 mouseOverText = false;
+                if( iLabelZoomed )
+                {
+                    iLabelZoomed = false;
+                    plot.Invalidate();
+                }
             }
 
             return false;
