@@ -56,7 +56,6 @@ namespace GMS
         private static SolidBrush iBorderPen;
         private static SolidBrush iGroupLabelPen;
         private static SolidBrush iSelectedGroupLabelPen;
-        SolidBrush iSelectedGroupLabelPen;
         Pen iPen;
         System.Drawing.Drawing2D.LinearGradientBrush iBrush;
         System.Drawing.RectangleF iFillRectangle;
@@ -272,7 +271,6 @@ namespace GMS
             //}
 
             //
-            (aGraphics);
         }
 
         /// <summary>
@@ -378,7 +376,7 @@ namespace GMS
         /// Draw the label of the rectangle
         /// </summary>
         /// <param name="aGraphics"></param>
-        private void DrawLabel(Graphics aGraphics, SolidBrush aPen)
+        private void DrawLabel(Graphics aGraphics)
         {
             DrawLabel(aGraphics, iGroupLabelPen);
        }
