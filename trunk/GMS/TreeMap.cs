@@ -195,9 +195,9 @@ namespace GMS
         }
 
         /// <summary>
-        /// 
+        /// Initializes the TreeMap from a descending order object[,,] cube
         /// </summary>
-        /// <param name="aDataCube"></param>
+        /// <param name="aDataCube">[columns, rows, 1]</param>
         /// <param name="aQuantitativeDataIndex"></param>
         /// <param name="aOrdinalDataIndex"></param>
         /// <param name="aIdIndex"></param>
@@ -208,33 +208,37 @@ namespace GMS
             iRootRectangle  = new TreeRectangle(0.0F);
             iCurrentRootRectangle    = iRootRectangle;
 
-            string currentGroup = (string)aDataCube[0, aOrdinalDataIndex, 0];
+            string currentGroup = (string)aDataCube[aOrdinalDataIndex, 0, 0];
             TreeRectangle currentNode = new TreeRectangle(0.0F);
             currentNode.Label = currentGroup;
 
             // iterate through the rows
-            for (int i = 0; i < aDataCube.GetLength(0); i++)
+            for (int i = 0; i < aDataCube.GetLength(1); i++)
             {
                 // if changing to a different group
-                if (currentGroup != (string)aDataCube[i, aOrdinalDataIndex, 0])
+                if (currentGroup != (string)aDataCube[aOrdinalDataIndex, i, 0])
                 {
-                    iRootRectangle.AddRectangle(currentNode);
+                    // only add the node to the root if any children have been created
+                    if (currentNode.GetChildren().Count != 0)
+                    {
+                        iRootRectangle.AddRectangle(currentNode);
+                    }
                     currentNode = new TreeRectangle(0.0F);
-                    currentGroup = (string)aDataCube[i, aOrdinalDataIndex, 0];
+                    currentGroup = (string)aDataCube[aOrdinalDataIndex, i, 0];
                     currentNode.Label = currentGroup;
                 }
 
-                float area = Convert.ToSingle(aDataCube[i, aQuantitativeDataIndex, 0]);
+                float area = Convert.ToSingle(aDataCube[aQuantitativeDataIndex, i, 0]);
 
-                // only add the node if the area is bigger than one
-                if (area > 1.0F)
+                // only add the node if the area is bigger or equal to one
+                if (area >= 1.0F)
                 {
                     TreeRectangle childRectangle = new TreeRectangle(area);
-                    childRectangle.Id = Convert.ToInt32(aDataCube[i, aIdIndex, 0]);
+                    childRectangle.Id = Convert.ToInt32(aDataCube[aIdIndex, i, 0]);
 
                     // Tooltip Data and Label
                     BuildToolTipData(childRectangle, aDataCube, aToolTipComponents, i);
-                    childRectangle.Label = (string)aDataCube[i, aLeafNodeLabelIndex, 0];
+                    childRectangle.Label = (string)aDataCube[aLeafNodeLabelIndex, i, 0];
 
                     currentNode.AddRectangle(childRectangle);
                 }
@@ -256,7 +260,7 @@ namespace GMS
             foreach (GMSToolTipComponent toolTipComponent in aToolTipComponents)
             {
                 toolTip += toolTipComponent.iPrefix + ": "
-                    + aDataCube[aRow, toolTipComponent.iColumnIndex, 0]
+                    + aDataCube[toolTipComponent.iColumnIndex, aRow, 0]
                     + " " + toolTipComponent.iSuffix
                     + "\n";
             }
