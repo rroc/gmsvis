@@ -49,6 +49,7 @@ namespace GMS
                                                     , renderer
                                                     , doc.iFilteredColorMap
                                                     , doc
+                                                    , GetGroupBox()
                                                     );
 
             mapPlot = new MapPlot(doc.GetFilteredDataCube()
@@ -122,7 +123,19 @@ namespace GMS
                 + "- TreeMap: Select which items you want to compare from drop down menu.\n"
                 + "- Parallel Coordinates: Filter and select items.\n"
                 + "\n"
-                + "Coloring and selection are synchronized with all the views when possible."
+                + "+ Coloring and Selection are synchronized with all the views when possible.\n"
+                + "\n"
+                + "Mouse Control:\n"
+                + "- GeoMap:\n"
+                + "\tLeft:\tSelect / Pan\n"
+                + "\tRight:\tZoom\n"
+                + "- TreeMap:\n"
+                + "\tLeft:\tZoom in\n"
+                + "\tRight:\tZoom out\n"
+                + "- Parallel Coordinates:\n"
+                + "\tLeft:\tSelect line\n"
+                + "\tRight:\tMove Axis Locations\n"
+
                 , "Welcome to the GMS Visualizer"
                 , MessageBoxButtons.OK
                 , MessageBoxIcon.Information
@@ -152,5 +165,11 @@ namespace GMS
         {
             ShowInformationBox();
         }
+
+        public System.Windows.Forms.ToolStripComboBox GetGroupBox()
+        {
+            return groupingComboBox;
+        }
+
     }
 }
