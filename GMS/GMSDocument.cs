@@ -370,7 +370,7 @@ namespace GMS
         /// <param name="db"></param>
         public object[, ,] BuildCountriesAreasTree(out int aQuantitativeDataIndex,
             out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
-            List<GMSToolTipComponent> toolTipComponents)
+            List<GMSToolTipComponent> toolTipComponents, out object[,,] aColorMapInput)
         {
             List<List<object>> dataRows = new List<List<object>>();
             
@@ -380,10 +380,15 @@ namespace GMS
 
             Hashtable styles = new Hashtable();
 
-            int countryLimiter = 20;
+            //int countryLimiter = 20;
             int idCounter = 0;
             foreach (Country country in sortedCountries)
             {
+                //if (countryLimiter == 0)
+                //{
+                //    break;
+                //}
+
                 foreach (StyleTreeMapInfo styleInfo in styles.Values)
                 {
                     styleInfo.iReleaseCount = 0;
@@ -411,20 +416,16 @@ namespace GMS
                 ArrayList sortedStyles = new ArrayList(styles);
                 sortedStyles.Sort(new StyleTreeMapInfoComparer());
 
-                /************************************************************************/
-                /* STYLE LIMITER: TEMPORARY !!!!!!                                      */
-                /************************************************************************/
                 int styleLimiter = 30;
                 foreach (DictionaryEntry entry in sortedStyles)
                 {
-                    if (styleLimiter == 0)
-                    {
-                        break;
-                    }
                     StyleTreeMapInfo styleInfo = (StyleTreeMapInfo)entry.Value;
-                    string styleName = (string)entry.Key;
-                    //Style style = (Style)iDb.styles[key];
                     int releasesCount = styleInfo.iReleaseCount;
+
+                    if (releasesCount == 0) { continue; }
+                    if (styleLimiter == 0) { break; }
+
+                    string styleName = (string)entry.Key;
                     string countryName = country.name;
                     
                     List<object> countryRow = new List<object>();
@@ -437,7 +438,20 @@ namespace GMS
                     dataRows.Add(countryRow);
                     styleLimiter--;
                 }
-                countryLimiter--;
+                //countryLimiter--;
+            }
+
+            // Removing the id's gaps by creating increasing ids
+            Hashtable idHash = new Hashtable();
+
+            int idCount = 0;
+            foreach (List<object> row in dataRows)
+            {
+                int id = (int)row[3];
+                if (! idHash.ContainsKey(id))
+                {
+                    idHash.Add(id, idCount++);
+                }
             }
 
             // the column order
@@ -447,19 +461,35 @@ namespace GMS
             aLeafNodeLabelIndex = 0;    // Leaf Label
 
             // ToolTip Components
+            toolTipComponents.Add(new GMSToolTipComponent("Country", aOrdinalDataIndex));
             toolTipComponents.Add(new GMSToolTipComponent("Music Style", aLeafNodeLabelIndex));
-            toolTipComponents.Add(new GMSToolTipComponent("# Releases", aQuantitativeDataIndex, "albums"));
+            toolTipComponents.Add(new GMSToolTipComponent("Nr. Albums", aQuantitativeDataIndex));
 
             // Create and Fill the DataCube
-            object[, ,] dataCube = new object[4, dataRows.Count, 1];
+            object[, ,] dataCube    = new object[4, dataRows.Count, 1];
+            aColorMapInput          = new object[1, idHash.Count, 1];
+
+            // Fill the color map input
+            int j = 0;
+            foreach (int id in idHash.Values)
+            {
+                aColorMapInput[0, j++, 0] = id;
+            }
 
             int i = 0;
             foreach (List<object> row in dataRows)
             {
-                int j = 0;
+                j = 0;
                 foreach (object attribute in row)
                 {
-                    dataCube[j++, i, 0] = attribute;
+                    if (j == 3)
+                    {
+                        dataCube[j++, i, 0] = idHash[attribute];
+                    }
+                    else
+                    {
+                        dataCube[j++, i, 0] = attribute;
+                    }
                 }
                 ++i;
             }
@@ -521,94 +551,12 @@ namespace GMS
                     int releasesCount = (int)countries[(string)entry.Key];
                     string governmentType = country.govType;
                     List<object> styleRow = new List<object>();
-                   
+
                     styleRow.Add(countryName);                  // Col 0: Box Labels
                     styleRow.Add(style.name);                   // Col 1: Group Labels
                     styleRow.Add(releasesCount);                // Col 2: Area values
                     styleRow.Add(iFilteredCountryNames.IndexOf(countryName));  // Col 3: Id
                     styleRow.Add(governmentType);               // Col 4: Government Type
-
-                    dataRows.Add(styleRow);                 
-                }
-                styleLimiter--;
-            }
-
-            // the column order
-            aQuantitativeDataIndex  = 2; // Area values
-            aOrdinalDataIndex       = 1; // Group Labels
-            aIdIndex                = 3; // Id
-            aLeafNodeLabelIndex     = 0; // Leaf Label
-
-            // ToolTip Components
-            toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
-            toolTipComponents.Add(new GMSToolTipComponent("# Releases", aQuantitativeDataIndex, "albums"));
-            toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
-
-            // Create and Fill the DataCube
-            object[,,] dataCube = new object[dataRows.Count, 5, 1];
-
-            int i = 0;
-            foreach (List<object> row in dataRows)
-            {
-                int j = 0;
-                foreach (object attribute in row)
-                {
-                    dataCube[i, j++, 0] = attribute;
-                }
-                ++i;
-            }
-
-            return dataCube;
-        }
-
-        /// <summary>
-        /// Creates the TreeMap for the countries grouped per Style
-        /// </summary>
-        /// <param name="aRectangle"></param>
-        /// <param name="db"></param>
-        public object[, ,] BuildStylesUnemploymentRateAreaTree(out int aQuantitativeDataIndex,
-            out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
-            List<GMSToolTipComponent> toolTipComponents)
-        {
-            // Temporary structure to hold the rows of the datacube
-            List<List<object>> dataRows = new List<List<object>>();
-
-            // Sort the styles so we can have only the N most popular ones
-            ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
-            sortedStyles.Sort(new StyleComparer());
-
-            int styleLimiter = 20;
-            foreach (Style style in sortedStyles)
-            {
-                if (styleLimiter == 0)
-                {
-                    break;
-                }
-
-                Hashtable countries = new Hashtable();
-
-                // count all the occurrences in the countries
-                foreach (MusicBrainzRelease release in style.releases)
-                {
-                    if (! countries.ContainsKey(release.country.name) )
-                    {
-                        countries.Add(release.country.name, release.country);
-                    }
-                }
-
-                // Sort the releases
-                ArrayList sortedReleases = new ArrayList(countries.Values);
-                sortedReleases.Sort(new CountryUnemploymentComparer());
-
-                foreach (Country country in sortedReleases)
-                {
-                    List<object> styleRow = new List<object>();
-
-                    styleRow.Add(country.name);                 // Col 0: Box Labels
-                    styleRow.Add(style.name);                   // Col 1: Group Labels
-                    styleRow.Add(country.unemploymentRate);     // Col 2: Area values
-                    styleRow.Add(iFilteredCountryNames.IndexOf(country.name)); // Col 3: Id
-                    styleRow.Add(country.govType);              // Col 4: Government Type
 
                     dataRows.Add(styleRow);
                 }
@@ -616,18 +564,18 @@ namespace GMS
             }
 
             // the column order
-            aQuantitativeDataIndex  = 2; // Area values
-            aOrdinalDataIndex       = 1; // Group Labels
-            aIdIndex                = 3; // Id
-            aLeafNodeLabelIndex     = 0; // Leaf Label
+            aQuantitativeDataIndex = 2; // Area values
+            aOrdinalDataIndex = 1; // Group Labels
+            aIdIndex = 3; // Id
+            aLeafNodeLabelIndex = 0; // Leaf Label
 
             // ToolTip Components
             toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
-            toolTipComponents.Add(new GMSToolTipComponent("Unemployment Rate", aQuantitativeDataIndex, "%"));
+            toolTipComponents.Add(new GMSToolTipComponent("Nr. Albums", aQuantitativeDataIndex));
             toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
 
             // Create and Fill the DataCube
-            object[, ,] dataCube = new object[dataRows.Count, 5, 1];
+            object[, ,] dataCube = new object[5, dataRows.Count, 1];
 
             int i = 0;
             foreach (List<object> row in dataRows)
@@ -635,13 +583,218 @@ namespace GMS
                 int j = 0;
                 foreach (object attribute in row)
                 {
-                    dataCube[i, j++, 0] = attribute;
+                    dataCube[j++, i, 0] = attribute;
                 }
                 ++i;
             }
 
             return dataCube;
         }
+
+        ///// <summary>
+        ///// Creates the TreeMap for the countries grouped per Style. The grouping
+        ///// criterion is either Unemployment Rate or Median Age
+        ///// </summary>
+        ///// <param name="aQuantitativeDataIndex"></param>
+        ///// <param name="aOrdinalDataIndex"></param>
+        ///// <param name="aIdIndex"></param>
+        ///// <param name="aLeafNodeLabelIndex"></param>
+        ///// <param name="toolTipComponents"></param>
+        ///// <param name="aMedianAge">if true uses Median Age as the criterion, otherwise
+        ///// it uses Unemployment Rate</param>
+        ///// <returns></returns>
+        //public object[, ,] BuildStylesCriterionAreaTree(out int aQuantitativeDataIndex,
+        //    out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
+        //    List<GMSToolTipComponent> toolTipComponents, bool aMedianAge)
+        //{
+        //    CountryComparer.CRITERION compareCriterion = aMedianAge ? 
+        //        CountryComparer.CRITERION.MEDIANAGE : CountryComparer.CRITERION.UNEMPLOYMENTRATE;
+
+        //    // Temporary structure to hold the rows of the datacube
+        //    List<List<object>> dataRows = new List<List<object>>();
+
+        //    // Sort the styles so we can have only the N most popular ones
+        //    ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
+        //    sortedStyles.Sort(new StyleComparer());
+
+        //    int styleLimiter = 20;
+        //    foreach (Style style in sortedStyles)
+        //    {
+        //        if (styleLimiter == 0)
+        //        {
+        //            break;
+        //        }
+
+        //        Hashtable countries = new Hashtable();
+
+        //        // count all the occurrences in the countries
+        //        foreach (MusicBrainzRelease release in style.releases)
+        //        {
+        //            if (! countries.ContainsKey(release.country.name) )
+        //            {
+        //                countries.Add(release.country.name, release.country);
+        //            }
+        //        }
+
+        //        // Sort the releases
+        //        ArrayList sortedReleases = new ArrayList(countries.Values);
+        //        sortedReleases.Sort(new CountryComparer(compareCriterion));
+
+        //        foreach (Country country in sortedReleases)
+        //        {
+        //            List<object> styleRow = new List<object>();
+
+        //            styleRow.Add(country.name);                 // Col 0: Box Labels
+        //            styleRow.Add(style.name);                   // Col 1: Group Labels
+
+        //            if (compareCriterion == CountryComparer.CRITERION.UNEMPLOYMENTRATE)
+        //            {
+        //                styleRow.Add(country.unemploymentRate); // Col 2: Area values
+        //            }
+        //            else
+        //            {
+        //                styleRow.Add(country.medianAge);        // Col 2: Area values
+        //            }
+
+        //            styleRow.Add(iFilteredCountryNames.IndexOf(country.name)); // Col 3: Id
+        //            styleRow.Add(country.govType);              // Col 4: Government Type
+
+        //            // switch the roles, so we can have both info on the tooltip
+        //            if (compareCriterion == CountryComparer.CRITERION.UNEMPLOYMENTRATE)
+        //            {
+        //                styleRow.Add(country.medianAge);        // Col 5: unchosen criterion
+        //            }
+        //            else
+        //            {
+        //                styleRow.Add(country.unemploymentRate); // Col 5: unchosen criterion
+        //            }
+
+        //            dataRows.Add(styleRow);
+        //        }
+        //        styleLimiter--;
+        //    }
+
+        //    // the column order
+        //    aQuantitativeDataIndex  = 2; // Area values
+        //    aOrdinalDataIndex       = 1; // Group Labels
+        //    aIdIndex                = 3; // Id
+        //    aLeafNodeLabelIndex     = 0; // Leaf Label
+
+        //    // ToolTip Components
+        //    toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
+            
+        //    // Add the tool tip according to the Criterion
+        //    if (compareCriterion == CountryComparer.CRITERION.UNEMPLOYMENTRATE)
+        //    {
+        //        toolTipComponents.Add(new GMSToolTipComponent("Unemployment Rate", aQuantitativeDataIndex, "%"));
+        //        toolTipComponents.Add(new GMSToolTipComponent("Median Age", 5, "years"));
+        //    }
+        //    else
+        //    {
+        //        toolTipComponents.Add(new GMSToolTipComponent("Median Age", aQuantitativeDataIndex, "years"));
+        //        toolTipComponents.Add(new GMSToolTipComponent("Unemployment Rate", 5, "%"));
+        //    }
+            
+        //    toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
+
+        //    // Create and Fill the DataCube
+        //    object[, ,] dataCube = new object[6, dataRows.Count, 1];
+
+        //    int i = 0;
+        //    foreach (List<object> row in dataRows)
+        //    {
+        //        int j = 0;
+        //        foreach (object attribute in row)
+        //        {
+        //            dataCube[j++, i, 0] = attribute;
+        //        }
+        //        ++i;
+        //    }
+
+        //    return dataCube;
+        //}
+
+        ///// <summary>
+        ///// Creates the TreeMap for the countries grouped per Style
+        ///// </summary>
+        ///// <param name="aRectangle"></param>
+        ///// <param name="db"></param>
+        //public object[, ,] BuildStylesUnemploymentRateAreaTree(out int aQuantitativeDataIndex,
+        //    out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
+        //    List<GMSToolTipComponent> toolTipComponents)
+        //{
+        //    // Temporary structure to hold the rows of the datacube
+        //    List<List<object>> dataRows = new List<List<object>>();
+
+        //    // Sort the styles so we can have only the N most popular ones
+        //    ArrayList sortedStyles = new ArrayList(iDb.styles.Values);
+        //    sortedStyles.Sort(new StyleComparer());
+
+        //    int styleLimiter = 20;
+        //    foreach (Style style in sortedStyles)
+        //    {
+        //        if (styleLimiter == 0)
+        //        {
+        //            break;
+        //        }
+
+        //        Hashtable countries = new Hashtable();
+
+        //        // count all the occurrences in the countries
+        //        foreach (MusicBrainzRelease release in style.releases)
+        //        {
+        //            if (! countries.ContainsKey(release.country.name) )
+        //            {
+        //                countries.Add(release.country.name, release.country);
+        //            }
+        //        }
+
+        //        // Sort the releases
+        //        ArrayList sortedReleases = new ArrayList(countries.Values);
+        //        sortedReleases.Sort(new CountryUnemploymentComparer());
+
+        //        foreach (Country country in sortedReleases)
+        //        {
+        //            List<object> styleRow = new List<object>();
+
+        //            styleRow.Add(country.name);                 // Col 0: Box Labels
+        //            styleRow.Add(style.name);                   // Col 1: Group Labels
+        //            styleRow.Add(country.unemploymentRate);     // Col 2: Area values
+        //            styleRow.Add(iFilteredCountryNames.IndexOf(country.name)); // Col 3: Id
+        //            styleRow.Add(country.govType);              // Col 4: Government Type
+
+        //            dataRows.Add(styleRow);
+        //        }
+        //        styleLimiter--;
+        //    }
+
+        //    // the column order
+        //    aQuantitativeDataIndex  = 2; // Area values
+        //    aOrdinalDataIndex       = 1; // Group Labels
+        //    aIdIndex                = 3; // Id
+        //    aLeafNodeLabelIndex     = 0; // Leaf Label
+
+        //    // ToolTip Components
+        //    toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
+        //    toolTipComponents.Add(new GMSToolTipComponent("Unemployment Rate", aQuantitativeDataIndex, "%"));
+        //    toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
+
+        //    // Create and Fill the DataCube
+        //    object[, ,] dataCube = new object[5, dataRows.Count, 1];
+
+        //    int i = 0;
+        //    foreach (List<object> row in dataRows)
+        //    {
+        //        int j = 0;
+        //        foreach (object attribute in row)
+        //        {
+        //            dataCube[j++, i, 0] = attribute;
+        //        }
+        //        ++i;
+        //    }
+
+        //    return dataCube;
+        //}
 
         /// <summary>
         /// 
@@ -658,9 +811,9 @@ namespace GMS
     }
     //HELPER CLASSES:
 
-    class CountryComparer : IComparer
+    public class CountryComparer : IComparer
     {
-        public enum CRITERION{NAME, RELEASES};
+        public enum CRITERION{NAME, RELEASES, UNEMPLOYMENTRATE, MEDIANAGE};
 
         private CRITERION iCompareCriterion;
 
@@ -679,6 +832,16 @@ namespace GMS
             return c1.name.CompareTo(c2.name);
         }
 
+        private int CompareUnemploymentRate(Country c1, Country c2)
+        {
+            return c1.unemploymentRate.CompareTo(c2.unemploymentRate);
+        }
+
+        private int CompareMedianAge(Country c1, Country c2)
+        {
+            return c1.medianAge.CompareTo(c2.medianAge);
+        }
+
         private int CompareReleases(Country c1, Country c2)
         {
             return c2.releases.Count.CompareTo(c1.releases.Count);
@@ -690,13 +853,16 @@ namespace GMS
             Country c1 = (Country)x;
             Country c2 = (Country)y;
 
-            if (iCompareCriterion == CRITERION.NAME)
+            switch (iCompareCriterion)
             {
-                return CompareName(c1, c2);
-            }
-            else
-            {
-                return CompareReleases(c1, c2);
+                case CRITERION.RELEASES:
+                    return CompareReleases(c1, c2);
+                case CRITERION.UNEMPLOYMENTRATE:
+                    return CompareUnemploymentRate(c1, c2);
+                case CRITERION.MEDIANAGE:
+                    return CompareMedianAge(c1, c2);
+                default:
+                    return CompareName(c1, c2);
             }
         }
     };
