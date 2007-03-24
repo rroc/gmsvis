@@ -68,6 +68,7 @@ namespace GMS
             iToolTip.Show(new Point(0,0));
             iToolTip.Hide();
 
+            iPanel.MouseLeave           += new EventHandler(MouseHoverControlHoverEnd);
             iMouseHoverControl          = new MouseHoverController(iPanel, 5, TIMER_DELAY);
             iMouseHoverControl.Hover    += new EventHandler(MouseHoverControlHover);
             iMouseHoverControl.HoverEnd += new EventHandler(MouseHoverControlHoverEnd);
@@ -105,6 +106,8 @@ namespace GMS
         {
             iToolTip.Hide();
         }
+
+
 
         /// <summary>
         /// 

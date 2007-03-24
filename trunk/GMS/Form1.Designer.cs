@@ -68,9 +68,9 @@ namespace GMS
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(65, 22);
-            this.toolStripLabel1.Text = "K-Means";
-            this.toolStripLabel1.ToolTipText = "Group into clusters (using K-Means Algorithm)";
+            this.toolStripLabel1.Size = new System.Drawing.Size(129, 22);
+            this.toolStripLabel1.Text = "Number of Groups";
+            this.toolStripLabel1.ToolTipText = "Find similar groups (using K-Means Algorithm)";
             // 
             // toolStripComboBox1
             // 
@@ -87,7 +87,7 @@ namespace GMS
             this.toolStripComboBox1.Size = new System.Drawing.Size(65, 25);
             this.toolStripComboBox1.Sorted = true;
             this.toolStripComboBox1.Text = "None";
-            this.toolStripComboBox1.ToolTipText = "Group into clusters (using K-Means Algorithm)";
+            this.toolStripComboBox1.ToolTipText = "Find similar groups (using K-Means Algorithm)";
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
             // 
             // mainSplitContainer
