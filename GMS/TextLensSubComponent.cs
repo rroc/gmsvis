@@ -350,14 +350,15 @@ namespace Gav.Graphics
         /// </summary>
         private void ComputeLensHorizontalBounds()
         {
+            const int offset = 5;
             if (inited)
             {
                 List<float> axesPositions = plot.GetAxisXPositions();
-                labelRight = plot.XPositionToScreen(axesPositions[0]);
+                labelRight = plot.XPositionToScreen(axesPositions[0]) + offset;
             }
             else
             {
-                labelRight = plot.XPositionToScreen(plot.PadPositionX(0));
+                labelRight = plot.XPositionToScreen(plot.PadPositionX(0)) + offset;
             }
 
             labelLeft = labelRight - (int)maxLabelWidth;
@@ -572,6 +573,10 @@ namespace Gav.Graphics
                 }
                 
                 // NOTE: NOT returning because parent (PC plot) must handle the selection as well 
+            }
+            else if (lastButtonPressed == MouseButtons.Right && mouseOverText)
+            {
+                return true;
             }
             
             return false;

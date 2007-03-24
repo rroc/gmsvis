@@ -55,6 +55,7 @@ namespace GMS
         // Drawing properties
         SolidBrush iBorderPen;
         SolidBrush iGroupLabelPen;
+        SolidBrush iSelectedGroupLabelPen;
         Pen iPen;
         System.Drawing.Drawing2D.LinearGradientBrush iBrush;
         System.Drawing.RectangleF iFillRectangle;
@@ -86,6 +87,7 @@ namespace GMS
 
             iBorderPen      = new SolidBrush(Color.Red);
             iGroupLabelPen  = new SolidBrush(Color.White);
+            iSelectedGroupLabelPen = new SolidBrush(Color.Black);
             iPen            = new Pen(iBorderPen, iBorder);
             iPen.Alignment  = System.Drawing.Drawing2D.PenAlignment.Center;
         }
@@ -313,13 +315,13 @@ namespace GMS
                            System.Drawing.Drawing2D.LinearGradientMode.Vertical);
 
                     aGraphics.FillRectangle(brush, iFillRectangle);
+                    DrawLabel(aGraphics, iSelectedGroupLabelPen);
                 }
                 else
                 {
                     aGraphics.FillRectangle(iBrush, iFillRectangle);
+                    DrawLabel(aGraphics);
                 }
-                
-                DrawLabel(aGraphics);
             }
             else
             {
@@ -380,12 +382,19 @@ namespace GMS
         /// <param name="aGraphics"></param>
         private void DrawLabel(Graphics aGraphics)
         {
+            DrawLabel(aGraphics, iGroupLabelPen);
+       }
+
+
+        private void DrawLabel(Graphics aGraphics, Brush aBrush )
+        {
             float fontsize = (float)Math.Log(iHeight * iScale.Y * 0.5F, 2.0F) * 2.0F;
             fontsize = (fontsize <= 1.0F)? 1.0F : fontsize;
             float centerY = iHeight / 2.0F;
             
             System.Drawing.Font font = new System.Drawing.Font("Arial Narrow", fontsize, FontStyle.Bold);
-            aGraphics.DrawString(iLabel, font, iGroupLabelPen, (iLowerLeft.X + (iWidth * 0.05F)) * iScale.X, (centerY + iLowerLeft.Y) * iScale.Y - fontsize);
+            aGraphics.DrawString(iLabel, font, aBrush, (iLowerLeft.X + (iWidth * 0.05F)) * iScale.X, (centerY + iLowerLeft.Y) * iScale.Y - fontsize);
+
         }
 
         /// <summary>

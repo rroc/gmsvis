@@ -195,15 +195,16 @@ namespace GMS
         private void SetupView()
         {
             this.headers.Add("Country");
-            this.headers.Add("Median Age");
-            this.headers.Add("Number of Releases");
-            this.headers.Add("Unemployment Rate");
-            this.headers.Add("GDB Per Capita");
+            this.headers.Add("Median Age\n(years)");
+            this.headers.Add("Albums\n(Log2)");
+            this.headers.Add("Unemployment Rate\n(%)");
+            this.headers.Add("GDB Per Capita\n($)");
 
             pcPlot = InitializeParallelCoordinatesPlot(panel, iDataCube, -1, headers);
             
             // Padding: so the names of the countries don't be cut
             pcPlot.PaddingLeft += 60;
+            pcPlot.PaddingTop += 15;
             pcPlot.PickSensitivity = 3;
 
             pcPlot.Picked += new EventHandler<IndexesPickedEventArgs>(pcPlot_Picked);
