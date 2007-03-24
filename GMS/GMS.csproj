@@ -49,6 +49,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\GAVProjectFramework.dll</HintPath>
     </Reference>
+    <Reference Include="LabExcelReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\LabExcelReader.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
@@ -99,6 +103,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\age.png" />
+    <None Include="Resources\cd.png" />
+    <None Include="Resources\coin.png" />
+    <None Include="Resources\work.png" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -115,6 +123,12 @@
     <None Include="Resources\age.png" />
     <None Include="Resources\cd.png" />
     <None Include="Resources\coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MusicDataMiner\MusicDataminer.csproj">
+      <Project>{0F187C9F-9106-469A-B639-217E90BC7552}</Project>
+      <Name>MusicDataminer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
