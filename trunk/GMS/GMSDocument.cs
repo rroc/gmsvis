@@ -18,7 +18,8 @@ namespace GMS
     class GMSDocument
     {
         // CONST DATA
-        private const string iGeoDataPath = "../../../data/geodata/";
+        private const string KGeoDataPath = "../../../data/geodata/";
+        private const string KFlagDataPath = "../../../data/flags/";
 
 
         // private attributes
@@ -31,6 +32,7 @@ namespace GMS
         private object[,]       iFilteredData;
         private DataCube        iFilteredDataCube;
         private List<string>    iFilteredCountryNames;
+        private List<string>    iFilteredFlagFiles;
         List<string>            iFilteredAcronyms;
         public  ColorMap        iFilteredColorMap;
 
@@ -64,6 +66,7 @@ namespace GMS
         
         public List<string> GetFilteredCountryNames() { return this.iFilteredCountryNames; }
         public List<string> GetFilteredAcronyms() { return this.iFilteredAcronyms; }
+        public List<string> GetFilteredFlagNames() { return this.iFilteredFlagFiles; }
 
         public Hashtable GetSortedCountryNames() { return this.iSortedCountryNames; }
 
@@ -107,7 +110,10 @@ namespace GMS
         {
             iFilteredColorMap = CreateColorMap();
             iFilteredCountryNames = new List<string>();
-            iFilteredAcronyms = ParseCountryFilter(iGeoDataPath + aFilterFileName);
+            iFilteredAcronyms = ParseCountryFilter(KGeoDataPath + aFilterFileName);
+            
+            //Hashtable flagfiles = ParseFlagNames(KFlagDataPath + "flags.txt");
+            //iFilteredFlagFiles = new List<string>();
 
             int numOfElements = 5;
             iFilteredData = new object[numOfElements, iFilteredAcronyms.Count];
@@ -130,7 +136,9 @@ namespace GMS
                 {
                     countryTitleCase = countryTitleCase.Substring(0, 14);
                 }
+
                 iFilteredCountryNames.Add(countryTitleCase);
+//                iFilteredFlagFiles.Add( (string)flagfiles[countryTitleCase]);
                 counter++;
             }
             iFilteredDataCube = new DataCube();
@@ -138,7 +146,6 @@ namespace GMS
 
             iFilteredColorMap.Input = iFilteredDataCube;
             iFilteredColorMap.Index = 1;
-            //kMeansFilter.Input = dataCube;
         }
 
 
@@ -294,6 +301,67 @@ namespace GMS
             }
             return countryFilter;
         }
+
+        /// <summary>
+        /// Read a flag file of format: country name\tfilename\n
+        /// </summary>
+        /// <param name="filename">name of the filter file</param>
+        /// <returns>Hashtable of filenames</returns>
+        private Hashtable ParseFlagNames(string filename)
+        {
+            Hashtable flagNames = new Hashtable();
+
+            // Open the file and read it back.
+            StreamReader sr = File.OpenText(filename);
+            string text = "";
+            flagNames.Clear();
+
+            while ((text = sr.ReadLine()) != null)
+            {
+                char[] delimiterChars = { '\t' };
+                string[] words = text.Split(delimiterChars);
+
+                string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(words[0]);
+                if (countryTitleCase.Length > 14)
+                {
+                    countryTitleCase = countryTitleCase.Substring(0, 14);
+                }
+                // Acronym, Country Name
+                if (2 == words.Length)
+                {
+                    flagNames.Add(countryTitleCase, words[1]);
+                }
+            }
+
+            ////FLAGS Stuff
+            ////LOAD FLAGS
+            //string dir = Directory.GetCurrentDirectory();
+            //string dataPath = "\\..\\..\\..\\data\\flags\\";
+            //iTexture = new List<Bitmap>();
+            //foreach (string flagFile in iDoc.GetFilteredFlagNames())
+            //{
+            //    try
+            //    {
+            //        iTexture.Insert(0, new Bitmap(dir + dataPath + flagFile));
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Console.WriteLine("File not found(" + e + "): " + flagFile);
+            //    }
+            //}
+            ////DRAW FLAGS
+            //int countryIndex = iDoc.GetFilteredCountryNames().IndexOf(country.name);
+            //Size size = new Size(40, 30);
+            //System.Drawing.Rectangle flagRectangle = new System.Drawing.Rectangle(iMouseHoverControl.HoverPosition, size);
+            //TextureBrush textureBrush = new TextureBrush(iTexture[countryIndex]);
+            //System.Drawing.Drawing2D.Matrix mx = new System.Drawing.Drawing2D.Matrix(((float)size.Width / iTexture[index].Width), 0, 0, ((float)size.Height / iTexture[index].Height), 0, 0);
+            //textureBrush.Transform = mx;
+            //Graphics g = iPanel.CreateGraphics();
+            //g.FillRectangle(textureBrush, flagRectangle);
+
+            return flagNames;
+        }
+
 
         /// <summary>
         /// Creates the TreeMap for the countries grouped per Style

@@ -13,11 +13,14 @@ using Gav.Graphics;
 using Gav.Data;
 
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 
 namespace GMS
 {
     class MapPlot
     {
+        private List<Bitmap> iTexture;
+
         private DataCube iDataCube;
         private MapData iMapData;
         private ColorMap iColorMap;
@@ -43,6 +46,7 @@ namespace GMS
         private InteractiveColorLegend iColorLegend;
 
         //TOOLTIP STUFF
+        private const int TOOLTIP_SENSITIVITY = 5; //In pixels
         private const int TIMER_DELAY = 200;
         private const int TOOLTIP_FADE_DELAY = 200;
         private GavToolTip iToolTip;
@@ -65,13 +69,14 @@ namespace GMS
             //Get country names
             iCountryNames = iDoc.GetFilteredCountryNames();
 
+            //Prepare tooltip
             iToolTip = new GavToolTip(iPanel);
             iToolTip.FadeEnable = true;
             iToolTip.FadeTime = TOOLTIP_FADE_DELAY;
             iToolTip.Show(new Point(0,0));
             iToolTip.Hide();
 
-            iMouseHoverControl = new MouseHoverController(iPanel, 5, TIMER_DELAY);
+            iMouseHoverControl = new MouseHoverController(iPanel, TOOLTIP_SENSITIVITY, TIMER_DELAY);
             iMouseHoverControl.Hover += new EventHandler(iMouseHoverControl_Hover);
             iMouseHoverControl.HoverEnd += new EventHandler(iMouseHoverControl_HoverEnd);
 
