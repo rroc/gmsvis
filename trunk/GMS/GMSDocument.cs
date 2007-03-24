@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 
 namespace GMS
 {
-    class GMSDocument
+    public class GMSDocument
     {
         // CONST DATA
         private const string KGeoDataPath = "../../../data/geodata/";
@@ -132,10 +132,7 @@ namespace GMS
                 iFilteredData[4, counter] = country.gdbPerCapita;
                 
                 string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(country.name);
-                if (countryTitleCase.Length > 14)
-                {
-                    countryTitleCase = countryTitleCase.Substring(0, 14);
-                }
+                countryTitleCase = ClipCountryName(countryTitleCase);
 
                 iFilteredCountryNames.Add(countryTitleCase);
 //                iFilteredFlagFiles.Add( (string)flagfiles[countryTitleCase]);
@@ -322,10 +319,7 @@ namespace GMS
                 string[] words = text.Split(delimiterChars);
 
                 string countryTitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(words[0]);
-                if (countryTitleCase.Length > 14)
-                {
-                    countryTitleCase = countryTitleCase.Substring(0, 14);
-                }
+                ClipCountryName(countryTitleCase);
                 // Acronym, Country Name
                 if (2 == words.Length)
                 {
@@ -380,15 +374,9 @@ namespace GMS
 
             Hashtable styles = new Hashtable();
 
-            //int countryLimiter = 20;
             int idCounter = 0;
             foreach (Country country in sortedCountries)
             {
-                //if (countryLimiter == 0)
-                //{
-                //    break;
-                //}
-
                 foreach (StyleTreeMapInfo styleInfo in styles.Values)
                 {
                     styleInfo.iReleaseCount = 0;
@@ -438,7 +426,6 @@ namespace GMS
                     dataRows.Add(countryRow);
                     styleLimiter--;
                 }
-                //countryLimiter--;
             }
 
             // Removing the id's gaps by creating increasing ids
@@ -495,6 +482,21 @@ namespace GMS
             }
 
             return dataCube;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string ClipCountryName(string name)
+        {
+            if (name.Length > 14)
+            {
+                return name.Substring(0, 14);
+            }
+
+            return name;
         }
 
         /// <summary>
@@ -586,6 +588,118 @@ namespace GMS
                     dataCube[j++, i, 0] = attribute;
                 }
                 ++i;
+            }
+
+            return dataCube;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aQuantitativeDataIndex"></param>
+        /// <param name="aOrdinalDataIndex"></param>
+        /// <param name="aIdIndex"></param>
+        /// <param name="aLeafNodeLabelIndex"></param>
+        /// <param name="toolTipComponents"></param>
+        /// <returns></returns>
+        public object[, ,] BuildGovernmentTypeAreasTree(out int aQuantitativeDataIndex,
+            out int aOrdinalDataIndex, out int aIdIndex, out int aLeafNodeLabelIndex,
+            List<GMSToolTipComponent> toolTipComponents, out object[, ,] aColorMapInput)
+        {
+            List<List<object>> dataRows = new List<List<object>>();
+
+            Hashtable govTypes = new Hashtable();
+
+            foreach (Country country in iDb.countries.Values)
+            {
+                if (! govTypes.ContainsKey(country.govType))
+                {
+                    govTypes.Add(country.govType, 1);
+                }
+                else
+                {
+                    int count = (int)govTypes[country.govType];
+                    govTypes[country.govType] = ++count;
+                }
+            }
+
+            // Sort the government types so we can have only the N most existent ones
+            ArrayList sortedGovTypes = new ArrayList(govTypes);
+            sortedGovTypes.Sort(new DictionaryValueComparer());
+
+            // Iterate the government types and get the countries
+            int govTypeId = 0;
+            int MAX_GOV_TYPES = 15;
+            foreach (DictionaryEntry entry in sortedGovTypes)
+            {
+                // Limit to MAX_GOV_TYPES
+                if (govTypeId > MAX_GOV_TYPES)
+                {
+                    break;
+                }
+
+                string govTypeName = (string)entry.Key;
+                int occurrences = (int)entry.Value;
+
+                foreach (Country country in iDb.countries.Values)
+                {
+                    string name = ClipCountryName(country.name);
+
+                    // if the country has this government type
+                    if (iFilteredCountryNames.Contains(name) && 
+                        country.govType == govTypeName)
+                    {
+                        int id = iFilteredCountryNames.IndexOf(name);
+                        string countryName = name;
+                        string governmentType = country.govType;
+                        
+                        List<object> styleRow = new List<object>();
+
+                        styleRow.Add(countryName);              // Col 0: Leaf Labels
+                        styleRow.Add(govTypeName);              // Col 1: Group Labels
+                        styleRow.Add(occurrences);              // Col 2: Area values
+                        styleRow.Add(id);                       // Col 3: Id
+                        styleRow.Add(country.gdbPerCapita);     // Col 4: GDB Per Capita
+                        styleRow.Add(country.unemploymentRate); // Col 5: Unemployment Rate
+                        styleRow.Add(country.releases.Count);   // Col 6: # Releases
+
+                        dataRows.Add(styleRow);
+                    }
+                }
+                govTypeId++;
+            }
+
+            // the column order
+            aQuantitativeDataIndex  = 2; // Area values
+            aOrdinalDataIndex       = 1; // Group Labels
+            aIdIndex                = 3; // Id
+            aLeafNodeLabelIndex     = 0; // Leaf Label
+
+            // ToolTip Components
+            toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
+            toolTipComponents.Add(new GMSToolTipComponent("Nr. Albums", 6));
+            toolTipComponents.Add(new GMSToolTipComponent("Unemployment Rate", 5, "%"));
+            toolTipComponents.Add(new GMSToolTipComponent("GDB per Capita", 4, "$"));
+            toolTipComponents.Add(new GMSToolTipComponent("Government Type", aOrdinalDataIndex));
+
+            // Create and Fill the DataCube
+            object[, ,] dataCube = new object[7, dataRows.Count, 1];
+            aColorMapInput = new object[1, iFilteredCountryNames.Count, 1];
+
+            for (int i = 0; i < iFilteredCountryNames.Count; i++)
+            {
+                aColorMapInput[0, i, 0] = i;
+            }
+
+            int k = 0;
+            foreach (List<object> row in dataRows)
+            {
+                int j = 0;
+                foreach (object attribute in row)
+                {
+                    dataCube[j++, k, 0] = attribute;
+                }
+                ++k;
             }
 
             return dataCube;
