@@ -51,6 +51,8 @@ namespace GMS
 
         private bool iZoomIn;
 
+        private GMSDocument iDoc;
+
         #endregion
 
         /// <summary>
@@ -73,8 +75,10 @@ namespace GMS
             iMouseHoverControl.Hover    += new EventHandler(MouseHoverControlHover);
             iMouseHoverControl.HoverEnd += new EventHandler(MouseHoverControlHoverEnd);
 
-            aDoc.ColorMapChanged    += new EventHandler<EventArgs>(DocumentColorMapChanged);
-            aDoc.Picked             += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+            iDoc = aDoc;
+
+            aDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
+            aDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
 
             iPanel.MouseDown        += new MouseEventHandler(MouseDown);
 
@@ -105,6 +109,7 @@ namespace GMS
         void MouseHoverControlHoverEnd(object sender, EventArgs e)
         {
             iToolTip.Hide();
+            Invalidate();
         }
 
 
@@ -526,6 +531,12 @@ namespace GMS
             Graphics g = iPanel.CreateGraphics();
             DrawTree(g);
             g.Dispose();
+        }
+
+        public void Dispose()
+        {
+            iDoc.ColorMapChanged    -= new EventHandler<EventArgs>(DocumentColorMapChanged);
+            iDoc.Picked             -= new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
         }
 
         protected override void InternalMouseMove(System.Windows.Forms.MouseEventArgs e)

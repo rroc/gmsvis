@@ -37,11 +37,11 @@ namespace GMS
         /// <summary>
         /// Static scale
         /// </summary>
-        private static Vector2 iScale;
+        private Vector2 iScale;
         /// <summary>
         /// Static border
         /// </summary>
-        private static float iBorder;
+        private float iBorder;
 
         //DATA:
         private float iArea;
@@ -240,6 +240,24 @@ namespace GMS
             iScale.X = aWidth / iWidth;
             iScale.Y = aHeight / iHeight;
             iBorder = (float)Math.Ceiling(Math.Max(iScale.X, iScale.Y) / 2.0f);
+
+            SetScale(iScale, iBorder);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aScale"></param>
+        /// <param name="aBorder"></param>
+        private void SetScale(Vector2 aScale, float aBorder)
+        {
+            iScale = aScale;
+            iBorder = aBorder;
+
+            foreach (TreeRectangle child in iChildRectangles)
+            {
+                child.SetScale(iScale, iBorder);
+            }
         }
 
         /// <summary>

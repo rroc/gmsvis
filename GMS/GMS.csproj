@@ -72,6 +72,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CountriesTreeMapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CountriesTreeMapForm.Designer.cs">
+      <DependentUpon>CountriesTreeMapForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +97,10 @@
     <Compile Include="KMeansFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CountriesTreeMapForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CountriesTreeMapForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AboutBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutBox.cs</DependentUpon>
@@ -128,7 +138,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="iTunes.ico" />
-    <None Include="Resources\help.png" />
+    <None Include="Resources\treemap.png" />
+    <None Include="Resources\help.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\work.png" />
     <None Include="Resources\age.png" />
     <None Include="Resources\cd.png" />

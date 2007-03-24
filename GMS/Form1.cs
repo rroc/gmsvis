@@ -21,6 +21,7 @@ namespace GMS
         ParallelPlotCountries pcCountries;
         MapPlot mapPlot;
         TreeMap iTreeMap;
+        CountriesTreeMapForm iCountriesTreeMap;
         AboutBox iAboutBox;
 
         public Form1()
@@ -44,7 +45,7 @@ namespace GMS
             doc.ReadDB(dir + iDataPath + iDBFileName);
             doc.SetupFilteredData("countries_acronyms_europe.txt");
             doc.SetupSortedData();
-            
+
             pcCountries = new ParallelPlotCountries(  doc.GetFilteredDataCube()
                                                     , doc.GetFilteredCountryNames()
                                                     , panel1
@@ -69,43 +70,15 @@ namespace GMS
             int quantitativeDataIndex, ordinalDataIndex, idIndex, leafNodeIndex;
             List<GMSToolTipComponent> toolTipComponents = new List<GMSToolTipComponent>();
 
-            //// Build the TreeMap Data << Styles releases per Countries >>
-            //object[, ,] countriesColorMapData;
-            //object[, ,] data = doc.BuildCountriesAreasTree(out quantitativeDataIndex,
-            //    out ordinalDataIndex, out idIndex, out leafNodeIndex, 
-            //    toolTipComponents, out countriesColorMapData);
-
             // Build the TreeMap Data << Countries releases per Styles >>
             object[, ,] data = doc.BuildStylesAreasTree(out quantitativeDataIndex,
                 out ordinalDataIndex, out idIndex, out leafNodeIndex, toolTipComponents);
 
-            //// Build the TreeMap Data << UnemploymentRates per Styles >>
-            //object[, ,] data = doc.BuildStylesUnemploymentRateAreaTree(out quantitativeDataIndex,
-            //    out ordinalDataIndex, out idIndex, out leafNodeIndex, toolTipComponents);
-
-            //// Build the TreeMap Data << UnemploymentRates per Styles >>
-            //object[, ,] data = doc.BuildStylesCriterionAreaTree(out quantitativeDataIndex,
-            //    out ordinalDataIndex, out idIndex, out leafNodeIndex, toolTipComponents, true);
-
             iTreeMap.SetData(data, quantitativeDataIndex, ordinalDataIndex, idIndex, 
                 leafNodeIndex, toolTipComponents);
             
-            /************************************************************************/
-            /* !!!!!!!!!!!!! TEMPORARY COLORMAP !!!!!!!!                            */
-            /************************************************************************/
-            //ColorMap map = new ColorMap();
-            //LinearColorMapPart linearMap = new LinearColorMapPart(Color.FromArgb(0x0051a87b), Color.FromArgb(0x00bad97a));
-            //map.AddColorMapPart(linearMap);
-            //LinearColorMapPart linearMap2 = new LinearColorMapPart(Color.FromArgb(0x00f0e978), Color.FromArgb(0x00d07c59));
-            //map.AddColorMapPart(linearMap2);
-            //DataCube d = new DataCube();
-            //d.SetData(countriesColorMapData);
-            //map.Input = d;
-            //map.Invalidate();
-
             iTreeMap.UpdateScale();
             iTreeMap.ColorMap = doc.iFilteredColorMap;
-            //iTreeMap.ColorMap = map;
             pcCountries.pcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
             this.glyphPanel.Show();
@@ -139,6 +112,21 @@ namespace GMS
         private void helpButtonClicked(object sender, EventArgs e)
         {
             ShowInformationBox();
+        }
+
+        private void treeMapComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ToolStripComboBox combo = (ToolStripComboBox)sender;
+            string treeMapType = (string)combo.SelectedItem;
+
+            if (combo.SelectedIndex != 0 && 
+                (iCountriesTreeMap == null || 
+                iCountriesTreeMap.IsDisposed))
+            {
+                iCountriesTreeMap = new CountriesTreeMapForm(doc, treeMapType, combo, 
+                    doc.iFilteredColorMap);
+                iCountriesTreeMap.Show();
+            }
         }
 
         public System.Windows.Forms.ToolStripComboBox GetGroupBox()
