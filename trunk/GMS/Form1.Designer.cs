@@ -31,9 +31,9 @@ namespace GMS
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.treeMapComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.groupingComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.treeMapComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.helpButton = new System.Windows.Forms.ToolStripButton();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PCMapSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -64,38 +64,19 @@ namespace GMS
             this.groupingComboBox,
             this.toolStripSeparator1,
             this.treeMapComboBox,
-            this.helpButton
-            });
+            this.helpButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(692, 26);
+            this.toolStrip1.Size = new System.Drawing.Size(692, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(129, 23);
+            this.toolStripLabel1.Size = new System.Drawing.Size(129, 22);
             this.toolStripLabel1.Text = "Number of Groups";
             this.toolStripLabel1.ToolTipText = "Find similar groups (using K-Means Algorithm)";
-
-            // 
-            // treeMapComboBox
-            // 
-            this.treeMapComboBox.AutoSize = false;
-//            this.treeMapComboBox.DropDownWidth = 200; 
-            this.treeMapComboBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.treeMapComboBox.Items.AddRange(new object[] {
-            "Choose TreeMap",
-            "Styles per Country",
-            "Countries per Style",
-            "Countries per Government"});
-            this.treeMapComboBox.Name = "treeMapComboBox";
-            this.treeMapComboBox.Size = new System.Drawing.Size(180, 26);
-            this.treeMapComboBox.Text = "Choose TreeMap";
-            this.treeMapComboBox.ToolTipText = "Opens a TreeMap according to the chosen option";
-            this.treeMapComboBox.SelectedIndexChanged += new System.EventHandler(this.treeMapComboBox_SelectedIndexChanged);
-            
             // 
             // groupingComboBox
             // 
@@ -107,6 +88,9 @@ namespace GMS
             "4",
             "5",
             "6",
+            "7",
+            "8",
+            "9",
             "None"});
             this.groupingComboBox.Name = "groupingComboBox";
             this.groupingComboBox.Size = new System.Drawing.Size(65, 25);
@@ -118,7 +102,22 @@ namespace GMS
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 26);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // treeMapComboBox
+            // 
+            this.treeMapComboBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.treeMapComboBox.AutoSize = false;
+            this.treeMapComboBox.Items.AddRange(new object[] {
+            "Choose TreeMap",
+            "Styles per Country",
+            "Countries per Style",
+            "Countries per Government"});
+            this.treeMapComboBox.Name = "treeMapComboBox";
+            this.treeMapComboBox.Size = new System.Drawing.Size(180, 25);
+            this.treeMapComboBox.Text = "Choose TreeMap";
+            this.treeMapComboBox.ToolTipText = "Opens a TreeMap according to the chosen option";
+            this.treeMapComboBox.SelectedIndexChanged += new System.EventHandler(this.treeMapComboBox_SelectedIndexChanged);
             // 
             // helpButton
             // 
@@ -126,7 +125,7 @@ namespace GMS
             this.helpButton.Image = global::GMS.Properties.Resources.help1;
             this.helpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.helpButton.Name = "helpButton";
-            this.helpButton.Size = new System.Drawing.Size(23, 23);
+            this.helpButton.Size = new System.Drawing.Size(23, 22);
             this.helpButton.Text = "Help";
             this.helpButton.Click += new System.EventHandler(this.helpButtonClicked);
             // 
