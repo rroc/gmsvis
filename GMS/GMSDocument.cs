@@ -594,7 +594,7 @@ namespace GMS
                     styleRow.Add(releasesCount);                // Col 2: Area values
                     styleRow.Add(iFilteredCountryNames.IndexOf(countryName));  // Col 3: Id
                     styleRow.Add(governmentType);               // Col 4: Government Type
-                    //styleRow.Add(style.releases.Count);         // Col 5: Releases
+                    styleRow.Add(style.releases.Count);         // Col 5: Releases
 
                     dataRows.Add(styleRow);
                 }
@@ -611,9 +611,10 @@ namespace GMS
             toolTipComponents.Add(new GMSToolTipComponent("Country", aLeafNodeLabelIndex));
             toolTipComponents.Add(new GMSToolTipComponent("Nr. Albums", aQuantitativeDataIndex));
             toolTipComponents.Add(new GMSToolTipComponent("Government Type", 4));
+            toolTipComponents.Add(new GMSToolTipComponent("Total number of albums in style", 5));
 
             // Create and Fill the DataCube
-            object[, ,] dataCube = new object[5, dataRows.Count, 1];
+            object[, ,] dataCube = new object[6, dataRows.Count, 1];
 
             int i = 0;
             foreach (List<object> row in dataRows)
