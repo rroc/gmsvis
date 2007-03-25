@@ -82,7 +82,7 @@ namespace GMS
             pcCountries.iPcPlot.FilterChanged += new EventHandler(pcPlot_FilterChanged);
 
             this.glyphPanel.Show();
-            this.ShowInformationBox();
+            this.ShowInformationBox();           
         }
 
         void ShowInformationBox()
@@ -123,8 +123,7 @@ namespace GMS
                 (iCountriesTreeMap == null || 
                 iCountriesTreeMap.IsDisposed))
             {
-                iCountriesTreeMap = new CountriesTreeMapForm(doc, treeMapType, combo, 
-                    doc.iFilteredColorMap);
+                iCountriesTreeMap = new CountriesTreeMapForm(doc, treeMapType, combo, doc.iFilteredColorMap);
                 iCountriesTreeMap.Show();
             }
         }

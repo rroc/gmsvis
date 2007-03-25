@@ -124,6 +124,7 @@ namespace GMS
             if (columnIndex != -1)
             {
                 iColorMap.Index = columnIndex;
+                iDoc.iFilteredSelectedColorMap.Index = columnIndex;
             }
 
             filterPlot.ColorMap = iColorMap;
@@ -259,6 +260,7 @@ namespace GMS
             }
             iPcPlot.SetSelectedHeader(iPcPlot.ClickedHeader);
             iColorMap.Index = iPcPlot.ClickedHeader;
+            iDoc.iFilteredSelectedColorMap.Index = iPcPlot.ClickedHeader;
             iDoc.OnColorMapChanged();
         }
 
