@@ -327,9 +327,11 @@ namespace GMS
 
                     aGraphics.FillRectangle(brush, iFillRectangle);
                     DrawLabel(aGraphics, iSelectedGroupLabelPen);
-                    Pen selectedPen = new Pen(Color.Blue, 4);
+                    Pen selectedPen = new Pen(Color.Cyan, 3);
+                    Pen selectedPen2 = new Pen(Color.Blue, 3);
 
-                    aGraphics.DrawRectangle(selectedPen, iBorderRectangle.X+2, iBorderRectangle.Y+2, iBorderRectangle.Width-4, iBorderRectangle.Height-4 );
+                    aGraphics.DrawRectangle(selectedPen, iBorderRectangle.X+3, iBorderRectangle.Y+3, iBorderRectangle.Width-7, iBorderRectangle.Height-7 );
+                    aGraphics.DrawRectangle(selectedPen2, iBorderRectangle.X + 6, iBorderRectangle.Y + 6, iBorderRectangle.Width - 12, iBorderRectangle.Height - 12);
                 }
                 else
                 {

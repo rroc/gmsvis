@@ -594,6 +594,7 @@ namespace GMS
                     styleRow.Add(releasesCount);                // Col 2: Area values
                     styleRow.Add(iFilteredCountryNames.IndexOf(countryName));  // Col 3: Id
                     styleRow.Add(governmentType);               // Col 4: Government Type
+                    //styleRow.Add(style.releases.Count);         // Col 5: Releases
 
                     dataRows.Add(styleRow);
                 }

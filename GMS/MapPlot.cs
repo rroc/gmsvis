@@ -65,7 +65,6 @@ namespace GMS
             iPanel = aDestinationPanel;
             renderer = aRenderer;
             iColorMap = aColorMap;
-            
 
             iPcPlot = aPcPlot;
             iDoc = aDoc;
@@ -235,7 +234,8 @@ namespace GMS
             //iSelectedColorLegend.ColorMap = iLegendColorMap;
             //iSelectedColorLegend.BorderColor = Color.Black;
             //iSelectedColorLegend.ShowMinMaxValues = false;
-            //iSelectedColorLegend.SetPosition(0.01F, 0.01F);
+            //iSelectedColorLegend.SetLegendSize(10, 200);
+            //iSelectedColorLegend.SetPosition(50F, 10F);
             //iSelectedColorLegend.SetLegendSize(0.02f, 0.2f);
             //iSelectedColorLegend.ShowColorEdgeSliders = false;
             //iSelectedColorLegend.ShowColorEdgeSliderValue = false;
@@ -245,19 +245,19 @@ namespace GMS
 
             iColorLegend = new InteractiveColorLegend();
             iColorLegend.ColorMap = iColorMap;
-            iColorLegend.BorderColor = Color.Black;
-            iColorLegend.SliderTextColor = Color.Black;
-            iColorLegend.ShowMinMaxValues = true;
-            iColorLegend.SetPosition(0.01F, 0.01F);
-            iColorLegend.SetLegendSize(0.01f, 0.2f);
+            //iColorLegend.BorderColor = Color.Black;
+            //iColorLegend.SliderTextColor = Color.Black;
+            //iColorLegend.ShowMinMaxValues = true;
+            iColorLegend.SetPosition(10, 10);
+            iColorLegend.SetLegendSize(15, 200);
             iColorLegend.ShowColorEdgeSliders = true;
-            iColorLegend.ShowColorEdgeSliderValue = true;
+            iColorLegend.ShowColorEdgeSliderValue = false;
             iColorLegend.ColorEdgeValuesChanged += new EventHandler(ColorLegendChanged);
 
-            iColorLegend.ShowValueSliders = true;
-            iColorLegend.ShowValueSliderValue = true;
-            iColorLegend.ValueSliderValuesChanged += new EventHandler(ColorLegendChanged);
-            iColorLegend.SetEdgeSliders(InteractiveColorLegend.SliderLinePosition.Center, InteractiveColorLegend.TextPosition.RightOrBottom, true);
+            //iColorLegend.ShowValueSliders = true;
+            //iColorLegend.ShowValueSliderValue = true;
+            //iColorLegend.ValueSliderValuesChanged += new EventHandler(ColorLegendChanged);
+            //iColorLegend.SetEdgeSliders(InteractiveColorLegend.SliderLinePosition.Center, InteractiveColorLegend.TextPosition.RightOrBottom, true);
 
 
             choroMap.AddSubComponent(iColorLegend);
@@ -325,6 +325,7 @@ namespace GMS
         /// </summary>
         public void Invalidate()
         {
+            //iColorMap.Invalidate();
             choroMap.Invalidate();
         }
     }

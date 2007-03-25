@@ -154,7 +154,7 @@ namespace Gav.Graphics
             mouseOverText = false;
 
             notVisibleTextColor = System.Drawing.Color.LightGray;
-            selectedTextColor   = System.Drawing.Color.Blue;
+            selectedTextColor   = System.Drawing.Color.Red;
             visibleTextColor    = System.Drawing.Color.Black;
 
             lastButtonPressed = MouseButtons.None;
