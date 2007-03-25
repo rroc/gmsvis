@@ -34,7 +34,8 @@ namespace GMS
         private List<string>    iFilteredCountryNames;
         //private List<string>    iFilteredFlagFiles;
         List<string>            iFilteredAcronyms;
-        public  ColorMap        iFilteredColorMap;
+        public ColorMap         iFilteredColorMap;
+        public ColorMap         iFilteredSelectedColorMap;
 
         private object[,]   iSortedData;
         private DataCube    iSortedDataCube;
@@ -84,20 +85,32 @@ namespace GMS
         /// Creates a HSV(0.0, 180.0) Color Map
         /// </summary>
         /// <returns></returns>
-        private ColorMap CreateColorMap()
+        private ColorMap CreateColorMap(Color aPart1Start, Color aPart1End, Color aPart2Start, Color aPart2End)
         {
+         
             ColorMap map = new ColorMap();
             //LinearHSVColorMapPart hsvMap = new LinearHSVColorMapPart(0.0f, 270.0f);
             //map.AddColorMapPart(hsvMap);
             //hsvMap.Invalidate();
-            LinearColorMapPart linearMap = new LinearColorMapPart(Color.FromArgb(0x0051a87b), Color.FromArgb(0x00bad97a));
+            LinearColorMapPart linearMap = new LinearColorMapPart(aPart1Start, aPart1End);
             map.AddColorMapPart(linearMap);
-            LinearColorMapPart linearMap2 = new LinearColorMapPart(Color.FromArgb(0x00f0e978), Color.FromArgb(0x00d07c59));
+            LinearColorMapPart linearMap2 = new LinearColorMapPart(aPart2Start,aPart2End);
             map.AddColorMapPart(linearMap2);
 
             linearMap.Invalidate();
             map.Invalidate();
             return map;
+        }
+
+        public Color OverOperator( Color aColor )
+        {
+            float a = 120 / 255.0f;
+            float grayMulA = (220 / 255.0f) * a;
+            float invA = 1.0f - a;
+            int r = (int)((((float)aColor.R / 255.0f) * invA + grayMulA) * 255.0f);
+            int g = (int)((((float)aColor.G / 255.0f) * invA + grayMulA) * 255.0f);
+            int b = (int)((((float)aColor.B / 255.0f) * invA + grayMulA) * 255.0f);
+            return Color.FromArgb( r,g,b );
         }
 
         /// <summary>
@@ -108,7 +121,19 @@ namespace GMS
         /// <param name="aFilterFileName">filter filename</param>
         public void SetupFilteredData( string aFilterFileName )
         {
-            iFilteredColorMap = CreateColorMap();
+            iFilteredColorMap = CreateColorMap(
+                                              Color.FromArgb(0x0051a87b)
+                                            , Color.FromArgb(0x00bad97a)
+                                            , Color.FromArgb(0x00f0e978)
+                                            , Color.FromArgb(0x00d07c59)
+                                            );
+
+            iFilteredSelectedColorMap = CreateColorMap(
+                                              OverOperator(  Color.FromArgb(0x0051a87b) )
+                                            , OverOperator(  Color.FromArgb(0x00bad97a) )
+                                            , OverOperator(  Color.FromArgb(0x00f0e978) )
+                                            , OverOperator( Color.FromArgb(0x00d07c59))
+                                            );
             iFilteredCountryNames = new List<string>();
             iFilteredAcronyms = ParseCountryFilter(KGeoDataPath + aFilterFileName);
             
@@ -143,6 +168,9 @@ namespace GMS
 
             iFilteredColorMap.Input = iFilteredDataCube;
             iFilteredColorMap.Index = 1;
+
+            iFilteredSelectedColorMap.Input = iFilteredDataCube;
+            iFilteredSelectedColorMap.Index = 1;
         }
 
 
@@ -153,7 +181,13 @@ namespace GMS
         /// </summary>
         public void SetupSortedData()
         {
-            iSortedColorMap = CreateColorMap();
+            iSortedColorMap =  CreateColorMap(
+                                              Color.FromArgb(0x0051a87b)
+                                            , Color.FromArgb(0x00bad97a)
+                                            , Color.FromArgb(0x00f0e978)
+                                            , Color.FromArgb(0x00d07c59)
+                                            );
+
             iSortedCountryNames = new Hashtable();
             List<object[]> filteredCountries = new List<object[]>();
             ArrayList sortedCountries = new ArrayList( iDb.countries.Values);
@@ -248,6 +282,7 @@ namespace GMS
         {
             iSortedColorMap.Invalidate();
             iFilteredColorMap.Invalidate();
+            iFilteredSelectedColorMap.Invalidate();
 
             if (this.ColorMapChanged != null)
             {

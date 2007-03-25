@@ -22,6 +22,7 @@ namespace GMS
         private DataCube iDataCube;
         private MapData iMapData;
         private ColorMap iColorMap;
+        private ColorMap iLegendColorMap;
 
         private Panel iPanel;
         private Renderer renderer;
@@ -46,6 +47,7 @@ namespace GMS
         private GMSDocument iDoc;
 
         private InteractiveColorLegend iColorLegend;
+        private InteractiveColorLegend iSelectedColorLegend;
 
         //TOOLTIP STUFF
         private const int TOOLTIP_SENSITIVITY = 5; //In pixels
@@ -63,8 +65,11 @@ namespace GMS
             iPanel = aDestinationPanel;
             renderer = aRenderer;
             iColorMap = aColorMap;
+            
+
             iPcPlot = aPcPlot;
             iDoc = aDoc;
+            iLegendColorMap = iDoc.iFilteredSelectedColorMap;
 
             SetupMapLayers();
 
@@ -179,7 +184,7 @@ namespace GMS
             polygonSelectionLayer = new MapPolygonLayer();
             polygonSelectionLayer.MapData = iMapData;
             polygonSelectionLayer.PolygonColor = Color.FromArgb(220,220,220);
-            polygonSelectionLayer.Alpha = 150;
+            polygonSelectionLayer.Alpha = 120;
 
             borderSelectionLayer = new MapPolygonBorderLayer();
             borderSelectionLayer.MapData = iMapData;
@@ -224,20 +229,38 @@ namespace GMS
             choroMap.AddLayer(glyphLayer);
             Invalidate();
 
+
+
+            //iSelectedColorLegend = new InteractiveColorLegend();
+            //iSelectedColorLegend.ColorMap = iLegendColorMap;
+            //iSelectedColorLegend.BorderColor = Color.Black;
+            //iSelectedColorLegend.ShowMinMaxValues = false;
+            //iSelectedColorLegend.SetPosition(0.01F, 0.01F);
+            //iSelectedColorLegend.SetLegendSize(0.02f, 0.2f);
+            //iSelectedColorLegend.ShowColorEdgeSliders = false;
+            //iSelectedColorLegend.ShowColorEdgeSliderValue = false;
+            ////iSelectedColorLegend.ColorEdgeValuesChanged += new EventHandler(ColorLegendChanged);
+            //choroMap.AddSubComponent(iSelectedColorLegend);
+
+
             iColorLegend = new InteractiveColorLegend();
             iColorLegend.ColorMap = iColorMap;
             iColorLegend.BorderColor = Color.Black;
             iColorLegend.SliderTextColor = Color.Black;
             iColorLegend.ShowMinMaxValues = true;
-            
-            iColorLegend.SetPosition(0.03F, 0.01F);
+            iColorLegend.SetPosition(0.01F, 0.01F);
             iColorLegend.SetLegendSize(0.01f, 0.2f);
-
             iColorLegend.ShowColorEdgeSliders = true;
             iColorLegend.ShowColorEdgeSliderValue = true;
             iColorLegend.ColorEdgeValuesChanged += new EventHandler(ColorLegendChanged);
 
-            choroMap.AddSubComponent( iColorLegend );
+            iColorLegend.ShowValueSliders = true;
+            iColorLegend.ShowValueSliderValue = true;
+            iColorLegend.ValueSliderValuesChanged += new EventHandler(ColorLegendChanged);
+            iColorLegend.SetEdgeSliders(InteractiveColorLegend.SliderLinePosition.Center, InteractiveColorLegend.TextPosition.RightOrBottom, true);
+
+
+            choroMap.AddSubComponent(iColorLegend);
             renderer.Add(choroMap, iPanel);
         }
 
