@@ -203,7 +203,7 @@ namespace GMS
             this.headers.Add("Median Age\n(years)");
             this.headers.Add("Albums\n(Log2)");
             this.headers.Add("Unemployment Rate\n(%)");
-            this.headers.Add("GDB Per Capita\n($)");
+            this.headers.Add("GDP Per Capita\n($)");
 
             iPcPlot = InitializeParallelCoordinatesPlot(iPanel, iDataCube, -1, headers);
             
