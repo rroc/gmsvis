@@ -177,6 +177,12 @@ namespace GMS
         /// <param name="e"></param>
         void SizeChanged(object sender, EventArgs e)
         {
+            // if minimized, don't update
+            if (this.iPanel.ClientSize.IsEmpty && ! this.iPanel.Disposing)
+            {
+                return;
+            }
+
             UpdateData();
             UpdateScale();
             UpdateDrawingArea();
