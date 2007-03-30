@@ -1,0 +1,64 @@
+\documentclass[twocolumn,8pt]{article}
+
+\topmargin    -10pt % Might need to be set to 0pt 
+                      % for some installations
+
+%\oddsidemargin  32pt
+\textheight    610pt
+%\textwidth     408pt
+\columnsep      24pt         
+
+
+\title{GMS - Geographical, Musical and Social Data Analysis Tool}
+%\author{HA~Kestler$^{1,2}$, F Schwenker$^1$, G Hafner$^1$, V~Hombach$^2$, 
+%      G~Palm$^1$, M~H{\"o}her$^2$ \\
+%      \mbox{}\\
+%      $^1$Neural Information Processing, University of Ulm, Germany \\
+%      $^2$Medicine II -- Cardiology, University Hospital Ulm, Germany}
+
+\author{Jo\~{a}o Pedro Jorge\thanks{joajo939@student.liu.se} \and Johannes Rajala\thanks{johra470@student.liu.se}}
+\date{30-03-2007}
+
+\usepackage{subfigure}
+\usepackage[pdftex]{graphicx}
+
+\begin{document}
+\small
+\maketitle
+
+\section{Introduction}
+
+The project described here was developed on the course of Information Visualization (TNM048) \cite{InfoVis} as its Final Project. The developed application provides the user to visually explore and analyze musical preferences and their relations to social, economical and geographical data within Europe. The application was designed taking into account human perception and interaction issues to provide easy access to users with different backgrounds.
+
+\section{Motivation}
+The presented project not only explored human perception and interaction issues, but also created useful and generic components that can be used to extend the GAV framework. Those components have shown to be quite useful and stable.Furthermore, the developers of GAV plan to have the Treemap visual structure integrated into their framework, in order to provide next year students the possibility of using it.
+
+\section{Aim}
+The goal of this project was to develop an application which enabled users to get an insight into any kind of data using special visual representations of it. The authors have chosen to find musical data from different sources and relate it to different attributes from European countries. Interactivity and understanding were two important aspects to consider during the development process.
+
+\section{Scope}
+
+The application was developed using GeoAnalytics Visualization Framework, shortly GAV, a framework developed at VITA Group/LiU \cite{GAV}. GAV provides developers with basic visualization tools for tailor-made and task-oriented applications development. GMS is one such application. In order to create a very complete and useful tool, this project extended GAV with components such as a multi-window Squarified Treemap \footnote{visualization method for large hierarchical
+structures} \cite{Treemap, Panopticon}, a embedded TableLens\footnote{visualization method for big amounts of tabular data} and descriptive geographically positioned Glyphs\footnote{graphical symbols representing a particular feature} \cite{InfoVis}.
+The ease of interaction with user was carefully considered and tested, and the results might be seen in detail on the Project Report.
+
+\section{Results}
+The achieved results were good, given the fact that the taken approach was mainly exploratory. It was possible to discover and analyze quickly some trends and outliers using the tool. Moreover, the surveyed users liked the tool and quickly learned how to work with it.
+
+\section{Course Details}
+The course was lectured by Mikael Jern \footnote{Mikael.Jern@itn.liu.se}, Johan Franzen \footnote{johan@jfranzen.se} and Jimmy Johansson\footnote{Jimmy.Johansson@itn.liu.se}. It was given the grade of 5+.
+
+% ### BIBLIOGRAPHY ###
+\begin{thebibliography}{99}
+
+\bibitem{Panopticon} Panopticon, 2007, Treemaps. In {\it www.panopticon.com}.
+
+\bibitem{GAV} VITA/LiU, GAV Framework. In {\it http:\slash \slash vita.itn.liu.se}.
+
+\bibitem{Treemap} Bruls M., Huizing K, Van Wijk J.J., 1999, Squarified Treemaps.
+
+\bibitem{InfoVis} Jern, Mikael, Information Visualization Notes, 2007. In {\it http:\slash \slash servus.itn.liu.se\slash courses\slash TNM048\slash InfVizCourse.htm}.
+
+\end{thebibliography}
+
+\end{document}
