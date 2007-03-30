@@ -38,9 +38,8 @@ namespace GMS
         private ParallelCoordinatesPlot iPcPlot;
         private IndexVisibilityHandler iSelectedInVisibility;
         private IndexVisibilityList iInVisibilityList;
-        private IndexVisibilityHandler iSelectedVisibility;
-        private IndexVisibilityList iVisibilityList;
-
+        private IndexVisibilityHandler  iSelectedVisibility;
+        private IndexVisibilityList     iVisibilityList;
 
         private List<string> iCountryNames;
 
@@ -139,23 +138,28 @@ namespace GMS
         /// <param name="e"></param>
         void DocumentPicked(object sender, IndexesPickedEventArgs e)
         {
+            //Initialize visibilities
             for (int i = 0, endI = iMapData.RegionList.Count; i < endI; i++)
             {
                 iInVisibilityList.SetVisibility(i, 0, true);
                 iVisibilityList.SetVisibility(i, 0, false);
             }
             
-            //polygonLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
-            //polygonSelectionLayer.SetSelectedPolygonIndexes(e.PickedIndexes);
+            //Set visibilities accordingly
             foreach (int index in e.PickedIndexes)
             {
-                iInVisibilityList.SetVisibility(index, 0, false ); //!iVisibilityList.GetVisibility(index));
-                iVisibilityList.SetVisibility(index, 0, true);
+                //Check that it is not filtered out
+                if (polygonLayer.IndexVisibilityHandler.GetVisibility(index))
+                {
+                    iInVisibilityList.SetVisibility(index, 0, false); //!iVisibilityList.GetVisibility(index));
+                    iVisibilityList.SetVisibility(index, 0, true);
+                }
             }
             iInVisibilityList.CommitChanges();
             iVisibilityList.CommitChanges();
             Invalidate();
         }
+
 
         private void SetupMapLayers()
         {
@@ -228,8 +232,6 @@ namespace GMS
             choroMap.AddLayer(glyphLayer);
             Invalidate();
 
-
-
             //iSelectedColorLegend = new InteractiveColorLegend();
             //iSelectedColorLegend.ColorMap = iLegendColorMap;
             //iSelectedColorLegend.BorderColor = Color.Black;
@@ -281,7 +283,6 @@ namespace GMS
             if (e.MouseEventArgs.Button == MouseButtons.Left)
             {
                 iMouseClickPoint = e.MouseEventArgs.Location;
-
             }
         }
 
@@ -298,18 +299,28 @@ namespace GMS
                 Vector2 v = choroMap.ConvertScreenCoordinatesToMapCoordinates(e.MouseEventArgs.Location);
                 int index = iMapData.GetRegionId(v);
 
-                List<int> selectedItems = new List<int>();
+                    List<int> selectedItems = new List<int>();
 
-                if (index != -1)
-                {
-                    selectedItems.Add(index);
-                }
+                    // if CTRL is pressed, add the line to the selection
+                    Keys keys = Control.ModifierKeys;
+                    bool add = (keys == Keys.Control);
 
-                // if CTRL is pressed, add the line to the selection
-                Keys keys = Control.ModifierKeys;
-                bool add = (keys == Keys.Control);
+                    bool visibility = false;
+                    if (index != -1)
+                    {
+                        visibility = polygonLayer.IndexVisibilityHandler.GetVisibility(index);
+                        if (visibility)
+                        {
+                            selectedItems.Add(index);
+                            iDoc.SetSelectedItems(selectedItems, add, true);
+                        }
+                    }
+                    else
+                    {
+                        iDoc.SetSelectedItems(selectedItems, add, true);
+                    }
 
-                iDoc.SetSelectedItems(selectedItems, add, true);
+
             }
         }
 

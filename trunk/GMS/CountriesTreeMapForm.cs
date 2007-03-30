@@ -22,13 +22,13 @@ namespace GMS
         ToolStripComboBox iTreeMapCombo;
         private ColorMap iSharedColorMap;
 
-        public CountriesTreeMapForm(GMSDocument aDoc, string aTreeMapType, 
-            ToolStripComboBox aTreeMapCombo, ColorMap aSharedColorMap)
+        public CountriesTreeMapForm(GMSDocument aDoc, string aTreeMapType,
+            ToolStripComboBox aTreeMapCombo, ColorMap aSharedColorMap, ParallelCoordinatesPlot aPcPlot)
         {
             InitializeComponent();
 
             iDoc = aDoc;
-            iTreeMap = new TreeMap(mainPanel, iDoc);
+            iTreeMap = new TreeMap(mainPanel, iDoc, aPcPlot);
             iLoaded = false;
             iTreeMapType = GetTreeMapType(aTreeMapType);
             iTreeMapCombo = aTreeMapCombo;

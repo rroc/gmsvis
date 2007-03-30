@@ -65,7 +65,7 @@ namespace GMS
 
 
             // Initialize Tree Map
-            iTreeMap = new TreeMap(mainSplitContainer.Panel2, doc);
+            iTreeMap = new TreeMap(mainSplitContainer.Panel2, doc, pcCountries.iPcPlot );
 
             int quantitativeDataIndex, ordinalDataIndex, idIndex, leafNodeIndex;
             List<GMSToolTipComponent> toolTipComponents = new List<GMSToolTipComponent>();
@@ -123,7 +123,7 @@ namespace GMS
                 (iCountriesTreeMap == null || 
                 iCountriesTreeMap.IsDisposed))
             {
-                iCountriesTreeMap = new CountriesTreeMapForm(doc, treeMapType, combo, doc.iFilteredColorMap);
+                iCountriesTreeMap = new CountriesTreeMapForm(doc, treeMapType, combo, doc.iFilteredColorMap, pcCountries.iPcPlot );
                 iCountriesTreeMap.Show();
             }
         }

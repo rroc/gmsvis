@@ -50,6 +50,8 @@ namespace GMS
 
         private int iId;
 
+        private IndexVisibilityHandler iVisibility;
+
         List<TreeRectangle> iChildRectangles;
 
         // Drawing properties
@@ -58,6 +60,8 @@ namespace GMS
         private static SolidBrush iSelectedGroupLabelPen;
         Pen iPen;
         System.Drawing.Drawing2D.LinearGradientBrush iBrush;
+        System.Drawing.Drawing2D.LinearGradientBrush iGrayBrush;
+
         System.Drawing.RectangleF iFillRectangle;
         System.Drawing.Rectangle iBorderRectangle; 
 
@@ -213,6 +217,11 @@ namespace GMS
                        iFillRectangle,
                        aColorMap.GetColor(iId), Color.Black,
                        System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+            iGrayBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                                   iFillRectangle,
+                                   Color.Gray, Color.Black,
+                                   System.Drawing.Drawing2D.LinearGradientMode.Vertical);
+
 
             iBorderRectangle = new System.Drawing.Rectangle(
                 (int)Math.Ceiling(iLowerLeft.X * iScale.X),
@@ -274,14 +283,15 @@ namespace GMS
         /// Draws the rectangle and its children
         /// </summary>
         /// <param name="aGraphics">the graphics container</param>
-        public void Draw(Graphics aGraphics, IColorMap aColorMap, List<int> aSelectedIds)
+        public void Draw(Graphics aGraphics, IColorMap aColorMap, List<int> aSelectedIds, IndexVisibilityHandler aVisibility )
         {
+            iVisibility = aVisibility;
             if (iHeight * iScale.Y <= 1)
             {
                 return;
             }
 
-            this.DrawChild(aGraphics, aColorMap, aSelectedIds);
+            this.DrawChild(aGraphics, aColorMap, aSelectedIds, aVisibility);
 
             //foreach (TreeRectangle rectangle in iChildRectangles)
             //{
@@ -296,7 +306,7 @@ namespace GMS
         /// </summary>
         /// <param name="aGraphics"></param>
         /// <param name="aColorMap"></param>
-        private void DrawChild(Graphics aGraphics, IColorMap aColorMap, List<int> aSelectedIds)
+        private void DrawChild(Graphics aGraphics, IColorMap aColorMap, List<int> aSelectedIds, IndexVisibilityHandler aVisibility)
         {
             float height = iHeight * iScale.Y;
 
@@ -317,7 +327,7 @@ namespace GMS
                 }
 
                 // *** If selected ***
-                if (aSelectedIds != null && aSelectedIds.Contains(iId))
+                if (aSelectedIds != null && aSelectedIds.Contains(iId) && (aVisibility != null && aVisibility.GetVisibility(iId)))
                 {
                     System.Drawing.Drawing2D.LinearGradientBrush brush = new
                            System.Drawing.Drawing2D.LinearGradientBrush(
@@ -335,7 +345,15 @@ namespace GMS
                 }
                 else
                 {
-                    aGraphics.FillRectangle(iBrush, iFillRectangle);
+                    if (aVisibility != null && aVisibility.GetVisibility(iId))
+                    {
+                        aGraphics.FillRectangle(iBrush, iFillRectangle);
+                    }
+                    else
+                    {
+                        aGraphics.FillRectangle(iGrayBrush, iFillRectangle);
+                    }
+                        
                     DrawLabel(aGraphics);
                 }
             }
@@ -344,7 +362,7 @@ namespace GMS
                 // Call children recursively
                 foreach (TreeRectangle rectangle in iChildRectangles)
                 {
-                    rectangle.DrawChild(aGraphics, aColorMap, aSelectedIds);
+                    rectangle.DrawChild(aGraphics, aColorMap, aSelectedIds, aVisibility);
                 }
 
                 // Draw the The Group Rectangle (as a border)
