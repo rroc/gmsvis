@@ -1,0 +1,206 @@
+This is pdfeTeX, Version 3.141592-1.30.6-2.2 (MiKTeX 2.5) (preloaded format=pdflatex 2006.12.5)  30 MAR 2007 16:50
+entering extended mode
+**Manual.tex
+(Manual.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8g> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman, ngerman, french, loaded.
+("C:\Program Files\MiKTeX 2.5\tex\latex\base\article.cls"
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+("C:\Program Files\MiKTeX 2.5\tex\latex\base\size10.clo"
+File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files\MiKTeX 2.5\tex\latex\subfigure\subfigure.sty"
+Package: subfigure 2002/07/30 v2.1.4 subfigure package
+\subfigtopskip=\skip43
+\subfigcapskip=\skip44
+\subfigcaptopadj=\dimen103
+\subfigbottomskip=\skip45
+\subfigcapmargin=\dimen104
+\subfiglabelskip=\skip46
+\c@subfigure=\count87
+\c@lofdepth=\count88
+\c@subtable=\count89
+\c@lotdepth=\count90
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+("C:\Program Files\MiKTeX 2.5\tex\latex\subfigure\subfigure.cfg")
+\subfig@top=\skip47
+\subfig@bottom=\skip48
+)
+("C:\Program Files\MiKTeX 2.5\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.5\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("C:\Program Files\MiKTeX 2.5\tex\latex\graphics\graphics.sty"
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.5\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files\MiKTeX 2.5\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2005/12/29 v1.2 MiKTeX 'graphics' configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+("C:\Program Files\MiKTeX 2.5\tex\latex\graphics\pdftex.def"
+File: pdftex.def 2006/08/14 v0.03t Graphics/color for pdfTeX
+\Gread@gobject=\count91
+))
+\Gin@req@height=\dimen105
+\Gin@req@width=\dimen106
+)
+
+LaTeX Warning: Unused global option(s):
+    [8pt].
+
+(Manual.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+ ("C:\Program Files\MiKTeX 2.5\tex\context\base\supp-pdf.tex"
+("C:\Program Files\MiKTeX 2.5\tex\context\base\supp-mis.tex"
+loading : Context Support Macros / Miscellaneous (2004.10.26)
+\protectiondepth=\count92
+\scratchcounter=\count93
+\scratchtoks=\toks15
+\scratchdimen=\dimen107
+\scratchskip=\skip49
+\scratchmuskip=\muskip10
+\scratchbox=\box26
+\scratchread=\read1
+\scratchwrite=\write3
+\zeropoint=\dimen108
+\onepoint=\dimen109
+\onebasepoint=\dimen110
+\minusone=\count94
+\thousandpoint=\dimen111
+\onerealpoint=\dimen112
+\emptytoks=\toks16
+\nextbox=\box27
+\nextdepth=\dimen113
+\everyline=\toks17
+\!!counta=\count95
+\!!countb=\count96
+\recursecounter=\count97
+)
+loading : Context Support Macros / PDF (2004.03.26)
+\nofMPsegments=\count98
+\nofMParguments=\count99
+\MPscratchCnt=\count100
+\MPscratchDim=\dimen114
+\MPnumerator=\count101
+\everyMPtoPDFconversion=\toks18
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 20.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 20.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 20.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 20.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 31.
+ <./pics/glyphs.png, id=1, 211.79124pt x 163.61125pt>
+File: ./pics/glyphs.png Graphic file (type png)
+ <use ./pics/glyphs.png>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 44.
+
+("C:\Program Files\MiKTeX 2.5\tex\latex\base\omscmr.fd"
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 44.
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--45
+
+ []
+
+
+Underfull \hbox (badness 1609) in paragraph at lines 46--47
+[][]\OT1/cmr/m/n/9 ooming: The map can be Zoomed Out/In
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--47
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+
+ []
+
+<./pics/treemap.png, id=2, 383.4325pt x 264.99pt>
+File: ./pics/treemap.png Graphic file (type png)
+ <use ./pics/treemap.png>
+[1{psfonts.map}
+
+
+ <D:/Linkoping University/Information Visualization/Project/Documents/Manual/pi
+cs/glyphs.png (PNG copy)> <D:/Linkoping University/Information Visualization/Pr
+oject/Documents/Manual/pics/treemap.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
+
+ []
+
+<./pics/pcplot.png, id=37, 892.33376pt x 334.24875pt>
+File: ./pics/pcplot.png Graphic file (type png)
+ <use ./pics/pcplot.png>
+Overfull \hbox (223.66579pt too wide) in paragraph at lines 87--88
+ [] 
+ []
+
+[2
+
+ <D:/Linkoping University/Information Visualization/Project/Documents/Manual/pi
+cs/pcplot.png (PNG copy)>] (Manual.aux) ) 
+Here is how much of TeX's memory you used:
+ 1168 strings out of 95419
+ 13593 string characters out of 1187298
+ 62348 words of memory out of 1062464
+ 4306 multiletter control sequences out of 60000
+ 8499 words of font info for 30 fonts, out of 1000000 for 2000
+ 14 hyphenation exceptions out of 8191
+ 31i,12n,24p,316b,314s stack positions out of 5000i,500n,10000p,200000b,32768s
+PDF statistics:
+ 40 PDF objects out of 300000
+ 0 named destinations out of 300000
+ 16 words of extra memory for PDF output out of 10000
+<C:/Program Files/MiKTeX 2.5/fonts/typ
+e1/bluesky/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy
+6.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Program
+ Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.5
+/fonts/type1/bluesky/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/blues
+ky/cm/cmr9.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmbx12.pfb><
+C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy8.pfb><C:/Program Files/
+MiKTeX 2.5/fonts/type1/bluesky/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.5/fonts/
+type1/bluesky/cm/cmr17.pfb>
+Output written on Manual.pdf (2 pages, 263539 bytes).
