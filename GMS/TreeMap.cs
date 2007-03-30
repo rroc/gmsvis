@@ -53,18 +53,22 @@ namespace GMS
 
         private GMSDocument iDoc;
 
+        private ParallelCoordinatesPlot iPcPlot;
+
         #endregion
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public TreeMap(System.Windows.Forms.Panel aPanel, GMSDocument aDoc)
+        public TreeMap(System.Windows.Forms.Panel aPanel, GMSDocument aDoc, ParallelCoordinatesPlot aPcPlot )
         {
             iPanel = aPanel;
             iPanel.SizeChanged += new EventHandler(SizeChanged);
             iPanel.Paint += new System.Windows.Forms.PaintEventHandler(Paint);
             iToolTip = new GavToolTip(iPanel);
-            
+
+            iPcPlot = aPcPlot;
+
             iToolTip.FadeEnable = true;
             iToolTip.FadeTime = TOOLTIP_FADE_DELAY;
             iToolTip.Show(new Point(0,0));
@@ -78,12 +82,12 @@ namespace GMS
             iDoc = aDoc;
 
             aDoc.ColorMapChanged += new EventHandler<EventArgs>(DocumentColorMapChanged);
-            aDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
+            iDoc.Picked += new EventHandler<IndexesPickedEventArgs>(DocumentPicked);
 
-            iPanel.MouseDown        += new MouseEventHandler(MouseDown);
-
+            iPanel.MouseDown += new MouseEventHandler(MouseDown);
             iSelectedIds = new List<int>();
 
+            
             iZoomIn = false;
 
             UpdateDrawingArea();
@@ -437,8 +441,10 @@ namespace GMS
                 return;
             }
 
+
             //iCurrentRootRectangle.GetChildren()[0].Draw(iDrawingArea, iColorMap);
-            iCurrentRootRectangle.Draw(iDrawingArea, iColorMap, iSelectedIds);
+
+            iCurrentRootRectangle.Draw(iDrawingArea, iColorMap, iSelectedIds, iPcPlot.IndexVisibilityHandler );
             g.DrawImageUnscaled(iBackBuffer, 0, 0);
         }
 
